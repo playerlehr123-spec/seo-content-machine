@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{b.name}}</h1>
+<div class='card'>
+  <p><strong>Website:</strong> {{b.website_url}}</p>
+  <p><strong>Audience:</strong> {{b.audience}}</p>
+  <p><strong>Offer:</strong> {{b.offer}}</p>
+  <p><strong>Brand voice:</strong> {{b.brand_voice}}</p>
+  <p><strong>Main CTA:</strong> {{b.main_cta}}</p>
+  <p><strong>Core topics:</strong> {{topics|join(', ')}}</p>
+</div>
+<a href='{{url_for("new_case_study")}}'>Add case study</a>
+<h2>Case studies</h2>
+{% for c in cases %}<div class='card'><a href='{{url_for("case_study_detail", case_id=c.id)}}'>{{c.project_name}}</a></div>{% else %}<div class='card'>No case studies yet.</div>{% endfor %}
+<h2>Drafts</h2>
+{% for d in drafts %}<div class='card'><a href='{{url_for("draft_detail", draft_id=d.id)}}'>{{d.title}}</a></div>{% else %}<div class='card'>No drafts yet.</div>{% endfor %}
+{% endblock %}

@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Agent Runs</h1>{% for i in items %}<div class='card'><a href='{{url_for("agent_run_detail", run_id=i.id)}}'>{{i.agent_name}}</a> {{i.status}} {{i.started_at}} {{i.finished_at}} {{i.error_message or ''}}</div>{% endfor %}{% endblock %}
