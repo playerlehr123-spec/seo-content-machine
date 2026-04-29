@@ -1,1 +1,18 @@
-{% extends 'base.html' %}{% block content %}<h1>{{d.title}}</h1><div class='card'><p>SEO Title: {{d.seo_title}}</p><p>Meta: {{d.meta_description}}</p><p>Slug: {{d.slug}}</p><p>Excerpt: {{d.excerpt}}</p><p>Category: {{d.category}}</p><p>Tags: {{d.tags_json}}</p><p>Image Prompt: {{d.image_prompt}}</p><p>Image Alt: {{d.image_alt_text}}</p><p>Internal Links: {{d.internal_links_json}}</p></div><div class='card'><pre>{{d.body_markdown}}</pre></div><div class='card'><pre>{{d.edited_body_markdown}}</pre></div>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{d.title}}</h1>
+<div class='card'>
+  <p><strong>SEO Title:</strong> {{d.seo_title}}</p>
+  <p><strong>Meta:</strong> {{d.meta_description}}</p>
+  <p><strong>Slug:</strong> {{d.slug}}</p>
+  <p><strong>Excerpt:</strong> {{d.excerpt}}</p>
+  <p><strong>Category:</strong> {{d.category}}</p>
+  <p><strong>Tags:</strong> {{tags|join(', ')}}</p>
+  <p><strong>Image Prompt:</strong> {{d.image_prompt}}</p>
+  <p><strong>Image Alt:</strong> {{d.image_alt_text}}</p>
+  <p><strong>Internal Links:</strong></p>
+  <ul>{% for link in links %}<li>{{link.anchor_text}} → {{link.target}} ({{link.reason}})</li>{% else %}<li>No link suggestions.</li>{% endfor %}</ul>
+</div>
+<div class='card'><h3>Body markdown</h3><pre>{{d.body_markdown}}</pre></div>
+<div class='card'><h3>Edited body markdown</h3><pre>{{d.edited_body_markdown}}</pre></div>
+{% endblock %}
