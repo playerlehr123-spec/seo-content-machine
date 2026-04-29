@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Case Studies</h1><a href='{{url_for("new_case_study")}}'>New Case Study</a>{% for i in items %}<div class='card'><a href='{{url_for("case_study_detail", case_id=i.id)}}'>{{i.project_name}}</a></div>{% endfor %}{% endblock %}

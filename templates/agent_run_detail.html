@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>{{r.agent_name}}</h1><div class='card'><p>Status: {{r.status}}</p><p>Error: {{r.error_message}}</p><pre>{{r.input_json}}</pre><pre>{{r.output_json}}</pre></div>{% endblock %}

@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>New Business Profile</h1><form method='post' class='card'>{% for f in ['name','website_url','audience','offer','brand_voice','main_cta','core_topics_json'] %}<label>{{f}}<textarea name='{{f}}'></textarea></label>{% endfor %}<button type='submit'>Save</button></form>{% endblock %}
