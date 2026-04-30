@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Drafts</h1>{% for i in items %}<div class='card'><a href='{{url_for("draft_detail", draft_id=i.id)}}'>{{i.title}} ({{i.campaign or 'No Campaign'}})</a></div>{% endfor %}{% endblock %}

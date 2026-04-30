@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Business Profiles</h1><a href='{{url_for("new_business_profile")}}'>New Business Profile</a>{% for i in items %}<div class='card'><a href='{{url_for("business_profile_detail", business_id=i.id)}}'>{{i.name}}</a></div>{% endfor %}{% endblock %}

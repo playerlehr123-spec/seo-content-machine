@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ d.title }}</h1>
+<div class='card'>
+  <p><strong>Target keyword:</strong> {{ d.target_keyword }}</p>
+  <p><strong>Search intent:</strong> {{ d.search_intent }}</p>
+  <p><strong>Buyer stage:</strong> {{ d.buyer_stage }}</p>
+  <p><strong>Post type:</strong> {{ d.post_type }}</p>
+  <p><strong>Target money page:</strong> {{ d.target_money_page }}</p>
+  <p><strong>Business value score:</strong> {{ d.business_value_score }}</p>
+  <p><strong>Ranking opportunity score:</strong> {{ d.ranking_opportunity_score }}</p>
+  <p><strong>Publish priority:</strong> {{ d.publish_priority }}</p>
+  <p><strong>Pipeline status:</strong> {{ d.pipeline_status|replace("not_ready","Not Ready")|replace("needs_human_review","Needs Human Review")|replace("ready_wordpress_draft","Ready for WordPress Draft")|replace("published","Published")|replace("needs_refresh","Needs Refresh") }}</p>
+  <p><strong>SEO title:</strong> {{ d.seo_title }}</p>
+  <p><strong>Meta description:</strong> {{ d.meta_description }}</p>
+  <p><strong>Slug:</strong> {{ d.slug }}</p>
+  <p><strong>Excerpt:</strong> {{ d.excerpt }}</p>
+  <p><strong>AI answer block:</strong> {{ d.ai_answer_block }}</p>
+</div>
+<div class='card'><h3>Real Assets Needed</h3><pre>{{ real_assets }}</pre></div>
+<div class='card'><h3>Campaign</h3>{% if campaign %}<p><strong>Name:</strong> {{campaign.name}}</p><p><strong>Goal:</strong> {{campaign.goal}}</p><p><strong>Target money page:</strong> {{campaign.target_money_page}}</p><p><strong>Lead magnet:</strong> {{campaign.lead_magnet_idea}}</p><p><strong>Primary CTA:</strong> {{campaign.primary_cta}}</p>{% else %}<p>No campaign attached.</p>{% endif %}</div><div class='card'><h3>Lead Engine</h3><p><strong>Conversion goal:</strong> {{ d.conversion_goal }}</p><p><strong>Primary CTA:</strong> {{ d.primary_cta }}</p><p><strong>Secondary CTA:</strong> {{ d.secondary_cta }}</p><p><strong>Lead readiness score:</strong> {{ d.lead_readiness_score }}</p><h4>Lead Path</h4><pre>{{ lead_path }}</pre><h4>Lead Magnet</h4><pre>{{ lead_magnet }}</pre><h4>Money Page Alignment</h4><pre>{{ money_align }}</pre><h4>Publish Readiness</h4><pre>{{ readiness }}</pre><h4>Tracking Plan</h4><pre>{{ tracking }}</pre></div>
+<div class='card'><h3>Publish Checklist</h3><pre>{{ checklist }}</pre></div>
+<div class='card'><h3>Claim Check</h3><pre>{{ claim_check }}</pre></div>
+<div class='card'><h3>CTA Plan</h3><pre>{{ cta_plan }}</pre></div>
+<div class='card'><h3>Internal Link Plan</h3><pre>{{ link_plan }}</pre></div>
+<div class='card'><h3>Repurposing Assets</h3><pre>{{ repurposing }}</pre></div>
+<div class='card'><h3>Refresh Plan</h3><pre>{{ refresh_plan }}</pre></div>
+<div class='card'><h3>Image Quality</h3><p><strong>Image brief:</strong> {{ d.image_brief }}</p><p><strong>Image prompt:</strong> {{ d.image_prompt }}</p><p><strong>Negative prompt:</strong> {{ d.image_negative_prompt }}</p><p><strong>Recommended image type:</strong> {{ d.recommended_image_type }}</p><p><strong>Alt text:</strong> {{ d.image_alt_text }}</p><p><strong>Style notes:</strong> {{ d.image_style_notes }}</p><p><strong>Image quality score:</strong> {{ image_quality.get('quality_score') }}</p><p><strong>Risk flags:</strong> {{ image_quality.get('risk_flags') }}</p><p><strong>Human review required:</strong> {{ image_quality.get('human_review_required') }}</p></div>
+<div class='card'><h3>WordPress</h3><p>Status: {{d.wordpress_status or 'not_sent'}}</p><p>Post URL: {{d.wordpress_post_url}}</p><p>Edit URL: {{d.wordpress_edit_url}}</p>{% if wp_ready %}<form method='post' action='{{url_for("send_wordpress_draft", draft_id=d.id)}}'><button type='submit'>Send to WordPress Draft</button></form>{% else %}<p>Add WORDPRESS_BASE_URL, WORDPRESS_USERNAME, and WORDPRESS_APP_PASSWORD to enable draft sending.</p>{% endif %}</div><div class='card'><h3>Edited body</h3><pre>{{ d.edited_body_markdown }}</pre></div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block content %}<h1>New Business Profile</h1><form method='post' class='card'>
+<label>Name<input name='name' required></label>
+<label>Website URL<input name='website_url'></label>
+<label>Audience<textarea name='audience'></textarea></label>
+<label>Offer<textarea name='offer'></textarea></label>
+<label>Brand Voice<textarea name='brand_voice'></textarea></label>
+<label>Main CTA<input name='main_cta'></label>
+<label>Traffic Goal<textarea name='traffic_goal'></textarea></label>
+<label>Core Topics JSON<textarea name='core_topics_json'>[]</textarea></label>
+<label>Money Pages JSON<textarea name='money_pages_json'>[]</textarea></label>
+<label>Primary Keywords JSON<textarea name='primary_keywords_json'>[]</textarea></label>
+<label>Competitors JSON<textarea name='competitors_json'>[]</textarea></label>
+<button type='submit'>Save</button></form>{% endblock %}

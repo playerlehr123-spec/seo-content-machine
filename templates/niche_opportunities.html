@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Niche Opportunities</h1>{% for o in items %}<div class='card'><a href='{{url_for("niche_opportunity_detail", op_id=o.id)}}'>{{o.query}}</a> | BV: {{o.business_value_score}} | RO: {{o.ranking_opportunity_score}} | {{o.target_money_page}}</div>{% endfor %}{% endblock %}

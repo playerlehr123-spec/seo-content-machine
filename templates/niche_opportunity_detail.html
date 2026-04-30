@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>{{o.query}}</h1><div class='card'><p>{{o.recommended_title}}</p><p>{{o.post_type}} | {{o.search_intent}} | {{o.buyer_stage}}</p><p>{{o.target_money_page}}</p><p>{{o.why_it_can_win}}</p></div><form method='post' action='{{url_for("run_niche", op_id=o.id)}}'><button type='submit'>Create Brief/Draft</button></form>{% endblock %}

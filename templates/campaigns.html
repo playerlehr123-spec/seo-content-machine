@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Campaigns</h1><a href='{{url_for("new_campaign")}}'>New Campaign</a>{% for c in items %}<div class='card'><a href='{{url_for("campaign_detail", campaign_id=c.id)}}'>{{c.name}}</a> | {{c.status}} | {{c.target_money_page}}</div>{% endfor %}{% endblock %}

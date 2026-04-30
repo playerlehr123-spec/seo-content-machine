@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>SEO + AI Search Traffic Engine</h1>
+<form method='post' action='{{ url_for("seed_demo_data_route") }}'><button type='submit'>Seed Demo Data</button></form>
+<div class='grid'>
+  <div class='card'><h3>Total business profiles</h3><p>{{total_business_profiles}}</p></div>
+  <div class='card'><h3>Total campaigns</h3><p>{{total_campaigns}}</p></div><div class="card"><h3>Total niche opportunities</h3><p>{{total_niche_opportunities}}</p></div>
+  <div class='card'><h3>Total drafts</h3><p>{{drafts}}</p></div>
+  <div class='card'><h3>Total agent runs</h3><p>{{total_agent_runs}}</p></div>
+  <div class='card'><h3>Posts ready for human review</h3><p>{{ready_review}}</p></div>
+  <div class='card'><h3>High business value drafts</h3><p>{{high_priority}}</p></div>
+  <div class='card'><h3>Drafts missing CTA</h3><p>{{missing_cta}}</p></div>
+  <div class='card'><h3>Drafts missing target money page</h3><p>{{missing_money}}</p></div>
+  <div class='card'><h3>Highest lead readiness score</h3><p>{{highest_lead_score}}</p></div>
+</div>
+<div class='card'><h3>Pipeline Status Counts</h3>{% for s,c in by_status %}<div>{{s}}: {{c}}</div>{% endfor %}</div>
+<div class='card'><h3>Next best lead-focused post</h3>{% if next_best %}<a href='{{ url_for("draft_detail", draft_id=next_best.id) }}'>{{ next_best.title }}</a>{% else %}No drafts yet.{% endif %}</div>
+<div class='card'><h3>Next Traffic Moves</h3><ul><li>Create a post targeting a high-intent niche keyword.</li><li>Add internal links to a money page.</li><li>Add or improve a CTA on drafts with missing CTA.</li></ul></div>
+<div class='card'><h3>Recent Drafts</h3>{% for d in recent_drafts %}<div><a href='{{url_for("draft_detail", draft_id=d.id)}}'>{{d.title}}</a></div>{% else %}<div>No drafts yet.</div>{% endfor %}</div>
+<div class='card'><h3>Recent Agent Runs</h3>{% for r in recent_runs %}<div><a href='{{url_for("agent_run_detail", run_id=r.id)}}'>{{r.agent_name}}</a> - {{r.status}}</div>{% else %}<div>No runs yet.</div>{% endfor %}</div>
+<div class='card'><h3>Active SEO Campaigns</h3>{% for c in active_campaigns %}<div>{{c.name}} | {{c.target_money_page}} | {{c.primary_keyword}} | {{c.status}}</div>{% else %}<div>No active campaigns.</div>{% endfor %}</div>{% endblock %}
