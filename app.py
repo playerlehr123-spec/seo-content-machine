@@ -172,6 +172,17 @@ def campaign_detail(campaign_id):
 @app.route('/drafts')
 def drafts(): return render_template('drafts.html', items=BlogPost.query.all())
 
+@app.route('/image-assets')
+def image_assets():
+    grouped = {}
+    for b in BusinessProfile.query.all():
+        per_business = BlogPost.query.filter_by(business_id=b.id).all()
+        grouped[b.name] = {}
+        for d in per_business:
+            key = d.recommended_image_type or "uncategorized"
+            grouped[b.name].setdefault(key, []).append(d)
+    return render_template('image_assets.html', grouped=grouped)
+
 
 @app.route('/drafts/<int:draft_id>')
 def draft_detail(draft_id):

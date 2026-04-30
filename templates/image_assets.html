@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Image Assets</h1>
+<p>Business-specific image assets only. No AI image generation.</p>
+{% for business, categories in grouped.items() %}
+<div class='card'>
+  <h3>{{ business }}</h3>
+  {% if categories %}
+    {% for category, drafts in categories.items() %}
+      <h4>{{ category }}</h4>
+      <ul>
+        {% for d in drafts %}
+          <li><a href='{{ url_for("draft_detail", draft_id=d.id) }}'>{{ d.title or ('Draft #' ~ d.id) }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  {% else %}
+    <p>No image assets linked yet.</p>
+  {% endif %}
+</div>
+{% endfor %}
+{% endblock %}
