@@ -176,7 +176,8 @@ def drafts(): return render_template('drafts.html', items=BlogPost.query.all())
 @app.route('/drafts/<int:draft_id>')
 def draft_detail(draft_id):
     draft = BlogPost.query.get_or_404(draft_id)
-    return render_template('draft_detail.html', campaign=Campaign.query.get(draft.campaign_id) if draft.campaign_id else None, wp_ready=bool(app.config.get('WORDPRESS_BASE_URL') and app.config.get('WORDPRESS_USERNAME') and app.config.get('WORDPRESS_APP_PASSWORD')), d=draft, checklist=parse_json(draft.publish_checklist_json or draft.seo_publish_checklist_json, {}), claim_check=parse_json(draft.claim_check_json, {}), cta_plan=parse_json(draft.cta_plan_json, {}), link_plan=parse_json(draft.internal_link_plan_json, {}), repurposing=parse_json(draft.repurposing_json, {}), refresh_plan=parse_json(draft.refresh_plan_json, {}), lead_path=parse_json(draft.lead_path_json, {}), lead_magnet=parse_json(draft.lead_magnet_json, {}), money_align=parse_json(draft.money_page_alignment_json, {}), readiness=parse_json(draft.publish_readiness_json, {}), tracking=parse_json(draft.tracking_plan_json, {}), image_quality=parse_json(draft.image_quality_json, {}), real_assets=parse_json(draft.real_assets_needed_json, {}))
+    readiness = parse_json(draft.publish_readiness_json, {})
+    return render_template('draft_detail.html', campaign=Campaign.query.get(draft.campaign_id) if draft.campaign_id else None, wp_ready=bool(app.config.get('WORDPRESS_BASE_URL') and app.config.get('WORDPRESS_USERNAME') and app.config.get('WORDPRESS_APP_PASSWORD')), d=draft, checklist=parse_json(draft.publish_checklist_json or draft.seo_publish_checklist_json, {}), claim_check=parse_json(draft.claim_check_json, {}), cta_plan=parse_json(draft.cta_plan_json, {}), link_plan=parse_json(draft.internal_link_plan_json, {}), repurposing=parse_json(draft.repurposing_json, {}), refresh_plan=parse_json(draft.refresh_plan_json, {}), lead_path=parse_json(draft.lead_path_json, {}), lead_magnet=parse_json(draft.lead_magnet_json, {}), money_align=parse_json(draft.money_page_alignment_json, {}), readiness=readiness, tracking=parse_json(draft.tracking_plan_json, {}), image_quality=parse_json(draft.image_quality_json, {}), real_assets=parse_json(draft.real_assets_needed_json, {}), article_style=readiness.get("article_style_guard", {}))
 
 
 
@@ -194,6 +195,9 @@ def send_wordpress_draft(draft_id):
     if missing:
         flash('Cannot send to WordPress. Missing: ' + ', '.join(missing), 'error')
         return redirect(url_for('draft_detail', draft_id=draft_id))
+    style_guard = parse_json(draft.publish_readiness_json, {}).get("article_style_guard", {})
+    if style_guard and not style_guard.get("approved_for_wordpress_draft"):
+        flash("Warning: Article Style Guard did not fully approve this draft. Send for manual review before publishing.", "warning")
     out = WordPressDraftAgent(BusinessProfile.query.get_or_404(draft.business_id), None, draft).execute({'wp_config': {'base_url': app.config.get('WORDPRESS_BASE_URL',''), 'username': app.config.get('WORDPRESS_USERNAME',''), 'app_password': app.config.get('WORDPRESS_APP_PASSWORD','')}})
     if out.get('success'):
         draft.wordpress_post_id = out.get('wordpress_post_id')

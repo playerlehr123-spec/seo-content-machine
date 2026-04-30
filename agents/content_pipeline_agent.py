@@ -23,6 +23,8 @@ from agents.image_quality_agent import ImageQualityAgent
 from agents.publish_checklist_agent import PublishChecklistAgent
 from agents.repurposing_agent import RepurposingAgent
 from agents.refresh_planner_agent import RefreshPlannerAgent
+from agents.article_style_guard_agent import ArticleStyleGuardAgent
+from agents.editorial_compressor_agent import EditorialCompressorAgent
 
 
 class ContentPipelineAgent:
@@ -62,9 +64,11 @@ class ContentPipelineAgent:
         image = BlogCardImageAgent(self.business, self.case_study, post).execute({"topic": post.title})
         image_quality = ImageQualityAgent(self.business, self.case_study, post).execute({"image_prompt": image.get("image_prompt"), "image_brief": image.get("image_brief")})
         checklist = PublishChecklistAgent(self.business, self.case_study, post).execute({"force_missing": ["No unsupported claims"] if claim.get("flagged_claims") else []})
+        compressed = EditorialCompressorAgent(self.business, self.case_study, post).execute({"text": edited.get("edited_body_markdown") or draft.get("body_markdown", "")})
+        style_guard = ArticleStyleGuardAgent(self.business, self.case_study, post).execute({"text": compressed.get("compressed_text") or edited.get("edited_body_markdown", ""), "business_name": self.business.name})
         repurpose = RepurposingAgent(self.business, self.case_study, post).execute({"title": post.title})
         refresh = RefreshPlannerAgent(self.business, self.case_study, post).execute({})
-        post.edited_body_markdown = edited.get("edited_body_markdown")
+        post.edited_body_markdown = compressed.get("compressed_text") or edited.get("edited_body_markdown")
         post.seo_title = seo.get("seo_title")
         post.meta_description = seo.get("meta_description")
         post.slug = seo.get("slug") or post.slug
@@ -82,7 +86,7 @@ class ContentPipelineAgent:
         post.money_page_alignment_json = json.dumps(alignment)
         post.lead_path_json = json.dumps(lead_path)
         post.lead_magnet_json = json.dumps(lead_magnet)
-        post.publish_readiness_json = json.dumps(readiness)
+        post.publish_readiness_json = json.dumps({**readiness, "article_style_guard": style_guard})
         post.tracking_plan_json = json.dumps(tracking)
         post.conversion_goal = lead_path.get("conversion_goal")
         post.primary_cta = lead_path.get("primary_cta")
@@ -105,7 +109,9 @@ class ContentPipelineAgent:
             "internal_links_exist": bool(links.get("links")),
             "human_review_checked": False,
         }
-        if not all([gate_checks["cta_exists"], gate_checks["money_page_exists"], gate_checks["internal_links_exist"]]):
+        if not style_guard.get("approved_for_wordpress_draft", False) and self.business.name == "The TV Sign":
+            post.pipeline_status = "needs_refresh"
+        elif not all([gate_checks["cta_exists"], gate_checks["money_page_exists"], gate_checks["internal_links_exist"]]):
             post.pipeline_status = "not_ready"
         elif gate_checks["claim_check_passed"] and checklist.get("ready_to_publish") and readiness.get("ready_for_review"):
             post.pipeline_status = "needs_human_review"
