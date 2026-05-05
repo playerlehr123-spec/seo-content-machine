@@ -53,60 +53,12 @@ jobs:
       - name: Debug output tree (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Get-ChildItem -Path mixpulse/build -Recurse | Select-Object FullName
-
-    - name: Package standalone beta artifact (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
+          Get-ChildItem -Path mixpulse/build -Recurse | Select-Object FullName
 
-          $candidates = Get-ChildItem -Path mixpulse/build -Recurse -File |
-            Where-Object {
-              $_.Name -like "*MixPulse*" -or
-              $_.Name -like "*.exe" -or
-              $_.Name -like "*.dll" -or
-              $_.Name -like "*.vst3"
-            }
-
-          $candidates | ForEach-Object {
-            Copy-Item $_.FullName -Destination beta/MixPulse-Windows-Beta -Force -ErrorAction SilentlyContinue
-          }
-
-          @(
-            "Standalone beta build."
-            "Run MixPulse.exe directly if included."
-            "If no EXE is present, inspect the included build output files."
-            "Unsigned beta build."
-          ) | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
-
-          $count = (Get-ChildItem -Path beta/MixPulse-Windows-Beta | Measure-Object).Count
-          if ($count -le 1) { throw "No Windows beta artifacts found after broad discovery." }
-
-      - name: Package standalone beta artifact (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
-          $exe = Get-ChildItem -Path mixpulse/build -Recurse -File -Filter MixPulse.exe | Select-Object -First 1
-          if ($exe) { Copy-Item $exe.FullName -Destination beta/MixPulse-Windows-Beta -Force }
-             @(
-            "Standalone beta build."
-            "Run MixPulse.exe directly."
-            "Unsigned beta build."
-          ) | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
-          if (-not $exe) { throw "No standalone beta artifact found" }
-
-      - name: Upload macOS artifact
-        if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
-        with:
-          name: MixPulse-macOS-Release
-          path: beta/MixPulse-macOS-Beta
-
-      - name: Upload Windows artifact
+      - name: Upload full Windows build folder
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: MixPulse-Windows-Release
-          path: beta/MixPulse-Windows-Beta
+          name: MixPulse-Windows-Build-Folder
+          path: mixpulse/build
