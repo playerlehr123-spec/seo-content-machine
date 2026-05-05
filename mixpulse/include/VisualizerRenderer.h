@@ -6,7 +6,7 @@
 class VisualizerRenderer
 {
 public:
-    void render(juce::Graphics&, juce::Rectangle<int>, const std::vector<float>& spectrum, VisualizerMode mode, float pulse);
+    void render(juce::Graphics&, juce::Rectangle<int>, const std::array<float, AudioAnalyzer::spectrumBins>& spectrum, VisualizerMode mode, float pulse);
 private:
     SpectrumBarsRenderer spectrum;
 };

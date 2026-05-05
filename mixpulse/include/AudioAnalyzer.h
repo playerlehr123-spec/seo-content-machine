@@ -5,15 +5,22 @@
 class AudioAnalyzer
 {
 public:
+    static constexpr int fftOrder = 10;
+    static constexpr int fftSize = 1 << fftOrder;
+    static constexpr int spectrumBins = 64;
+
     void prepare(double sampleRate, int samplesPerBlock);
     void analyze(const juce::AudioBuffer<float>&);
+
     MeterData& getMeterData() noexcept { return meter; }
     const MeterData& getMeterData() const noexcept { return meter; }
-    const std::vector<float>& getSpectrum() const noexcept { return spectrum; }
+
+    std::array<float, spectrumBins> getSpectrumSnapshot() const noexcept;
+
 private:
     MeterData meter;
-    std::vector<float> spectrum;
-    juce::dsp::FFT fft { 10 };
-    juce::dsp::WindowingFunction<float> window { 1024, juce::dsp::WindowingFunction<float>::hann };
-    std::array<float, 2048> fftData{};
+    juce::dsp::FFT fft { fftOrder };
+    juce::dsp::WindowingFunction<float> window { fftSize, juce::dsp::WindowingFunction<float>::hann };
+    std::array<float, fftSize * 2> fftData{};
+    std::array<std::atomic<float>, spectrumBins> spectrumAtomic{};
 };

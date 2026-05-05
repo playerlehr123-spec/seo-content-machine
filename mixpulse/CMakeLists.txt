@@ -16,10 +16,13 @@ endif()
 
 juce_add_plugin(MixPulse
     COMPANY_NAME "MixPulse"
+    BUNDLE_ID com.mixpulse.plugin
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
     IS_MIDI_EFFECT FALSE
+    VST3_CATEGORIES "Fx|Analyzer"
+    AU_MAIN_TYPE kAudioUnitType_Effect
     EDITOR_WANTS_KEYBOARD_FOCUS TRUE
     COPY_PLUGIN_AFTER_BUILD FALSE
     PLUGIN_MANUFACTURER_CODE MxPl
@@ -39,14 +42,14 @@ target_sources(MixPulse PRIVATE
     Source/VisualizerState.cpp
     Source/VisualizerRenderer.cpp
     Source/SpectrumBarsRenderer.cpp
-    Source/VisualizerWindow.cpp
-)
+    Source/VisualizerWindow.cpp)
 
 target_include_directories(MixPulse PRIVATE include)
 
 target_compile_definitions(MixPulse PRIVATE
     JUCE_WEB_BROWSER=0
-    JUCE_USE_CURL=0)
+    JUCE_USE_CURL=0
+    JUCE_VST3_CAN_REPLACE_VST2=0)
 
 target_link_libraries(MixPulse PRIVATE
     juce::juce_audio_basics
