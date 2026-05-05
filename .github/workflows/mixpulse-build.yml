@@ -1,0 +1,111 @@
+name: MixPulse Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout JUCE (pinned)
+        uses: actions/checkout@v4
+        with:
+          repository: juce-framework/JUCE
+          ref: 7.0.12
+          path: _deps/JUCE
+
+      - name: Configure (macOS)
+        if: runner.os == 'macOS'
+        run: >-
+          cmake -S mixpulse -B mixpulse/build
+          -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE
+          -DCMAKE_BUILD_TYPE=Release
+          -DMIXPULSE_BUILD_VST3=ON
+          -DMIXPULSE_BUILD_STANDALONE=ON
+          -DMIXPULSE_BUILD_AU=ON
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: >-
+          cmake -S mixpulse -B mixpulse/build
+          -DJUCE_DIR=${{ github.workspace }}\_deps\JUCE
+          -DCMAKE_BUILD_TYPE=Release
+          -DMIXPULSE_BUILD_VST3=ON
+          -DMIXPULSE_BUILD_STANDALONE=ON
+          -DMIXPULSE_BUILD_AU=OFF
+
+      - name: Build
+        run: cmake --build mixpulse/build --config Release --target MixPulse
+
+      - name: Debug output tree (macOS/Linux shell)
+        if: runner.os != 'Windows'
+        run: |
+          find mixpulse/build -maxdepth 6 -type d
+          find mixpulse/build -maxdepth 6 -type f
+
+      - name: Debug output tree (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path mixpulse/build -Recurse | Select-Object FullName
+
+      - name: Package beta artifacts (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          set -e
+          mkdir -p beta/MixPulse-macOS-Beta
+          cp -R mixpulse/build/MixPulse_artefacts/Release/VST3/MixPulse.vst3 beta/MixPulse-macOS-Beta/ || true
+          cp -R mixpulse/build/MixPulse_artefacts/Release/AU/MixPulse.component beta/MixPulse-macOS-Beta/ || true
+          cp -R mixpulse/build/MixPulse_artefacts/Release/Standalone/MixPulse.app beta/MixPulse-macOS-Beta/ || true
+          cat > beta/MixPulse-macOS-Beta/README_INSTALL.txt <<'TXT'
+Copy MixPulse.vst3 to:
+/Library/Audio/Plug-Ins/VST3/
+
+Copy MixPulse.component to:
+/Library/Audio/Plug-Ins/Components/
+
+Then rescan plugins in your DAW.
+
+Unsigned beta build: macOS may require right-click Open and Security approval.
+TXT
+          test -d beta/MixPulse-macOS-Beta/MixPulse.vst3 -o -d beta/MixPulse-macOS-Beta/MixPulse.component -o -d beta/MixPulse-macOS-Beta/MixPulse.app
+
+      - name: Package beta artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
+          if (Test-Path "mixpulse/build/MixPulse_artefacts/Release/VST3/MixPulse.vst3") { Copy-Item "mixpulse/build/MixPulse_artefacts/Release/VST3/MixPulse.vst3" -Destination beta/MixPulse-Windows-Beta -Recurse -Force }
+          if (Test-Path "mixpulse/build/MixPulse_artefacts/Release/Standalone/MixPulse.exe") { Copy-Item "mixpulse/build/MixPulse_artefacts/Release/Standalone/MixPulse.exe" -Destination beta/MixPulse-Windows-Beta -Force }
+          @"
+Copy MixPulse.vst3 to:
+C:\Program Files\Common Files\VST3\
+
+Then rescan plugins in your DAW.
+
+Unsigned beta build.
+"@ | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
+          if (-not (Test-Path "beta/MixPulse-Windows-Beta/MixPulse.vst3") -and -not (Test-Path "beta/MixPulse-Windows-Beta/MixPulse.exe")) { throw "No beta artifacts found." }
+
+      - name: Upload macOS artifact
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MixPulse-macOS-Release
+          path: beta/MixPulse-macOS-Beta
+
+      - name: Upload Windows artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MixPulse-Windows-Release
+          path: beta/MixPulse-Windows-Beta
