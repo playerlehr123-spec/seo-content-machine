@@ -1,47 +1,50 @@
-# MixPulse Phase 1 MVP (Ableton/FL Optimized Baseline)
+# MixPulse Phase 1 MVP (Compile-Focused)
 
-## File Tree
-- CMakeLists.txt
-- include/
-- Source/
+## Scope (Phase 1 only)
+Implemented now:
+- JUCE plugin targets: VST3, AU, Standalone
+- Analysis-only audio pass-through (no audio processing changes)
+- Peak/RMS meters with clip latch dots
+- LUFS M/S/I placeholders
+- True Peak placeholder (sample peak based)
+- Integrated loudness reference bar with -14 and -23 markers
+- Tap tempo + beat pulse trigger
+- Detachable spectrum visualizer window
+- Screenshot export of visualizer window
 
-## Implemented (Phase 1)
-- JUCE plugin targets (VST3/AU/Standalone)
-- Ableton/FL-oriented plugin metadata (VST3 Fx|Analyzer, AU effect type)
-- Audio pass-through with analysis-only process block
-- Peak/RMS/sample-peak metering
-- Atomic spectrum transfer from audio thread to GUI thread (lock-free snapshot)
-- Tap tempo (4 taps), BPM display
-- Beat pulse envelope
-- Main editor window and Dark Neon theme
-- Detachable visualizer window (always-on-top by default)
-- Spectrum bars visualizer
-- Screenshot export (S)
-- Keyboard shortcuts (T/B/V/R/S/F/Esc)
-
-## Scaffolded / TODO
-- Full BS.1770 loudness
-- Oversampled true peak
+Deferred (TODO):
+- Full ITU-R BS.1770 loudness gating
+- Oversampled true peak detection (dBTP)
 - Additional visualizer modes
-- Export manager, preset manager, settings persistence
+- NDI/PDF/CSV export and advanced creator FX
 
-## Deployment Notes for Ableton + FL Studio
-- Use VST3 format on Windows/macOS for both DAWs.
-- Use AU on macOS where needed for Ableton.
-- Keep plugin as insert FX; do not place on MIDI-only tracks.
-- Recommended QA matrix:
-  - Sample rates: 44.1/48/96 kHz
-  - Buffer sizes: 64/128/256/512 samples
-  - Session stress test: 8+ plugin instances
+## Build prerequisites
+- CMake 3.22+
+- C++17 compiler
+- JUCE 7.x checkout or JUCE package with CMake config
 
-## Build (macOS)
+## Exact build steps
+### macOS
 ```bash
-cmake -S . -B build -DJUCE_DIR=/path/to/JUCE
+cd mixpulse
+cmake -S . -B build -DJUCE_DIR=/absolute/path/to/JUCE
 cmake --build build --config Release
 ```
 
-## Build (Windows)
+### Windows (PowerShell)
 ```powershell
-cmake -S . -B build -DJUCE_DIR=C:/JUCE
+cd mixpulse
+cmake -S . -B build -DJUCE_DIR=C:/path/to/JUCE
 cmake --build build --config Release
 ```
+
+## Notes for Ableton + FL Studio deployment
+- Prefer VST3 for both Ableton and FL Studio on Windows/macOS.
+- AU is available for macOS hosts that use AU.
+- Keep plugin on audio/effect tracks (not MIDI-only tracks).
+- Validate with buffer sizes 64/128/256/512 and sample rates 44.1/48/96 kHz.
+
+## Known limitations in this phase
+- LUFS S/I are placeholders and not standards-accurate yet.
+- True Peak is sample-peak placeholder only.
+- Meter visuals are MVP-level and will be refined in later phases.

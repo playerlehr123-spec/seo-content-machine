@@ -13,13 +13,18 @@ public:
     void resized() override;
     bool keyPressed(const juce::KeyPress&) override;
     void timerCallback() override;
+
 private:
     void openVisualizer();
     void exportScreenshot();
+    void drawMeterColumn(juce::Graphics&, juce::Rectangle<int> area);
+    void drawVerticalBar(juce::Graphics&, juce::Rectangle<float> area, float value, juce::Colour baseColor, const juce::String& label);
+
     MixPulseAudioProcessor& processor;
     ThemeManager::Theme theme;
     juce::TextButton tapButton { "Tap (T)" }, visualizerButton { "Open Visualizer" };
     juce::ToggleButton beatSyncButton { "Beat Sync (B)" };
     std::unique_ptr<VisualizerWindow> visualizer;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MixPulseAudioProcessorEditor)
 };
