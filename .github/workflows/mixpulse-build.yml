@@ -63,11 +63,11 @@ jobs:
           mkdir -p beta/MixPulse-macOS-Beta
           app=$(find mixpulse/build -type d -name "MixPulse.app" | head -n 1 || true)
           [ -n "$app" ] && cp -R "$app" beta/MixPulse-macOS-Beta/
-          cat > beta/MixPulse-macOS-Beta/README_INSTALL.txt <<'TXT'
-Standalone beta build.
-Open MixPulse.app directly.
-Unsigned build: macOS may require right-click Open and Security approval.
-TXT
+              printf "%s\n" \
+            "Standalone beta build." \
+            "Open MixPulse.app directly." \
+            "Unsigned build: macOS may require right-click Open and Security approval." \
+            > beta/MixPulse-macOS-Beta/README_INSTALL.txt
           [ -n "$app" ] || (echo "No standalone beta artifact found" && exit 1)
 
       - name: Package standalone beta artifact (Windows)
@@ -77,11 +77,11 @@ TXT
           New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
           $exe = Get-ChildItem -Path mixpulse/build -Recurse -File -Filter MixPulse.exe | Select-Object -First 1
           if ($exe) { Copy-Item $exe.FullName -Destination beta/MixPulse-Windows-Beta -Force }
-          @"
-Standalone beta build.
-Run MixPulse.exe directly.
-Unsigned beta build.
-"@ | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
+             @(
+            "Standalone beta build."
+            "Run MixPulse.exe directly."
+            "Unsigned beta build."
+          ) | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
           if (-not $exe) { throw "No standalone beta artifact found" }
 
       - name: Upload macOS artifact
