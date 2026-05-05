@@ -1,0 +1,111 @@
+name: MixPulse Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout JUCE with fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/juce-framework/JUCE.git _deps/JUCE
+          cd _deps/JUCE
+          if git fetch --tags --depth 1 origin refs/tags/7.0.11:refs/tags/7.0.11 2>/dev/null; then
+            git checkout 7.0.11
+            echo "Using JUCE tag 7.0.11"
+          else
+            echo "JUCE tag 7.0.11 unavailable; falling back to master"
+            git checkout master
+          fi
+
+      - name: Configure (macOS)
+        if: runner.os == 'macOS'
+        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=ON -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=ON
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=ON -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=OFF
+
+      - name: Build
+        run: cmake --build mixpulse/build --config Release --target MixPulse
+
+      - name: Debug output tree (macOS/Linux shell)
+        if: runner.os != 'Windows'
+        run: |
+          find mixpulse/build -maxdepth 8 -type d
+          find mixpulse/build -maxdepth 8 -type f
+
+      - name: Debug output tree (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Get-ChildItem -Path mixpulse/build -Recurse | Select-Object FullName
+
+      - name: Package beta artifacts (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p beta/MixPulse-macOS-Beta
+          vst3=$(find mixpulse/build -type d -name "MixPulse.vst3" | head -n 1 || true)
+          comp=$(find mixpulse/build -type d -name "MixPulse.component" | head -n 1 || true)
+          app=$(find mixpulse/build -type d -name "MixPulse.app" | head -n 1 || true)
+          [ -n "$vst3" ] && cp -R "$vst3" beta/MixPulse-macOS-Beta/
+          [ -n "$comp" ] && cp -R "$comp" beta/MixPulse-macOS-Beta/
+          [ -n "$app" ] && cp -R "$app" beta/MixPulse-macOS-Beta/
+          cat > beta/MixPulse-macOS-Beta/README_INSTALL.txt <<'TXT'
+Copy MixPulse.vst3 to:
+/Library/Audio/Plug-Ins/VST3/
+
+Copy MixPulse.component to:
+/Library/Audio/Plug-Ins/Components/
+
+Then rescan plugins in your DAW.
+
+Unsigned beta build: macOS may require right-click Open and Security approval.
+TXT
+          [ -n "$vst3" ] || [ -n "$comp" ] || [ -n "$app" ] || (echo "No beta artifacts found" && exit 1)
+
+      - name: Package beta artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
+          $vst3 = Get-ChildItem -Path mixpulse/build -Recurse -Directory -Filter MixPulse.vst3 | Select-Object -First 1
+          $exe = Get-ChildItem -Path mixpulse/build -Recurse -File -Filter MixPulse.exe | Select-Object -First 1
+          if ($vst3) { Copy-Item $vst3.FullName -Destination beta/MixPulse-Windows-Beta -Recurse -Force }
+          if ($exe) { Copy-Item $exe.FullName -Destination beta/MixPulse-Windows-Beta -Force }
+          @"
+Copy MixPulse.vst3 to:
+C:\Program Files\Common Files\VST3\
+
+Then rescan plugins in your DAW.
+
+Unsigned beta build.
+"@ | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
+          if (-not $vst3 -and -not $exe) { throw "No beta artifacts found" }
+
+      - name: Upload macOS artifact
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MixPulse-macOS-Release
+          path: beta/MixPulse-macOS-Beta
+
+      - name: Upload Windows artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MixPulse-Windows-Release
+          path: beta/MixPulse-Windows-Beta
