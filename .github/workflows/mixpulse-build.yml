@@ -34,12 +34,12 @@ jobs:
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
-        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=ON -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=OFF
+        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=OFF -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=OFF
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=ON -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=OFF
+        run: cmake -S mixpulse -B mixpulse/build -DJUCE_DIR=${{ github.workspace }}/_deps/JUCE -DCMAKE_BUILD_TYPE=Release -DMIXPULSE_BUILD_VST3=OFF -DMIXPULSE_BUILD_STANDALONE=ON -DMIXPULSE_BUILD_AU=OFF
 
       - name: Build
         run: cmake --build mixpulse/build --config Release --target MixPulse
@@ -55,44 +55,34 @@ jobs:
         shell: pwsh
         run: Get-ChildItem -Path mixpulse/build -Recurse | Select-Object FullName
 
-      - name: Package beta artifacts (macOS)
+      - name: Package standalone beta artifact (macOS)
         if: runner.os == 'macOS'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p beta/MixPulse-macOS-Beta
-          vst3=$(find mixpulse/build -type d -name "MixPulse.vst3" | head -n 1 || true)
           app=$(find mixpulse/build -type d -name "MixPulse.app" | head -n 1 || true)
-          [ -n "$vst3" ] && cp -R "$vst3" beta/MixPulse-macOS-Beta/
           [ -n "$app" ] && cp -R "$app" beta/MixPulse-macOS-Beta/
           cat > beta/MixPulse-macOS-Beta/README_INSTALL.txt <<'TXT'
-Copy MixPulse.vst3 to:
-/Library/Audio/Plug-Ins/VST3/
-
-Then rescan plugins in your DAW.
-
-Unsigned beta build: macOS may require right-click Open and Security approval.
+Standalone beta build.
+Open MixPulse.app directly.
+Unsigned build: macOS may require right-click Open and Security approval.
 TXT
-          [ -n "$vst3" ] || [ -n "$app" ] || (echo "No beta artifacts found" && exit 1)
+          [ -n "$app" ] || (echo "No standalone beta artifact found" && exit 1)
 
-      - name: Package beta artifacts (Windows)
+      - name: Package standalone beta artifact (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path beta/MixPulse-Windows-Beta | Out-Null
-          $vst3 = Get-ChildItem -Path mixpulse/build -Recurse -Directory -Filter MixPulse.vst3 | Select-Object -First 1
           $exe = Get-ChildItem -Path mixpulse/build -Recurse -File -Filter MixPulse.exe | Select-Object -First 1
-          if ($vst3) { Copy-Item $vst3.FullName -Destination beta/MixPulse-Windows-Beta -Recurse -Force }
           if ($exe) { Copy-Item $exe.FullName -Destination beta/MixPulse-Windows-Beta -Force }
           @"
-Copy MixPulse.vst3 to:
-C:\Program Files\Common Files\VST3\
-
-Then rescan plugins in your DAW.
-
+Standalone beta build.
+Run MixPulse.exe directly.
 Unsigned beta build.
 "@ | Set-Content -Path beta/MixPulse-Windows-Beta/README_INSTALL.txt
-          if (-not $vst3 -and -not $exe) { throw "No beta artifacts found" }
+          if (-not $exe) { throw "No standalone beta artifact found" }
 
       - name: Upload macOS artifact
         if: runner.os == 'macOS'

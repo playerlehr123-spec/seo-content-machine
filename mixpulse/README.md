@@ -97,3 +97,12 @@ See `mixpulse/docs/QA_CHECKLIST.md`.
 - Current CI fix pass disables AU in CI (`MIXPULSE_BUILD_AU=OFF`) to reduce macOS build blockers and prioritize VST3/Standalone beta artifact output.
 - Local AU support remains in CMake option handling for developer builds.
 - If CI still fails, inspect the first failure line in configure/build logs and the debug output tree printed by workflow.
+
+
+## CI scope (temporary)
+- GitHub Actions currently proves **Standalone-only** beta builds on macOS and Windows.
+- CI flags currently used:
+  - `MIXPULSE_BUILD_VST3=OFF`
+  - `MIXPULSE_BUILD_STANDALONE=ON`
+  - `MIXPULSE_BUILD_AU=OFF`
+- VST3 CI build validation is the next target after Standalone gate stability.
