@@ -4,23 +4,25 @@
 #include "AudioAnalyzer.h"
 #include "BeatPulseEngine.h"
 #include "VisualizerState.h"
+#include "VisualRack.h"
 
 class VisualizerComponent : public juce::Component, private juce::Timer
 {
 public:
-    VisualizerComponent(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&);
+    VisualizerComponent(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&);
     void paint(juce::Graphics&) override;
     void timerCallback() override;
 private:
     AudioAnalyzer& analyzer;
     BeatPulseEngine& pulse;
     VisualizerState& state;
+    VisualRackState& rack;
 };
 
 class VisualizerWindow : public juce::DocumentWindow
 {
 public:
-    VisualizerWindow(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&);
+    VisualizerWindow(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&);
     void closeButtonPressed() override;
     void toggleFullscreen();
 private:

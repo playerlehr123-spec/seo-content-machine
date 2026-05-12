@@ -60,7 +60,8 @@ target_sources(MixPulse PRIVATE
     Source/VisualizerState.cpp
     Source/VisualizerRenderer.cpp
     Source/SpectrumBarsRenderer.cpp
-    Source/VisualizerWindow.cpp)
+    Source/VisualizerWindow.cpp
+    Source/VisualRack.cpp)
 
 target_include_directories(MixPulse PRIVATE include)
 

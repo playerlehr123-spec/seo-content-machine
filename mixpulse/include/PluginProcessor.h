@@ -4,6 +4,7 @@
 #include "TapTempoEngine.h"
 #include "BeatPulseEngine.h"
 #include "VisualizerState.h"
+#include "VisualRack.h"
 
 class MixPulseAudioProcessor : public juce::AudioProcessor
 {
@@ -33,4 +34,5 @@ public:
     TapTempoEngine tapTempo;
     BeatPulseEngine beatPulse;
     VisualizerState visualizerState;
+    VisualRackState visualRackState;
 };

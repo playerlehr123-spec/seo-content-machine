@@ -5,6 +5,7 @@
 - Analysis-only pass-through
 - Peak/RMS metering
 - Spectrum visualizer
+- Visual rack scaffold
 - CI artifacts
 
 ## Phase 1.5

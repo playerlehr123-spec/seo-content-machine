@@ -106,3 +106,5 @@ See `mixpulse/docs/QA_CHECKLIST.md`.
   - `MIXPULSE_BUILD_STANDALONE=ON`
   - `MIXPULSE_BUILD_AU=OFF`
 - VST3 CI build validation is the next target after Standalone gate stability.
+
+- Visual Rack concept: `mixpulse/docs/VISUAL_RACK_CONCEPT.md`
