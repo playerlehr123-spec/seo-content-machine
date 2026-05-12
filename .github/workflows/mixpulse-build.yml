@@ -78,24 +78,24 @@ jobs:
           New-Item -ItemType Directory -Path $betaDir -Force | Out-Null
 
           $readmePath = Join-Path $betaDir "README_INSTALL.txt"
-          @"
-MixPulse Windows Beta
-
-Standalone:
-Run MixPulse.exe directly if included.
-
-VST3:
-If MixPulse.vst3 is included, copy it to:
-C:\Program Files\Common Files\VST3\
-
-Then rescan plugins in your DAW.
-
-Notes:
-- Unsigned beta build.
-- Windows may warn on first launch.
-- VST3 support is experimental in this build.
-- Audio pass-through should remain unchanged.
-"@ | Set-Content -Path $readmePath
+          @(
+            "MixPulse Windows Beta"
+            ""
+            "Standalone:"
+            "Run MixPulse.exe directly if included."
+            ""
+            "VST3:"
+            "If MixPulse.vst3 is included, copy it to:"
+            "C:\Program Files\Common Files\VST3\"
+            ""
+            "Then rescan plugins in your DAW."
+            ""
+            "Notes:"
+            "- Unsigned beta build."
+            "- Windows may warn on first launch."
+            "- VST3 support is experimental in this build."
+            "- Audio pass-through should remain unchanged."
+          ) | Set-Content -Path $readmePath
 
           $exeItems = Get-ChildItem -Path mixpulse/build -Recurse -File | Where-Object { $_.Extension -eq ".exe" -and $_.Name -like "*MixPulse*" }
           foreach ($exe in $exeItems) {
