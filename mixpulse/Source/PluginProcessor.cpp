@@ -27,3 +27,7 @@ void MixPulseAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 }
 
 juce::AudioProcessorEditor* MixPulseAudioProcessor::createEditor() { return new MixPulseAudioProcessorEditor(*this); }
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new MixPulseAudioProcessor();
+}
