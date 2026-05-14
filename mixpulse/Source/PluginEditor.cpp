@@ -3,6 +3,7 @@
 #include "VisualizerRenderer.h"
 #include "Branding.h"
 #include "ExportPreset.h"
+#include "CreatorTemplate.h"
 
 namespace {
 float gainToDb(float g) { return juce::jlimit(-60.0f, 0.0f, juce::Decibels::gainToDecibels(std::max(1.0e-6f, g))); }
@@ -196,7 +197,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
         return;
     }
 
-    auto exportDir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile(kProductDisplayName).getChildFile("Exports");
+    auto exportDir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile(Branding::ProductDisplayName).getChildFile("Exports");
     exportDir.createDirectory();
 
     auto* sourceComponent = visualizer ? visualizer->getContentComponent() : nullptr;

@@ -45,6 +45,7 @@ jobs:
       - name: Debug candidate targets
         shell: pwsh
         if: failure()
+        continue-on-error: true
         run: cmake --build mixpulse/build --config Release --target help
 
       - name: Debug output tree (Windows)

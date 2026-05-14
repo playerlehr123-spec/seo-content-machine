@@ -2,6 +2,20 @@
 
 namespace BrandLayer
 {
+namespace
+{
+juce::var getPropertyOrDefault(const juce::DynamicObject* obj, const juce::Identifier& key, juce::var fallback)
+{
+    if (obj == nullptr)
+        return fallback;
+
+    if (obj->hasProperty(key))
+        return obj->getProperty(key);
+
+    return fallback;
+}
+}
+
 static juce::var toVar(const CreatorBrandState& s)
 {
     auto* o = new juce::DynamicObject();
@@ -33,19 +47,19 @@ bool loadPreset(CreatorBrandState& s, const juce::File& path)
     auto v = juce::JSON::parse(path);
     auto* o = v.getDynamicObject();
     if (!o) return false;
-    s.artistName = o->getProperty("artistName", s.artistName).toString();
-    s.trackTitle = o->getProperty("trackTitle", s.trackTitle).toString();
-    s.labelName = o->getProperty("labelName", s.labelName).toString();
-    s.callToAction = o->getProperty("callToAction", s.callToAction).toString();
-    s.releaseStatusText = o->getProperty("releaseStatusText", s.releaseStatusText).toString();
-    s.logoPath = o->getProperty("logoPath", s.logoPath).toString();
-    s.hasLogo = (bool) o->getProperty("hasLogo", s.hasLogo);
-    s.logoOpacity = (float) o->getProperty("logoOpacity", s.logoOpacity);
-    s.logoScale = (float) o->getProperty("logoScale", s.logoScale);
-    s.logoPositionMode = (int) o->getProperty("logoPositionMode", s.logoPositionMode);
-    s.brandPrimaryColor = juce::Colour::fromString(o->getProperty("brandPrimaryColor", s.brandPrimaryColor.toString()).toString());
-    s.brandSecondaryColor = juce::Colour::fromString(o->getProperty("brandSecondaryColor", s.brandSecondaryColor.toString()).toString());
-    s.brandAccentColor = juce::Colour::fromString(o->getProperty("brandAccentColor", s.brandAccentColor.toString()).toString());
+    s.artistName = getPropertyOrDefault(o, "artistName", s.artistName).toString();
+    s.trackTitle = getPropertyOrDefault(o, "trackTitle", s.trackTitle).toString();
+    s.labelName = getPropertyOrDefault(o, "labelName", s.labelName).toString();
+    s.callToAction = getPropertyOrDefault(o, "callToAction", s.callToAction).toString();
+    s.releaseStatusText = getPropertyOrDefault(o, "releaseStatusText", s.releaseStatusText).toString();
+    s.logoPath = getPropertyOrDefault(o, "logoPath", s.logoPath).toString();
+    s.hasLogo = (bool) getPropertyOrDefault(o, "hasLogo", s.hasLogo);
+    s.logoOpacity = (float) (double) getPropertyOrDefault(o, "logoOpacity", s.logoOpacity);
+    s.logoScale = (float) (double) getPropertyOrDefault(o, "logoScale", s.logoScale);
+    s.logoPositionMode = (int) getPropertyOrDefault(o, "logoPositionMode", s.logoPositionMode);
+    s.brandPrimaryColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandPrimaryColor", s.brandPrimaryColor.toString()).toString());
+    s.brandSecondaryColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandSecondaryColor", s.brandSecondaryColor.toString()).toString());
+    s.brandAccentColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandAccentColor", s.brandAccentColor.toString()).toString());
     return true;
 }
 
