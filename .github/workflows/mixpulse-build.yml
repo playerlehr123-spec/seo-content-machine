@@ -78,55 +78,56 @@ jobs:
           New-Item -ItemType Directory -Path $betaDir -Force | Out-Null
 
           $readmePath = Join-Path $betaDir "README_INSTALL.txt"
-          @"
-WaveFrame Windows Beta
-Internal codename/artifact name may still appear as MixPulse.
-
-Standalone:
-Run MixPulse.exe directly if included.
-
-VST3:
-If MixPulse.vst3 is included, copy it to:
-C:\Program Files\Common Files\VST3\
-
-Then open your DAW and rescan plugins.
-
-Ableton:
-Preferences > Plug-Ins > Rescan
-Then look for MixPulse or WaveFrame.
-
-FL Studio:
-Options > Manage plugins > Find installed plugins
-Then look for MixPulse or WaveFrame.
-
-Manual VST3 test:
-1. Load plugin on an audio track.
-2. Play audio through the track.
-3. Confirm audio passes through unchanged.
-4. Confirm meters move.
-5. Open/close plugin UI.
-6. Test Output button.
-7. Test Frame.
-8. Test HUD.
-9. Remove plugin from track.
-10. Reload plugin.
-
-Manual tests still required:
-- UI layout
-- mic/input meters
-- Frame button
-- HUD button
-- Creator Output
-- fullscreen
-- DAW plugin loading
-
-Notes:
-- Unsigned beta build.
-- Windows may warn on first launch.
-- VST3 support is experimental in this build.
-- Do not share public release until DAW test passes.
-- Audio pass-through should remain unchanged.
-"@ | Set-Content -Path $readmePath
+          $readmeLines = @(
+            "WaveFrame Windows Beta",
+            "Internal codename/artifact name may still appear as MixPulse.",
+            "",
+            "Standalone:",
+            "Run MixPulse.exe directly if included.",
+            "",
+            "VST3:",
+            "If MixPulse.vst3 is included, copy it to:",
+            "C:\Program Files\Common Files\VST3\",
+            "",
+            "Then open your DAW and rescan plugins.",
+            "",
+            "Ableton:",
+            "Preferences > Plug-Ins > Rescan",
+            "Then look for MixPulse or WaveFrame.",
+            "",
+            "FL Studio:",
+            "Options > Manage plugins > Find installed plugins",
+            "Then look for MixPulse or WaveFrame.",
+            "",
+            "Manual VST3 test:",
+            "1. Load plugin on an audio track.",
+            "2. Play audio through the track.",
+            "3. Confirm audio passes through unchanged.",
+            "4. Confirm meters move.",
+            "5. Open/close plugin UI.",
+            "6. Test Output button.",
+            "7. Test Frame.",
+            "8. Test HUD.",
+            "9. Remove plugin from track.",
+            "10. Reload plugin.",
+            "",
+            "Manual tests still required:",
+            "- UI layout",
+            "- mic/input meters",
+            "- Frame button",
+            "- HUD button",
+            "- Creator Output",
+            "- fullscreen",
+            "- DAW plugin loading",
+            "",
+            "Notes:",
+            "- Unsigned beta build.",
+            "- Windows may warn on first launch.",
+            "- VST3 support is experimental in this build.",
+            "- Do not share public release until DAW test passes.",
+            "- Audio pass-through should remain unchanged."
+          )
+          $readmeLines | Set-Content -Path $readmePath
 
           $exeItems = Get-ChildItem -Path mixpulse/build -Recurse -File | Where-Object { $_.Extension -eq ".exe" -and ($_.Name -like "*MixPulse*" -or $_.Name -like "*WaveFrame*") }
           foreach ($exe in $exeItems) {
