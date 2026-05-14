@@ -95,3 +95,9 @@ void MixPulseAudioProcessor::setStateInformation(const void* data, int sizeInByt
     brandState.logoPositionMode = (int)state.getProperty("logoPositionMode", brandState.logoPositionMode);
     brandState.hasLogo = brandState.logoPath.isNotEmpty() && juce::File(brandState.logoPath).existsAsFile();
 }
+
+
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new MixPulseAudioProcessor();
+}
