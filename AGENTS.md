@@ -48,6 +48,10 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 - Avoid shared UI, processor, and workflow files in 4x tasks.
 - Main bot handles integration.
 - 4x outputs should become scaffolding or module PRs, not direct main merges.
+- For any feature branch, identify the product pillar before implementation.
+- Prefer docs/scaffold first, then implementation.
+- Use the PR template checklist before final report.
+- For any UI change, include screenshot/testing notes.
 
 ## Forbidden Unless Explicitly Requested
 - Video export
