@@ -11,8 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache JUCE 7.0.11
+        id: juce_cache
+        uses: actions/cache@v4
+        with:
+          path: _deps/JUCE
+          key: windows-juce-7.0.11
+
       - name: Checkout JUCE tag 7.0.11
         id: juce_tag
+        if: steps.juce_cache.outputs.cache-hit != 'true'
         continue-on-error: true
         uses: actions/checkout@v4
         with:
@@ -21,12 +29,15 @@ jobs:
           path: _deps/JUCE
 
       - name: Checkout JUCE master fallback
-        if: steps.juce_tag.outcome == 'failure'
+        if: steps.juce_cache.outputs.cache-hit != 'true' && steps.juce_tag.outcome == 'failure'
         uses: actions/checkout@v4
         with:
           repository: juce-framework/JUCE
           ref: master
           path: _deps/JUCE
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
       - name: Configure (Windows)
         shell: pwsh
@@ -46,7 +57,13 @@ jobs:
         shell: pwsh
         if: failure()
         continue-on-error: true
-        run: cmake --build mixpulse/build --config Release --target help
+        run: |
+          try {
+            cmake --build mixpulse/build --config Release --target help
+          } catch {
+            Write-Warning "Candidate target listing failed: $_"
+          }
+          exit 0
 
       - name: Debug output tree (Windows)
         shell: pwsh
@@ -208,6 +225,48 @@ jobs:
           if (-not $vst3) { Write-Host "No VST3 package found in beta artifact."; exit 0 }
           Get-ChildItem -Path $vst3.FullName -Recurse | Select-Object FullName
           Write-Host "VST3 package structure found. DAW test still required."
+
+      - name: WaveFrame artifact summary
+        if: always()
+        shell: pwsh
+        run: |
+          $summary = @(
+            "# WaveFrame Build Summary",
+            "",
+            "- JUCE cache key: windows-juce-7.0.11",
+            "- JUCE cache hit: ${{ steps.juce_cache.outputs.cache-hit }}",
+            "- Artifact names: MixPulse-Windows-Beta, MixPulse-Windows-Build-Folder",
+            ""
+          )
+
+          $exeItems = @()
+          $vst3Items = @()
+
+          if (Test-Path "beta/MixPulse-Windows-Beta") {
+            $exeItems = @(Get-ChildItem -Path beta/MixPulse-Windows-Beta -Recurse -File | Where-Object { $_.Extension -eq ".exe" -and ($_.Name -like "*MixPulse*" -or $_.Name -like "*WaveFrame*") })
+            $vst3Items = @(Get-ChildItem -Path beta/MixPulse-Windows-Beta -Recurse -Directory | Where-Object { $_.Name -like "*.vst3" })
+          }
+
+          $summary += "## EXE found"
+          if ($exeItems.Count -gt 0) {
+            foreach ($exe in $exeItems) {
+              $summary += "- $($exe.FullName)"
+            }
+          } else {
+            $summary += "- None found"
+          }
+
+          $summary += ""
+          $summary += "## VST3 found"
+          if ($vst3Items.Count -gt 0) {
+            foreach ($vst3 in $vst3Items) {
+              $summary += "- $($vst3.FullName)"
+            }
+          } else {
+            $summary += "- None found"
+          }
+
+          $summary | Add-Content -Path $env:GITHUB_STEP_SUMMARY
 
       - name: Upload beta artifact
         uses: actions/upload-artifact@v4
