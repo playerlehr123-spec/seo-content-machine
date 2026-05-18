@@ -99,6 +99,7 @@ jobs:
           $readmeLines = @(
             "WaveFrame Windows Beta",
             "Internal codename/artifact name may still appear as MixPulse.",
+            "For full beta testing steps, see mixpulse/docs/BETA_ARTIFACT_TEST_PLAN.md in the repo.",
             "",
             "Standalone:",
             "Run MixPulse.exe directly if included.",

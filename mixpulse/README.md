@@ -113,6 +113,8 @@ See `mixpulse/docs/QA_CHECKLIST.md`.
 
 ## Beta tester docs
 - Install guide: `mixpulse/docs/BETA_INSTALL.md`
+- Beta artifact test plan: `mixpulse/docs/BETA_ARTIFACT_TEST_PLAN.md`
+- DAW smoke test checklist: `mixpulse/docs/DAW_SMOKE_TEST_CHECKLIST.md`
 - QA checklist: `mixpulse/docs/QA_CHECKLIST.md`
 - Roadmap: `mixpulse/docs/ROADMAP.md`
 
@@ -180,6 +182,8 @@ Current CI is intentionally **Windows-first**. Standalone remains the gating art
 - `mixpulse/docs/DEVELOPMENT_WORKFLOW.md`
 - `mixpulse/docs/AGENT_WORKFLOW.md`
 - `mixpulse/docs/CI_TROUBLESHOOTING.md`
+- `mixpulse/docs/BETA_ARTIFACT_TEST_PLAN.md`
+- `mixpulse/docs/DAW_SMOKE_TEST_CHECKLIST.md`
 - `mixpulse/docs/SOCIAL_CONTENT_MODULES.md`
 - `mixpulse/docs/UI_DIRECTION.md`
 - `mixpulse/docs/REQUEST_TOOL_WORKFLOW.md`
