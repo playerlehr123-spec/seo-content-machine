@@ -54,6 +54,15 @@ cmake -S . -B build -DJUCE_DIR=C:/path/to/JUCE
 cmake --build build --config Release
 ```
 
+### Local build doctor
+If JUCE already exists locally, run the WaveFrame build doctor from the repo root:
+
+```powershell
+scripts/check_waveframe.ps1 -JuceDir C:/path/to/JUCE
+```
+
+The script configures the MixPulse project with Windows-first beta flags, builds the standalone target first, falls back to `ALL_BUILD` if needed, and prints discovered EXE/VST3 artifacts.
+
 ## Current CI status
 - Windows-only CI is active.
 - The immediate goal is to produce a testable standalone EXE and/or VST3 artifact from CI.
@@ -168,6 +177,9 @@ Current CI is intentionally **Windows-first**. Standalone remains the gating art
 
 
 ## Docs index
+- `mixpulse/docs/DEVELOPMENT_WORKFLOW.md`
+- `mixpulse/docs/AGENT_WORKFLOW.md`
+- `mixpulse/docs/CI_TROUBLESHOOTING.md`
 - `mixpulse/docs/SOCIAL_CONTENT_MODULES.md`
 - `mixpulse/docs/UI_DIRECTION.md`
 - `mixpulse/docs/REQUEST_TOOL_WORKFLOW.md`
