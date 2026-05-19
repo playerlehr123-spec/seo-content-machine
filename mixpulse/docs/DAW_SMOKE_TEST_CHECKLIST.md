@@ -9,6 +9,9 @@ Use this short checklist for VST3 validation before sharing a beta build externa
 - Meter movement: Confirm meters respond to audio.
 - UI open/close: Open and close the plugin UI without a crash.
 - Output window: Confirm the Output button opens the output window.
+- HUD toggle: Click HUD and press `H`; confirm the compact meter view toggles without hiding the plugin controls.
+- Frame export: Select Current, Reel, Square, Feed, Thumb, and Stream presets; confirm the Frame button writes PNG stills only under `Documents\WaveFrame\Exports`.
+- Template selector: Select Release Announcement, Label Drop, and DJ Stream Overlay; confirm the visual module/guide changes and audio pass-through remains unchanged.
 - Remove/reload: Remove the plugin, then load it again.
 - Crash check: Confirm no crash, hang, or DAW instability.
 
@@ -19,6 +22,9 @@ Use this short checklist for VST3 validation before sharing a beta build externa
 - Meter movement: Confirm meters respond to audio.
 - UI open/close: Open and close the plugin UI without a crash.
 - Output window: Confirm the Output button opens the output window.
+- HUD toggle: Click HUD and press `H`; confirm the compact meter view toggles without hiding the plugin controls.
+- Frame export: Select Current, Reel, Square, Feed, Thumb, and Stream presets; confirm the Frame button writes PNG stills only under `Documents\WaveFrame\Exports`.
+- Template selector: Select Release Announcement, Label Drop, and DJ Stream Overlay; confirm the visual module/guide changes and audio pass-through remains unchanged.
 - Remove/reload: Remove the plugin, then load it again.
 - Crash check: Confirm no crash, hang, or DAW instability.
 
@@ -29,6 +35,9 @@ Use this short checklist for VST3 validation before sharing a beta build externa
 - Meter movement: Confirm meters respond to audio.
 - UI open/close: Open and close the plugin UI without a crash.
 - Output window: Confirm the Output button opens the output window.
+- HUD toggle: Click HUD and press `H`; confirm the compact meter view toggles without hiding the plugin controls.
+- Frame export: Select Current, Reel, Square, Feed, Thumb, and Stream presets; confirm the Frame button writes PNG stills only under `Documents\WaveFrame\Exports`.
+- Template selector: Select Release Announcement, Label Drop, and DJ Stream Overlay; confirm the visual module/guide changes and audio pass-through remains unchanged.
 - Remove/reload: Remove the plugin, then load it again.
 - Crash check: Confirm no crash, hang, or DAW instability.
 
@@ -39,5 +48,8 @@ Use this short checklist for VST3 validation before sharing a beta build externa
 - Meter movement: Confirm meters respond to audio.
 - UI open/close: Open and close the plugin UI without a crash.
 - Output window: Confirm the Output button opens the output window.
+- HUD toggle: Click HUD and press `H`; confirm the compact meter view toggles without hiding the plugin controls.
+- Frame export: Select Current, Reel, Square, Feed, Thumb, and Stream presets; confirm the Frame button writes PNG stills only under `Documents\WaveFrame\Exports`.
+- Template selector: Select Release Announcement, Label Drop, and DJ Stream Overlay; confirm the visual module/guide changes and audio pass-through remains unchanged.
 - Remove/reload: Remove the plugin, then load it again.
 - Crash check: Confirm no crash, hang, or host instability.
