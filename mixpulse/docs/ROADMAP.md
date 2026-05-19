@@ -34,6 +34,7 @@
 - social aspect guides
 - OBS workflow
 - template selector
+- Visual Modules Batch 2: Logo Reactor v1, Type Pulse v1, Promo Card v1, Particles v1/placeholder
 
 ## Tier 4 — Tool Suite
 - Particles
