@@ -38,8 +38,8 @@ The right panel organizes creator workflow into predictable groups.
 - Controls: visual module selector, intensity, motion, beat sync, tap, fullscreen.
 - Motion / Audio: beat pulse, bass/mid/high sensitivity, glow, and reactive scale placeholders.
 - Brand: artist, track, label, CTA, color/logo placeholders.
-- Templates: starter social template set.
-- Export: PNG frame export, aspect presets, OBS capture note.
+- Templates: starter social template set with purpose, module recommendation, aspect, and status.
+- Export: PNG frame export, dimensions, aspect presets, OBS capture note, and video marked future only.
 
 ## Templates Panel
 
@@ -54,6 +54,7 @@ Starter templates:
 - Album Motion
 
 Templates can safely set a visual module, CTA text, release text, and preferred still export preset.
+Template System v1 also stores short description, aspect label, export use case, brand text visibility, and implementation status.
 
 ## Export Panel
 

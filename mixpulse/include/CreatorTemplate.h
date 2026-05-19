@@ -4,6 +4,8 @@
 #include <vector>
 #include "VisualRack.h"
 
+enum class CreatorTemplateStatus { Implemented, Placeholder, Future };
+
 struct CreatorTemplatePreset
 {
     juce::String name;
@@ -13,6 +15,12 @@ struct CreatorTemplatePreset
     int preferredExportPresetIndex = 0;
     juce::String ctaText;
     juce::String releaseStatusText;
+    juce::String shortDescription;
+    juce::String preferredAspectRatio;
+    juce::String exportUseCase;
+    bool brandTextVisible = true;
+    CreatorTemplateStatus status = CreatorTemplateStatus::Placeholder;
 };
 
 const std::vector<CreatorTemplatePreset>& getBuiltInCreatorTemplates();
+juce::String creatorTemplateStatusLabel(CreatorTemplateStatus status);

@@ -14,7 +14,7 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     : AudioProcessorEditor(&p), processor(p), theme(ThemeManager::darkNeon())
 {
     setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
-    addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox);
+    addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(primaryColorButton); addAndMakeVisible(accentColorButton); addAndMakeVisible(showLogoButton); addAndMakeVisible(showTextButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox); addAndMakeVisible(logoPlacementBox); addAndMakeVisible(artistEditor); addAndMakeVisible(trackEditor); addAndMakeVisible(labelEditor); addAndMakeVisible(ctaEditor);
     tapButton.onClick = [this]{ processor.tapTempo.tap(juce::Time::getMillisecondCounterHiRes()/1000.0); processor.beatPulse.trigger(processor.tapTempo.getBpm().value_or(0.0)); };
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
@@ -58,23 +58,40 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     savePresetButton.onClick = [this]{ saveUserPreset(); };
     loadPresetButton.onClick = [this]{ loadUserPreset(); };
     resetDefaultButton.onClick = [this]{ resetDefaults(); };
+    primaryColorButton.onClick = [this]{ applyBrandColorPreset(0); };
+    accentColorButton.onClick = [this]{ applyBrandColorPreset(1); };
+
+    auto setupTextEditor = [this](juce::TextEditor& editor)
+    {
+        editor.setSelectAllWhenFocused(true);
+        editor.setJustification(juce::Justification::centredLeft);
+        editor.onTextChange = [this] { applyBrandEditorsToState(); };
+    };
+    setupTextEditor(artistEditor);
+    setupTextEditor(trackEditor);
+    setupTextEditor(labelEditor);
+    setupTextEditor(ctaEditor);
+
+    showLogoButton.onClick = [this]{ processor.brandState.showLogoPlaceholder = showLogoButton.getToggleState(); repaint(); };
+    showTextButton.onClick = [this]{ processor.brandState.showTextOverlay = showTextButton.getToggleState(); repaint(); };
+    logoPlacementBox.addItem("Center", (int)BrandLayer::LogoPositionMode::Center + 1);
+    logoPlacementBox.addItem("Top Left", (int)BrandLayer::LogoPositionMode::CornerTopLeft + 1);
+    logoPlacementBox.addItem("Top Right", (int)BrandLayer::LogoPositionMode::CornerTopRight + 1);
+    logoPlacementBox.addItem("Bottom Left", (int)BrandLayer::LogoPositionMode::CornerBottomLeft + 1);
+    logoPlacementBox.addItem("Bottom Right", (int)BrandLayer::LogoPositionMode::CornerBottomRight + 1);
+    logoPlacementBox.addItem("Watermark", (int)BrandLayer::LogoPositionMode::Watermark + 1);
+    logoPlacementBox.onChange = [this]
+    {
+        processor.brandState.logoPositionMode = juce::jmax(0, logoPlacementBox.getSelectedId() - 1);
+        repaint();
+    };
 
     for (int i = 0; i < (int)getBuiltInCreatorTemplates().size(); ++i)
         templateBox.addItem(getBuiltInCreatorTemplates()[(size_t)i].name, i + 1);
     templateBox.setSelectedId(1);
     templateBox.onChange = [this]
     {
-        const int idx = templateBox.getSelectedId() - 1;
-        if (idx >= 0 && idx < (int)getBuiltInCreatorTemplates().size())
-        {
-            const auto& tp = getBuiltInCreatorTemplates()[(size_t)idx];
-            processor.visualRackState.selectedModule.store((int)tp.module);
-            processor.brandState.callToAction = tp.ctaText;
-            processor.brandState.releaseStatusText = tp.releaseStatusText;
-            syncModuleBoxToProcessor();
-            exportPresetBox.setSelectedId(tp.preferredExportPresetIndex + 1, juce::sendNotificationSync);
-            setStatusMessage("Template: " + tp.name + " - " + tp.moduleName);
-        }
+        applyTemplatePreset(templateBox.getSelectedId() - 1);
     };
     syncUiToProcessorState();
     startTimerHz(30);
@@ -223,6 +240,15 @@ void MixPulseAudioProcessorEditor::resized()
         savePresetButton.setBounds(0, 0, 0, 0);
         loadPresetButton.setBounds(0, 0, 0, 0);
         resetDefaultButton.setBounds(0, 0, 0, 0);
+        primaryColorButton.setBounds(0, 0, 0, 0);
+        accentColorButton.setBounds(0, 0, 0, 0);
+        showLogoButton.setBounds(0, 0, 0, 0);
+        showTextButton.setBounds(0, 0, 0, 0);
+        logoPlacementBox.setBounds(0, 0, 0, 0);
+        artistEditor.setBounds(0, 0, 0, 0);
+        trackEditor.setBounds(0, 0, 0, 0);
+        labelEditor.setBounds(0, 0, 0, 0);
+        ctaEditor.setBounds(0, 0, 0, 0);
         return;
     }
 
@@ -240,18 +266,27 @@ void MixPulseAudioProcessorEditor::resized()
     fullscreenButton.setBounds(beatRow.removeFromLeft(56));
 
     right.removeFromTop(10);
-    right.removeFromTop(98);
+    right.removeFromTop(78);
     right.removeFromTop(10);
-    auto brand = right.removeFromTop(124);
-    auto brandButtons = brand.removeFromBottom(26);
-    savePresetButton.setBounds(brandButtons.removeFromLeft(84));
-    brandButtons.removeFromLeft(8);
-    loadPresetButton.setBounds(brandButtons.removeFromLeft(84));
-    brandButtons.removeFromLeft(8);
-    resetDefaultButton.setBounds(brandButtons.removeFromLeft(88));
+    auto brand = right.removeFromTop(174);
+    brand.removeFromTop(22);
+    artistEditor.setBounds(brand.removeFromTop(24).withTrimmedLeft(92));
+    trackEditor.setBounds(brand.removeFromTop(24).withTrimmedLeft(92));
+    labelEditor.setBounds(brand.removeFromTop(24).withTrimmedLeft(92));
+    ctaEditor.setBounds(brand.removeFromTop(24).withTrimmedLeft(92));
+    auto colorRow = brand.removeFromTop(24).withTrimmedLeft(92);
+    primaryColorButton.setBounds(colorRow.removeFromLeft(58));
+    colorRow.removeFromLeft(6);
+    accentColorButton.setBounds(colorRow.removeFromLeft(58));
+    auto logoRow = brand.removeFromTop(24).withTrimmedLeft(92);
+    showLogoButton.setBounds(logoRow.removeFromLeft(62));
+    logoRow.removeFromLeft(6);
+    showTextButton.setBounds(logoRow.removeFromLeft(56));
+    auto placementRow = brand.removeFromTop(26).withTrimmedLeft(92);
+    logoPlacementBox.setBounds(placementRow.removeFromLeft(132));
 
     right.removeFromTop(10);
-    auto templates = right.removeFromTop(76);
+    auto templates = right.removeFromTop(108);
     templates.removeFromTop(22);
     templateBox.setBounds(templates.removeFromTop(26));
 
@@ -261,6 +296,12 @@ void MixPulseAudioProcessorEditor::resized()
     exportPresetBox.setBounds(exportCard.removeFromTop(26));
     exportCard.removeFromTop(8);
     themeBox.setBounds(exportCard.removeFromTop(26).removeFromLeft(134));
+    auto presetButtons = exportCard.removeFromTop(28);
+    savePresetButton.setBounds(presetButtons.removeFromLeft(84));
+    presetButtons.removeFromLeft(8);
+    loadPresetButton.setBounds(presetButtons.removeFromLeft(84));
+    presetButtons.removeFromLeft(8);
+    resetDefaultButton.setBounds(presetButtons.removeFromLeft(88));
 }
 
 bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
@@ -303,8 +344,12 @@ void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Re
     auto inner = area.reduced(18, 42);
     auto meta = inner.removeFromTop(56);
     const auto moduleName = visualModuleName((VisualModuleType)processor.visualRackState.selectedModule.load());
+    const int templateIndex = juce::jlimit(0, (int)getBuiltInCreatorTemplates().size() - 1, templateBox.getSelectedId() - 1);
+    const auto& selectedTemplate = getBuiltInCreatorTemplates()[(size_t)templateIndex];
+    const int exportIndex = juce::jlimit(0, (int)getBuiltInExportPresets().size() - 1, exportPresetBox.getSelectedId() - 1);
+    const auto& exportPreset = getBuiltInExportPresets()[(size_t)exportIndex];
     drawLabelValue(g, meta.removeFromTop(22), "Module", moduleName);
-    drawLabelValue(g, meta.removeFromTop(22), "Template", templateBox.getText().isNotEmpty() ? templateBox.getText() : "Minimal Meter");
+    drawLabelValue(g, meta.removeFromTop(22), "Template", selectedTemplate.name + " / " + selectedTemplate.preferredAspectRatio);
 
     inner.removeFromTop(8);
     auto canvas = inner.toFloat().reduced(2.0f);
@@ -339,22 +384,36 @@ void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Re
     g.setColour(theme.text);
     g.setFont(juce::Font(26.0f, juce::Font::bold));
     g.drawText(moduleName, frame.toNearestInt().reduced(18), juce::Justification::centred);
+    if (processor.brandState.showTextOverlay)
+    {
+        auto copy = frame.toNearestInt().reduced(20);
+        g.setColour(processor.brandState.brandTextColor.withAlpha(0.86f));
+        g.setFont(juce::Font(18.0f, juce::Font::bold));
+        g.drawText(processor.brandState.artistName + " - " + processor.brandState.trackTitle, copy.removeFromTop(28), juce::Justification::centred);
+        g.setColour(processor.brandState.brandAccentColor.withAlpha(0.80f));
+        g.setFont(13.0f);
+        g.drawText(processor.brandState.callToAction + " / " + processor.brandState.labelName, copy, juce::Justification::centredBottom);
+    }
     g.setColour(theme.mutedText);
     g.setFont(13.0f);
-    g.drawText("Aspect guide / safe-area preview", frame.toNearestInt().reduced(18), juce::Justification::centredBottom);
+    g.drawText("Aspect guide / safe-area preview / still frame", frame.toNearestInt().reduced(18), juce::Justification::centredBottom);
 
     auto footer = inner.removeFromBottom(42);
-    drawPill(g, footer.removeFromLeft(118).reduced(0, 8), exportPresetShortLabel(exportPresetBox.getSelectedId() - 1), theme.accent);
+    drawPill(g, footer.removeFromLeft(118).reduced(0, 8), exportPreset.aspectLabel, theme.accent);
     footer.removeFromLeft(8);
-    drawPill(g, footer.removeFromLeft(150).reduced(0, 8), "PNG frame only", theme.secondary);
+    drawPill(g, footer.removeFromLeft(172).reduced(0, 8), exportPreset.width > 0 ? juce::String(exportPreset.width) + "x" + juce::String(exportPreset.height) : "Current size", theme.secondary);
     footer.removeFromLeft(8);
-    drawPill(g, footer.removeFromLeft(162).reduced(0, 8), "Video export: future", theme.mutedText);
+    drawPill(g, footer.removeFromLeft(158).reduced(0, 8), "Still PNG / video future", theme.mutedText);
 }
 
 void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce::Rectangle<int> area)
 {
     drawPanel(g, area, "Creator Controls");
     auto r = area.reduced(14, 42);
+    const int templateIndex = juce::jlimit(0, (int)getBuiltInCreatorTemplates().size() - 1, templateBox.getSelectedId() - 1);
+    const auto& selectedTemplate = getBuiltInCreatorTemplates()[(size_t)templateIndex];
+    const int exportIndex = juce::jlimit(0, (int)getBuiltInExportPresets().size() - 1, exportPresetBox.getSelectedId() - 1);
+    const auto& exportPreset = getBuiltInExportPresets()[(size_t)exportIndex];
 
     auto controls = r.removeFromTop(104);
     drawSectionTitle(g, controls.removeFromTop(20), "Controls");
@@ -364,35 +423,40 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     drawLabelValue(g, controls.removeFromTop(22), "Beat sync", processor.visualizerState.beatSync.load() ? "On" : "Off");
 
     r.removeFromTop(10);
-    auto motion = r.removeFromTop(98);
+    auto motion = r.removeFromTop(78);
     drawSectionTitle(g, motion.removeFromTop(20), "Motion / Audio");
     drawLabelValue(g, motion.removeFromTop(20), "Pulse", "beat pulse placeholder");
-    drawLabelValue(g, motion.removeFromTop(20), "Bass/Mid/High", "sensitivity TODO");
-    drawLabelValue(g, motion.removeFromTop(20), "Glow / Scale", "reactive placeholders");
+    drawLabelValue(g, motion.removeFromTop(20), "Reactive", "scale / glow placeholders");
 
     r.removeFromTop(10);
-    auto brand = r.removeFromTop(124);
-    drawSectionTitle(g, brand.removeFromTop(20), "Brand");
-    drawLabelValue(g, brand.removeFromTop(20), "Artist", processor.brandState.artistName);
-    drawLabelValue(g, brand.removeFromTop(20), "Track", processor.brandState.trackTitle);
-    drawLabelValue(g, brand.removeFromTop(20), "Label", processor.brandState.labelName);
-    drawLabelValue(g, brand.removeFromTop(20), "CTA", processor.brandState.callToAction);
-    drawLabelValue(g, brand.removeFromTop(20), "Logo", processor.brandState.logoPath.isNotEmpty() ? "preset path" : "placeholder layer");
+    auto brand = r.removeFromTop(174);
+    drawSectionTitle(g, brand.removeFromTop(20), "Brand Kit");
+    drawLabelValue(g, brand.removeFromTop(24), "Artist", "");
+    drawLabelValue(g, brand.removeFromTop(24), "Track", "");
+    drawLabelValue(g, brand.removeFromTop(24), "Label", "");
+    drawLabelValue(g, brand.removeFromTop(24), "CTA", "");
+    drawLabelValue(g, brand.removeFromTop(22), "Colors", "primary / accent placeholders");
+    drawLabelValue(g, brand.removeFromTop(22), "Logo", processor.brandState.showLogoPlaceholder ? "placeholder visible" : "hidden");
 
     r.removeFromTop(10);
-    auto templates = r.removeFromTop(76);
+    auto templates = r.removeFromTop(108);
     drawSectionTitle(g, templates.removeFromTop(20), "Templates");
     templates.removeFromTop(30);
+    drawLabelValue(g, templates.removeFromTop(20), "Purpose", selectedTemplate.bestFor);
+    drawLabelValue(g, templates.removeFromTop(20), "Module", selectedTemplate.moduleName);
+    drawLabelValue(g, templates.removeFromTop(20), "Status", creatorTemplateStatusLabel(selectedTemplate.status));
     g.setColour(theme.mutedText); g.setFont(11.0f);
-    g.drawText("Minimal Meter / Logo Reactor / Release / Label / Stream / Reel / Album", templates, juce::Justification::topLeft);
+    g.drawText(selectedTemplate.shortDescription, templates, juce::Justification::topLeft);
 
     r.removeFromTop(10);
     auto exportCard = r;
     drawSectionTitle(g, exportCard.removeFromTop(20), "Export");
     exportCard.removeFromTop(30);
-    drawLabelValue(g, exportCard.removeFromTop(20), "Still", "Current frame PNG");
-    drawLabelValue(g, exportCard.removeFromTop(20), "Aspects", "9:16 / 1:1 / 4:5 / 16:9");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Preset", exportPreset.name);
+    drawLabelValue(g, exportCard.removeFromTop(20), "Size", exportPreset.width > 0 ? juce::String(exportPreset.width) + "x" + juce::String(exportPreset.height) : "Current window");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Still", "Frame button writes PNG");
     drawLabelValue(g, exportCard.removeFromTop(20), "OBS", "use Output window capture");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Video", "future/TODO only");
 }
 
 void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectangle<int> area)
@@ -481,6 +545,7 @@ void MixPulseAudioProcessorEditor::syncUiToProcessorState()
     exportPresetBox.setSelectedId(processor.selectedExportPreset + 1, juce::dontSendNotification);
     themeBox.setSelectedId(processor.selectedTheme, juce::dontSendNotification);
     syncModuleBoxToProcessor();
+    syncBrandEditorsToState();
     applySelectedExportPresetToOutputGuide();
 }
 
@@ -489,8 +554,63 @@ void MixPulseAudioProcessorEditor::syncModuleBoxToProcessor()
     moduleBox.setSelectedId((int)processor.visualRackState.selectedModule.load() + 1, juce::dontSendNotification);
 }
 
+void MixPulseAudioProcessorEditor::syncBrandEditorsToState()
+{
+    artistEditor.setText(processor.brandState.artistName, false);
+    trackEditor.setText(processor.brandState.trackTitle, false);
+    labelEditor.setText(processor.brandState.labelName, false);
+    ctaEditor.setText(processor.brandState.callToAction, false);
+    showLogoButton.setToggleState(processor.brandState.showLogoPlaceholder, juce::dontSendNotification);
+    showTextButton.setToggleState(processor.brandState.showTextOverlay, juce::dontSendNotification);
+    logoPlacementBox.setSelectedId(processor.brandState.logoPositionMode + 1, juce::dontSendNotification);
+}
+
+void MixPulseAudioProcessorEditor::applyBrandEditorsToState()
+{
+    processor.brandState.artistName = artistEditor.getText().isNotEmpty() ? artistEditor.getText() : "Artist Name";
+    processor.brandState.trackTitle = trackEditor.getText().isNotEmpty() ? trackEditor.getText() : "Track Title";
+    processor.brandState.labelName = labelEditor.getText().isNotEmpty() ? labelEditor.getText() : "Label Name";
+    processor.brandState.callToAction = ctaEditor.getText().isNotEmpty() ? ctaEditor.getText() : "Out Now";
+    repaint();
+}
+
+void MixPulseAudioProcessorEditor::applyTemplatePreset(int templateIndex)
+{
+    if (templateIndex < 0 || templateIndex >= (int)getBuiltInCreatorTemplates().size())
+        return;
+
+    const auto& tp = getBuiltInCreatorTemplates()[(size_t)templateIndex];
+    processor.visualRackState.selectedModule.store((int)tp.module);
+    processor.brandState.callToAction = tp.ctaText;
+    processor.brandState.releaseStatusText = tp.releaseStatusText;
+    processor.brandState.showTextOverlay = tp.brandTextVisible;
+    processor.brandState.showLogoPlaceholder = tp.module == VisualModuleType::LogoPulse || tp.name.containsIgnoreCase("Logo") || tp.brandTextVisible;
+    syncModuleBoxToProcessor();
+    syncBrandEditorsToState();
+    exportPresetBox.setSelectedId(tp.preferredExportPresetIndex + 1, juce::sendNotificationSync);
+    setStatusMessage("Template: " + tp.name + " / " + tp.preferredAspectRatio + " / " + creatorTemplateStatusLabel(tp.status));
+}
+
+void MixPulseAudioProcessorEditor::applyBrandColorPreset(int presetIndex)
+{
+    if (presetIndex == 0)
+    {
+        processor.brandState.brandPrimaryColor = juce::Colour::fromRGB(32, 218, 255);
+        processor.brandState.brandBackgroundColor = juce::Colour::fromRGB(6, 9, 18);
+        primaryColorButton.setButtonText("Cyan");
+    }
+    else
+    {
+        processor.brandState.brandAccentColor = juce::Colour::fromRGB(255, 220, 120);
+        processor.brandState.brandTextColor = juce::Colours::white;
+        accentColorButton.setButtonText("Gold");
+    }
+    repaint();
+}
+
 void MixPulseAudioProcessorEditor::saveUserPreset()
 {
+    applyBrandEditorsToState();
     processor.selectedExportPreset = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
     processor.selectedTheme = themeBox.getSelectedId();
     processor.hudEnabled = hudMode;
@@ -514,6 +634,8 @@ void MixPulseAudioProcessorEditor::loadUserPreset()
         else setStatusMessage("Preset loaded - Logo file missing");
     }
     else setStatusMessage("Preset loaded");
+    syncBrandEditorsToState();
+    repaint();
 }
 
 void MixPulseAudioProcessorEditor::resetDefaults()
