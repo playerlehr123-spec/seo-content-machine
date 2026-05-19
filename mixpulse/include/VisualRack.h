@@ -8,7 +8,7 @@
 #include "BeatPulseEngine.h"
 #include "TapTempoEngine.h"
 
-enum class VisualModuleType { SpectrumBars, Waveform, Vectorscope, LogoPulse, TextCard, GradientField, ParticleBurstPlaceholder, TunnelPlaceholder, PlasmaPlaceholder };
+enum class VisualModuleType { SpectrumBars, Waveform, Vectorscope, LogoPulse, TextCard, GradientField, ParticleBurstPlaceholder, TunnelPlaceholder, PlasmaPlaceholder, TypePulse, PromoCard, Particles };
 enum class VisualFxType { Bloom, Mirror, Colorize, Scanlines, ChromaticSplit, FeedbackPlaceholder, PixelatePlaceholder, DisplacementPlaceholder };
 enum class ModSource { None, FullAmplitude, BassEnergy, LowMidEnergy, MidEnergy, HighEnergy, BeatPulse, TapTempoBpm, LufsMPlaceholder };
 enum class OutputPreset { Free, Landscape16x9, Square1x1, Portrait9x16, Portrait4x5, Thumbnail16x9 };

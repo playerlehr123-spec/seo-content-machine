@@ -6,6 +6,10 @@ const std::vector<VisualRackPreset> kBuiltInVisualRackPresets {
     {"Dark Neon Meter", VisualModuleType::SpectrumBars, OutputPreset::Landscape16x9, ModSource::FullAmplitude, true, true, true, false, false, 0.45f, 0.5f, 0.15f, 0.12f, 0.75f, 0.65f},
     {"Stream Overlay", VisualModuleType::SpectrumBars, OutputPreset::Landscape16x9, ModSource::BeatPulse, true, true, true, true, false, 0.35f, 0.45f, 0.2f, 0.1f, 0.7f, 0.7f},
     {"Reel Visualizer", VisualModuleType::SpectrumBars, OutputPreset::Portrait9x16, ModSource::BeatPulse, true, true, true, false, true, 0.45f, 0.55f, 0.1f, 0.2f, 0.8f, 0.75f},
+    {"Logo Reactor", VisualModuleType::LogoPulse, OutputPreset::Square1x1, ModSource::BeatPulse, true, false, true, false, false, 0.5f, 0.55f, 0.0f, 0.0f, 0.75f, 0.6f},
+    {"Type Pulse", VisualModuleType::TypePulse, OutputPreset::Portrait9x16, ModSource::BeatPulse, true, false, true, false, false, 0.35f, 0.6f, 0.0f, 0.0f, 0.8f, 0.7f},
+    {"Promo Card", VisualModuleType::PromoCard, OutputPreset::Portrait4x5, ModSource::FullAmplitude, true, false, true, false, false, 0.25f, 0.45f, 0.0f, 0.0f, 0.65f, 0.35f},
+    {"Particles v1", VisualModuleType::Particles, OutputPreset::Landscape16x9, ModSource::BeatPulse, true, false, true, false, true, 0.45f, 0.55f, 0.0f, 0.16f, 0.75f, 0.8f},
     {"Album Art Background", VisualModuleType::GradientField, OutputPreset::Square1x1, ModSource::FullAmplitude, true, false, true, false, false, 0.2f, 0.5f, 0.0f, 0.0f, 0.5f, 0.45f},
     {"Minimal Meter", VisualModuleType::SpectrumBars, OutputPreset::Free, ModSource::FullAmplitude, false, false, false, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.6f, 0.4f},
 };
@@ -59,12 +63,15 @@ juce::String visualModuleName(VisualModuleType module)
         case VisualModuleType::SpectrumBars: return "Spectrum Bars";
         case VisualModuleType::Waveform: return "Waveform";
         case VisualModuleType::Vectorscope: return "Vectorscope";
-        case VisualModuleType::LogoPulse: return "Logo Pulse";
+        case VisualModuleType::LogoPulse: return "Logo Reactor";
         case VisualModuleType::TextCard: return "Text Card";
         case VisualModuleType::GradientField: return "Gradient Field";
         case VisualModuleType::ParticleBurstPlaceholder: return "Particle Burst";
         case VisualModuleType::TunnelPlaceholder: return "Tunnel";
         case VisualModuleType::PlasmaPlaceholder: return "Plasma";
+        case VisualModuleType::TypePulse: return "Type Pulse";
+        case VisualModuleType::PromoCard: return "Promo Card";
+        case VisualModuleType::Particles: return "Particles";
     }
     return "Unknown";
 }

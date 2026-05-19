@@ -3,12 +3,13 @@
 const std::vector<CreatorTemplatePreset>& getBuiltInCreatorTemplates()
 {
     static const std::vector<CreatorTemplatePreset> templates {
-        { "Release Announcement", "IG post / reel cover", "Release Promo Card", VisualModuleType::TextCard, 3, "Out Now", "New Release" },
-        { "New Music Teaser", "Reels/TikTok", "Reel Visualizer", VisualModuleType::SpectrumBars, 1, "Presave / Out Now", "Teaser" },
-        { "Label Drop", "Label social", "Logo Reactor", VisualModuleType::LogoPulse, 2, "Out Now", "Label Drop" },
-        { "DJ Stream Overlay", "OBS", "Stream Overlay", VisualModuleType::SpectrumBars, 5, "Live", "Live Set" },
-        { "YouTube Thumbnail", "YouTube", "Promo Card", VisualModuleType::TextCard, 4, "Visualizer / Live Set", "Watch Now" },
-        { "Minimal Meter", "Utility", "Meter Overlay", VisualModuleType::SpectrumBars, 0, "WaveFrame", "Meter" }
+        { "Minimal Meter", "Utility", "Meter Overlay", VisualModuleType::SpectrumBars, 0, "WaveFrame", "Meter" },
+        { "Logo Reactor", "Artist/label identity", "Logo Reactor", VisualModuleType::LogoPulse, 2, "Listen", "Logo Pulse" },
+        { "Release Announcement", "IG post / reel cover", "Promo Card", VisualModuleType::PromoCard, 3, "Out Now", "New Release" },
+        { "Label Drop", "Label social", "Promo Card", VisualModuleType::PromoCard, 2, "Out Now", "Label Drop" },
+        { "Stream Overlay", "OBS", "Stream Overlay", VisualModuleType::Particles, 5, "Live", "Live Set" },
+        { "Reel Visualizer", "Reels/TikTok", "Type Pulse", VisualModuleType::TypePulse, 1, "Presave", "New Music" },
+        { "Album Motion", "Cover motion concept", "Particles", VisualModuleType::Particles, 2, "Listen", "Album Motion" }
     };
     return templates;
 }
