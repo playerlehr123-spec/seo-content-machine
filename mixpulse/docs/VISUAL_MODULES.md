@@ -7,18 +7,26 @@ WaveFrame visual modules are audio-reactive creator surfaces for still PNG expor
 | Module | Purpose | Status | Export Modes |
 |---|---|---|---|
 | Spectrum Bars | compact audio-reactive spectrum visual | active | PNG frame, live output/OBS |
-| Logo Reactor | brand/logo pulse visual | v1 beta | PNG frame, live output/OBS |
-| Type Pulse | audio-reactive artist/title text | v1 beta | PNG frame, live output/OBS |
-| Promo Card | branded social release card | v1 beta | PNG frame, live output/OBS |
-| Particles | deterministic audio-reactive dot field | v1 beta | PNG frame, live output/OBS |
+| Logo Reactor | brand/logo pulse visual | v1 renderer | PNG frame, live output/OBS |
+| Type Pulse | audio-reactive artist/title text | v1 renderer | PNG frame, live output/OBS |
+| Promo Card | branded social release card | v1 renderer | PNG frame, live output/OBS |
+| Particles | deterministic audio-reactive dot field | v1 renderer | PNG frame, live output/OBS |
 
 ## MVP Controls
 
-- Spectrum Bars: intensity, motion amount, beat sync, colorize/mirror/bloom toggles.
-- Logo Reactor: logo scale placeholder, glow amount, pulse amount, brand color, placement placeholder.
-- Type Pulse: text size placeholder, pulse amount, repetition placeholder, color/glow/alignment placeholder.
-- Promo Card: artist, title, label, CTA, status text, brand colors, aspect guide awareness.
-- Particles: density placeholder, size placeholder, motion amount, audio amount, color mode placeholder.
+- Spectrum Bars: intensity, motion amount, beat sync, colorize/mirror/bloom toggles, rounded bar readability.
+- Logo Reactor: brand mark scale, glow, opacity pulse, brand color, placement placeholder, artist/title/label text.
+- Type Pulse: repeated text field, centered title, CTA, color/glow pulse.
+- Promo Card: artist, title, label, CTA, status text, brand colors, aspect guide awareness, reactive spectrum strip.
+- Particles: deterministic dot grid, size/brightness/spread reaction, motion amount, brand color blending.
+
+## Batch 2 Polish Status
+
+- Logo Reactor now renders a cleaner beat-reactive brand mark with brand colors, placement awareness, glow rings, and artist/title text.
+- Type Pulse now layers repeated artist/title/CTA text behind a pulsing centered title.
+- Promo Card now has a more complete release-card composition with a cover placeholder, release tag, CTA, label footer, and reactive spectrum strip.
+- Particles now uses a denser deterministic field with audio-reactive spread, brightness, and size.
+- Spectrum Bars now has a clearer scope frame, center guide, and rounded bars while preserving existing meter/reference behavior elsewhere.
 
 ## Future Modules
 
