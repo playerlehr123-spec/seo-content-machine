@@ -270,13 +270,13 @@ jobs:
           $summary | Add-Content -Path $env:GITHUB_STEP_SUMMARY
 
       - name: Upload beta artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: MixPulse-Windows-Beta
           path: beta/MixPulse-Windows-Beta
 
       - name: Upload full build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: MixPulse-Windows-Build-Folder
           path: mixpulse/build
