@@ -1,11 +1,12 @@
 # WaveFrame Social Export Workflow
 
 ## Output now / near term
-- PNG still export
+- PNG still export from the Frame button
+- fixed-size still presets: 9:16, 1:1, 4:5, and 16:9
 - OBS capture for motion
 
 ## Output later
-- video export
+- video export research only; not implemented in this beta
 - SVG export for vector tools (if implemented)
 
 ## Presets and dimensions
@@ -27,3 +28,4 @@
 - no built-in video export yet
 - no MP4/WebM output yet
 - no transparent export pipeline yet
+- logo image import remains TODO; Logo Reactor uses a beat-pulsed brand placeholder

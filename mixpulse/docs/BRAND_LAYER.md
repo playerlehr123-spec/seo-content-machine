@@ -21,12 +21,13 @@ Brand Layer provides local-only creator content state for:
 
 ## Release Promo Card scope
 - Artist/Track/Label/CTA text model exists in state foundation.
+- Creator templates can set CTA/status defaults and route the preview to Promo Card or Logo Reactor placeholders.
 - Rich typography/template styling is future work.
 
 ## Future
 - Logo PNG import workflow polish
 - Editable promo text controls
 - Template packs
-- Fixed-resolution frame exports
+- Fixed-resolution frame export QA polish
 - Social preset bundles
 - Video export investigation (later)
