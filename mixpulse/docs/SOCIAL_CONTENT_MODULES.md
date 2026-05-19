@@ -3,22 +3,22 @@
 ## 1) Promo Card
 - Purpose: release announcement stills/reels
 - Controls: artist, title, label, CTA, logo, colors, aspect
-- Status: v1 beta card layout with audio-reactive accent/spectrum strip
+- Status: v1 renderer with release tag, cover placeholder, artist/title/CTA text, label footer, and audio-reactive accent/spectrum strip
 
 ## 2) Logo Reactor
 - Purpose: audio-reactive logo visual
 - Controls: logo, glow, scale, beat pulse, background
-- Status: v1 beta placeholder using WaveFrame/Brand Layer text; image import is TODO
+- Status: v1 renderer using Brand Layer text, color, opacity, scale, and placement placeholders; image import is TODO
 
 ## 3) Particles
 - Purpose: particle-inspired audio motion
 - Controls: density, size, frequency, motion, audio amount
-- Status: v1 beta deterministic dot field; no heavy physics or shader SDK
+- Status: v1 renderer with deterministic dot field, audio-reactive brightness, size, and spread; no heavy physics or shader SDK
 
 ## 4) Type Pulse
 - Purpose: audio-reactive text pattern
 - Controls: text, font size, repetition, color, pulse amount
-- Status: v1 beta using Brand Layer defaults; editable text UI is TODO
+- Status: v1 renderer using repeated artist/title/CTA text and a pulsing centered title; editable text UI is TODO
 
 ## 5) Pixelator
 - Purpose: image/logo pixel treatment
