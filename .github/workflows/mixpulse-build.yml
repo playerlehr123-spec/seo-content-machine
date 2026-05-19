@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Cache JUCE 7.0.11
         id: juce_cache
@@ -22,7 +22,7 @@ jobs:
         id: juce_tag
         if: steps.juce_cache.outputs.cache-hit != 'true'
         continue-on-error: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: juce-framework/JUCE
           ref: 7.0.11
@@ -30,7 +30,7 @@ jobs:
 
       - name: Checkout JUCE master fallback
         if: steps.juce_cache.outputs.cache-hit != 'true' && steps.juce_tag.outcome == 'failure'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: juce-framework/JUCE
           ref: master
