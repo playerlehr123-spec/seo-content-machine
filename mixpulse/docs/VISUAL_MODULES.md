@@ -28,6 +28,12 @@ WaveFrame visual modules are audio-reactive creator surfaces for still PNG expor
 - Particles now uses a denser deterministic field with audio-reactive spread, brightness, and size.
 - Spectrum Bars now has a clearer scope frame, center guide, and rounded bars while preserving existing meter/reference behavior elsewhere.
 
+## Brand Kit + Templates
+
+- Visual modules read Brand Kit text, color, logo visibility, text overlay visibility, placement, scale, and opacity where supported.
+- Creator templates recommend visual modules and still-frame aspect presets.
+- Template metadata distinguishes implemented modules from placeholder/future workflows.
+
 ## Future Modules
 
 | Module | Purpose | Status |

@@ -24,6 +24,10 @@ private:
     void syncUiToProcessorState();
     void applySelectedExportPresetToOutputGuide();
     void syncModuleBoxToProcessor();
+    void syncBrandEditorsToState();
+    void applyBrandEditorsToState();
+    void applyTemplatePreset(int templateIndex);
+    void applyBrandColorPreset(int presetIndex);
     void drawHeader(juce::Graphics&, juce::Rectangle<int> area);
     void drawPreviewCanvas(juce::Graphics&, juce::Rectangle<int> area);
     void drawRightControlPanel(juce::Graphics&, juce::Rectangle<int> area);
@@ -39,8 +43,10 @@ private:
     MixPulseAudioProcessor& processor;
     ThemeManager::Theme theme;
     juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset Default" };
-    juce::ToggleButton beatSyncButton { "Beat Sync" };
-    juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox;
+    juce::TextButton primaryColorButton { "Cyan" }, accentColorButton { "Gold" };
+    juce::ToggleButton beatSyncButton { "Beat Sync" }, showLogoButton { "Logo" }, showTextButton { "Text" };
+    juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox, logoPlacementBox;
+    juce::TextEditor artistEditor, trackEditor, labelEditor, ctaEditor;
 
     float peakHoldL = -60.0f, peakHoldR = -60.0f, rmsHoldL = -60.0f, rmsHoldR = -60.0f;
     bool hudMode = false;

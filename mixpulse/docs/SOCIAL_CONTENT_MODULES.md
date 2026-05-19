@@ -44,3 +44,9 @@
 - PNG still/frame export only.
 - OBS remains the current workaround for motion capture.
 - No built-in video export, upload, timeline, NDI, Spout, Syphon, or shader SDK.
+
+## Creator Template System v1
+
+- Templates now carry aspect, use-case, module recommendation, brand text visibility, and implementation status metadata.
+- Brand Kit v1 shares artist, track, label, CTA, text/logo visibility, placement, and safe color placeholder state with renderer modules.
+- Export presets are still-frame-first and clearly labeled for `9:16`, `1:1`, `4:5`, and `16:9` social workflows.
