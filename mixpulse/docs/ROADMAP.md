@@ -25,6 +25,7 @@
 - better output window
 - spectrum bars v2
 - frame export reliability
+- UI/UX Polish Pass 1: cleaner layout, larger preview, grouped controls, right-side creator panels, clearer export/template workflow, still no video export
 
 ## Tier 3 — Creator Templates
 - Brand Layer
