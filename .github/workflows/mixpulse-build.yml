@@ -13,7 +13,7 @@ jobs:
 
       - name: Cache JUCE 7.0.11
         id: juce_cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: _deps/JUCE
           key: windows-juce-7.0.11
