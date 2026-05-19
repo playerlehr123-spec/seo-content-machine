@@ -54,8 +54,11 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
         if (idx >= 0 && idx < (int)getBuiltInCreatorTemplates().size())
         {
             const auto& tp = getBuiltInCreatorTemplates()[(size_t)idx];
+            processor.visualRackState.selectedModule.store((int)tp.module);
+            processor.brandState.callToAction = tp.ctaText;
+            processor.brandState.releaseStatusText = tp.releaseStatusText;
             exportPresetBox.setSelectedId(tp.preferredExportPresetIndex + 1, juce::sendNotificationSync);
-            setStatusMessage("Template: " + tp.name + " • " + tp.moduleName);
+            setStatusMessage("Template: " + tp.name + " - " + tp.moduleName);
         }
     };
     syncUiToProcessorState();
@@ -91,8 +94,8 @@ void MixPulseAudioProcessorEditor::drawMeterColumn(juce::Graphics& g, juce::Rect
     for (auto db : {0,-3,-6,-9,-12,-24}) { auto y=dbToY((float)db,ticks); g.setColour(theme.grid); g.drawHorizontalLine((int)y,ticks.getX(),ticks.getRight()); g.setColour(theme.mutedText); g.drawText(juce::String(db),(int)ticks.getRight()-30,(int)y-8,28,14,juce::Justification::right); }
 
     const auto& m = processor.analyzer.getMeterData(); auto bw=ticks.getWidth()/5.2f;
-    drawVerticalBar(g,{ticks.getX()+bw*0.2f,ticks.getY(),bw,ticks.getHeight()},m.peakL.load(),theme.left,"Pk L",peakHoldL);
-    drawVerticalBar(g,{ticks.getX()+bw*1.3f,ticks.getY(),bw,ticks.getHeight()},m.peakR.load(),theme.right,"Pk R",peakHoldR);
+    drawVerticalBar(g,{ticks.getX()+bw*0.2f,ticks.getY(),bw,ticks.getHeight()},m.peakL.load(),theme.left,"Peak L",peakHoldL);
+    drawVerticalBar(g,{ticks.getX()+bw*1.3f,ticks.getY(),bw,ticks.getHeight()},m.peakR.load(),theme.right,"Peak R",peakHoldR);
     drawVerticalBar(g,{ticks.getX()+bw*2.7f,ticks.getY(),bw,ticks.getHeight()},m.rmsL.load(),theme.left.withAlpha(0.7f),"RMS L",rmsHoldL);
     drawVerticalBar(g,{ticks.getX()+bw*3.8f,ticks.getY(),bw,ticks.getHeight()},m.rmsR.load(),theme.right.withAlpha(0.7f),"RMS R",rmsHoldR);
     g.setColour(m.clipLatched.load()?theme.warningDot:juce::Colours::darkgrey); g.fillEllipse(panel.getX()+10,panel.getY()+8,7,7); g.fillEllipse(panel.getX()+22,panel.getY()+8,7,7);
@@ -121,7 +124,7 @@ void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
         auto& m=processor.analyzer.getMeterData();
         g.setColour(theme.text); g.setFont(18.0f);
         g.drawText("HUD  BPM " + (processor.tapTempo.getBpm()?juce::String(*processor.tapTempo.getBpm(),1):"--.-"), hud.removeFromTop(28), juce::Justification::left);
-        g.drawText("LUFS M " + juce::String(m.lufsM.load(),1) + "  TP " + juce::String(gainToDb(m.truePeak.load()),1), hud.removeFromTop(24), juce::Justification::left);
+        g.drawText("LUFS M " + juce::String(m.lufsM.load(),1) + "  True Peak " + juce::String(gainToDb(m.truePeak.load()),1) + " dB", hud.removeFromTop(24), juce::Justification::left);
     }
     else
     {
@@ -132,13 +135,13 @@ void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
     g.drawText("LUFS M  " + juce::String(m.lufsM.load(),1), loud.removeFromTop(24), juce::Justification::left);
     g.drawText("LUFS S  --.-", loud.removeFromTop(24), juce::Justification::left);
     g.drawText("LUFS I  --.-", loud.removeFromTop(24), juce::Justification::left);
-    g.drawText("TP      " + juce::String(gainToDb(m.truePeak.load()),1), loud.removeFromTop(24), juce::Justification::left);
+    g.drawText("True Peak  " + juce::String(gainToDb(m.truePeak.load()),1) + " dB", loud.removeFromTop(24), juce::Justification::left);
 
     auto ref=right.removeFromTop(26).reduced(12,5).toFloat(); g.setColour(theme.grid); g.fillRoundedRectangle(ref,3);
     auto mx=[ref](float l){return juce::jmap(l,-30.0f,-6.0f,ref.getX(),ref.getRight());}; g.setColour(theme.secondary.withAlpha(0.45f)); g.drawVerticalLine((int)mx(-6),ref.getY(),ref.getBottom()); g.drawVerticalLine((int)mx(-12),ref.getY(),ref.getBottom()); g.drawVerticalLine((int)mx(-14),ref.getY(),ref.getBottom()); g.drawVerticalLine((int)mx(-23),ref.getY(),ref.getBottom()); g.setColour(theme.mutedText); g.drawText("LUFS refs", (int)ref.getX(), (int)ref.getY()-12, 80, 10, juce::Justification::left);
 
-    auto preview=right.removeFromTop(124).reduced(12); g.setColour(theme.grid); g.drawRoundedRectangle(preview.toFloat(),6,1); g.drawText("Creator Output Window Preview", preview.removeFromTop(22), juce::Justification::left); g.drawText("Spectrum Preview", preview.removeFromTop(18), juce::Justification::left); g.drawText("Other modules are placeholders", preview.removeFromTop(18), juce::Justification::left);
-    auto visCtl=right.reduced(12); g.setColour(theme.grid); g.drawRoundedRectangle(visCtl.toFloat(),6,1); g.drawText("Visual Rack", visCtl.removeFromTop(22), juce::Justification::left); g.drawText("Preset: Dark Neon Meter (placeholder)", visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Module: " + visualModuleName((VisualModuleType) processor.visualRackState.selectedModule.load()), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("FX: Bloom " + juce::String(processor.visualRackState.fxBloom.load()?"ON":"OFF") + " / Mirror " + juce::String(processor.visualRackState.fxMirror.load()?"ON":"OFF") + " / Colorize " + juce::String(processor.visualRackState.fxColorize.load()?"ON":"OFF"), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("FX: Scanlines " + juce::String(processor.visualRackState.fxScanlines.load()?"ON":"OFF") + " / Chromatic " + juce::String(processor.visualRackState.fxChromaticSplit.load()?"ON":"OFF"), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Aspect: " + juce::String(processor.visualRackState.outputPreset.load()) + " / Export: " + exportPresetShortLabel(exportPresetBox.getSelectedId()-1), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Template: " + templateBox.getText() + " • PNG only beta", visCtl.removeFromTop(18), juce::Justification::left);
+    auto preview=right.removeFromTop(124).reduced(12); g.setColour(theme.grid); g.drawRoundedRectangle(preview.toFloat(),6,1); g.drawText("Creator Output Window Preview", preview.removeFromTop(22), juce::Justification::left); g.drawText("Brand: " + processor.brandState.artistName + " / " + processor.brandState.trackTitle, preview.removeFromTop(18), juce::Justification::left); g.drawText("CTA: " + processor.brandState.callToAction + " / " + processor.brandState.labelName, preview.removeFromTop(18), juce::Justification::left);
+    auto visCtl=right.reduced(12); g.setColour(theme.grid); g.drawRoundedRectangle(visCtl.toFloat(),6,1); g.drawText("Visual Rack", visCtl.removeFromTop(22), juce::Justification::left); g.drawText("Preset: Dark Neon Meter (placeholder)", visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Module: " + visualModuleName((VisualModuleType) processor.visualRackState.selectedModule.load()), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("FX: Bloom " + juce::String(processor.visualRackState.fxBloom.load()?"ON":"OFF") + " / Mirror " + juce::String(processor.visualRackState.fxMirror.load()?"ON":"OFF") + " / Colorize " + juce::String(processor.visualRackState.fxColorize.load()?"ON":"OFF"), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("FX: Scanlines " + juce::String(processor.visualRackState.fxScanlines.load()?"ON":"OFF") + " / Chromatic " + juce::String(processor.visualRackState.fxChromaticSplit.load()?"ON":"OFF"), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Aspect: " + juce::String(processor.visualRackState.outputPreset.load()) + " / Export: " + exportPresetShortLabel(exportPresetBox.getSelectedId()-1), visCtl.removeFromTop(18), juce::Justification::left); g.drawText("Template: " + templateBox.getText() + " - PNG still export only", visCtl.removeFromTop(18), juce::Justification::left);
     g.drawText("QA: " + juce::String(Branding::BetaStatus) + " / " + (juce::JUCEApplicationBase::isStandaloneApp() ? "Standalone" : "VST3 / Host"), visCtl.removeFromTop(18), juce::Justification::left);
     }
 
@@ -169,7 +172,7 @@ bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
     return false;
 }
 void MixPulseAudioProcessorEditor::timerCallback(){ repaint(); }
-void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState); visualizer->setVisible(true); visualizer->toFront(true);} 
+void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true);}
 void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
 {
     const int idx = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
@@ -210,13 +213,15 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
 
     juce::Image img(juce::Image::ARGB, w, h, true);
     juce::Graphics gg(img);
-    if (preset.width > 0 && preset.height > 0 && sourceComponent != this)
+    if (preset.width > 0 && preset.height > 0)
     {
-        float sx = (float)w / (float)sourceComponent->getWidth();
-        float sy = (float)h / (float)sourceComponent->getHeight();
-        gg.addTransform(juce::AffineTransform::scale(sx, sy));
+        VisualizerRenderer renderer;
+        renderer.render(gg, { 0, 0, w, h }, processor.analyzer.getSpectrumSnapshot(), processor.visualizerState.mode.load(), processor.beatPulse.getPulse(), processor.visualRackState, &processor.brandState);
     }
-    sourceComponent->paintEntireComponent(gg, false);
+    else
+    {
+        sourceComponent->paintEntireComponent(gg, false);
+    }
 
     auto stamp = juce::Time::getCurrentTime().formatted("%Y-%m-%d_%H-%M-%S");
     auto safeName = exportPresetShortLabel(presetIndex).removeCharacters(" /:");
@@ -226,7 +231,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     if (!os.openedOk()) { setStatusMessage("Export failed: cannot create output file"); return; }
     if (!png.writeImageToStream(img, os)) { setStatusMessage("Export failed: PNG encoder error"); return; }
 
-    setStatusMessage("Saved " + exportPresetShortLabel(presetIndex) + " PNG to Documents/WaveFrame/Exports");
+    setStatusMessage("Saved " + exportPresetShortLabel(presetIndex) + " PNG " + juce::String(w) + "x" + juce::String(h));
 }
 
 

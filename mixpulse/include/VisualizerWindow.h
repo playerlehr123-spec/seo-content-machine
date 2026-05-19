@@ -5,11 +5,12 @@
 #include "BeatPulseEngine.h"
 #include "VisualizerState.h"
 #include "VisualRack.h"
+#include "BrandLayer.h"
 
 class VisualizerComponent : public juce::Component, private juce::Timer
 {
 public:
-    VisualizerComponent(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&);
+    VisualizerComponent(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&, BrandLayer::CreatorBrandState&);
     void paint(juce::Graphics&) override;
     void timerCallback() override;
 private:
@@ -17,12 +18,13 @@ private:
     BeatPulseEngine& pulse;
     VisualizerState& state;
     VisualRackState& rack;
+    BrandLayer::CreatorBrandState& brand;
 };
 
 class VisualizerWindow : public juce::DocumentWindow
 {
 public:
-    VisualizerWindow(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&);
+    VisualizerWindow(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&, BrandLayer::CreatorBrandState&);
     void closeButtonPressed() override;
     void toggleFullscreen();
 private:
