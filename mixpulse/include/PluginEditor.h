@@ -24,6 +24,13 @@ private:
     void syncUiToProcessorState();
     void applySelectedExportPresetToOutputGuide();
     void syncModuleBoxToProcessor();
+    void configureTooltips();
+    void configureControlSlider(juce::Slider&, double min, double max, double interval, const juce::String& suffix);
+    void syncControlSlidersToProcessor();
+    int getSelectedTemplateIndex() const;
+    int getSelectedExportPresetIndex() const;
+    juce::String getTemplateStatusText() const;
+    juce::String getExportStatusText() const;
     void drawHeader(juce::Graphics&, juce::Rectangle<int> area);
     void drawPreviewCanvas(juce::Graphics&, juce::Rectangle<int> area);
     void drawRightControlPanel(juce::Graphics&, juce::Rectangle<int> area);
@@ -41,6 +48,7 @@ private:
     juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset Default" };
     juce::ToggleButton beatSyncButton { "Beat Sync" };
     juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox;
+    juce::Slider intensitySlider, motionSlider;
 
     float peakHoldL = -60.0f, peakHoldR = -60.0f, rmsHoldL = -60.0f, rmsHoldR = -60.0f;
     bool hudMode = false;

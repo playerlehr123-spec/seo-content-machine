@@ -37,6 +37,7 @@
 - template selector
 - Visual Modules Batch 2: Logo Reactor v1, Type Pulse v1, Promo Card v1, Particles v1/placeholder
 - Visual Modules Batch 2 polish: cleaner v1 renderers for Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars readability
+- Interaction + Control Polish: intensity/motion sliders, safer selector state, clearer button tooltips, status feedback, and reset defaults
 
 ## Tier 4 — Tool Suite
 - Particles
