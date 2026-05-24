@@ -4,6 +4,8 @@
 - PNG still export from the Frame button
 - fixed-size still presets: 9:16, 1:1, 4:5, and 16:9
 - OBS capture for motion
+- export preset changes report selected aspect/dimensions and still-PNG status in the UI
+- Frame remains current-output still capture only; it does not imply video export
 
 ## Output later
 - video export research only; not implemented in this beta

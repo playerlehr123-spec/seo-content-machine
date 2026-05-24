@@ -31,6 +31,12 @@ Creator Templates are workflow presets that combine:
 - Use Export Frame for stills/covers.
 - Use OBS recording for motion video capture.
 
+## Interaction status
+- The right control panel shows the selected template, use case, and recommended module.
+- Invalid or empty template selections fall back to the safe default template.
+- Template changes may update the visual module and preferred still export preset.
+- Deeper template editing remains future/TODO.
+
 ## Current limitations
 - PNG only (no built-in video export).
 - No MP4/WebM, NDI, Spout, or Syphon.

@@ -15,13 +15,17 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
 {
     setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
     addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox);
+    addAndMakeVisible(intensitySlider); addAndMakeVisible(motionSlider);
+    configureTooltips();
+    configureControlSlider(intensitySlider, 0.0, 2.0, 0.01, "x");
+    configureControlSlider(motionSlider, 0.0, 1.0, 0.01, "");
     tapButton.onClick = [this]{ processor.tapTempo.tap(juce::Time::getMillisecondCounterHiRes()/1000.0); processor.beatPulse.trigger(processor.tapTempo.getBpm().value_or(0.0)); };
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
     screenshotButton.onClick = [this]{ exportScreenshot(); };
-    fullscreenButton.onClick = [this]{ if(visualizer) visualizer->toggleFullscreen(); };
+    fullscreenButton.onClick = [this]{ if(!visualizer) openVisualizer(); if(visualizer){ visualizer->toggleFullscreen(); setStatusMessage("Output fullscreen toggled"); } };
     hudButton.onClick = [this]{ hudMode = !hudMode; processor.hudEnabled = hudMode; setStatusMessage(hudMode ? "HUD mode ON" : "HUD mode OFF"); resized(); repaint(); };
-    infoButton.onClick = [this]{ setStatusMessage("Info: " + juce::String(Branding::ProductDisplayName) + " " + Branding::ProductVersion + " (" + Branding::ProductCodename + ")"); };
+    infoButton.onClick = [this]{ setStatusMessage(juce::String("Info: ") + Branding::ProductDisplayName + " " + Branding::ProductVersion + " (" + Branding::ProductCodename + ")"); };
     copyInfoButton.onClick = [this]{
         juce::String buildMode = juce::JUCEApplicationBase::isStandaloneApp() ? "Standalone" : "VST3 / Host";
         juce::String info = juce::String(Branding::ProductDisplayName) + " " + Branding::ProductVersion + "\n"
@@ -45,15 +49,28 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     moduleBox.setSelectedId((int)processor.visualRackState.selectedModule.load() + 1);
     moduleBox.onChange = [this]
     {
-        const auto module = juce::jmax(0, moduleBox.getSelectedId() - 1);
+        const auto module = juce::jlimit(0, (int)VisualModuleType::Particles, moduleBox.getSelectedId() - 1);
         processor.visualRackState.selectedModule.store(module);
-        setStatusMessage("Module: " + visualModuleName((VisualModuleType)module));
+        setStatusMessage(juce::String("Module: ") + visualModuleName((VisualModuleType)module));
     };
 
     for (int i = 0; i < (int)getBuiltInExportPresets().size(); ++i)
         exportPresetBox.addItem(exportPresetShortLabel(i), i + 1);
     exportPresetBox.setSelectedId(1);
     exportPresetBox.onChange = [this] { applySelectedExportPresetToOutputGuide(); };
+
+    intensitySlider.onValueChange = [this]
+    {
+        const auto value = (float) juce::jlimit(0.0, 2.0, intensitySlider.getValue());
+        processor.visualRackState.visualIntensity.store(value);
+        setStatusMessage(juce::String("Intensity ") + juce::String(value, 2) + "x");
+    };
+    motionSlider.onValueChange = [this]
+    {
+        const auto value = (float) juce::jlimit(0.0, 1.0, motionSlider.getValue());
+        processor.visualRackState.motionAmount.store(value);
+        setStatusMessage(juce::String("Motion ") + juce::String(value, 2));
+    };
 
     savePresetButton.onClick = [this]{ saveUserPreset(); };
     loadPresetButton.onClick = [this]{ loadUserPreset(); };
@@ -73,7 +90,12 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
             processor.brandState.releaseStatusText = tp.releaseStatusText;
             syncModuleBoxToProcessor();
             exportPresetBox.setSelectedId(tp.preferredExportPresetIndex + 1, juce::sendNotificationSync);
-            setStatusMessage("Template: " + tp.name + " - " + tp.moduleName);
+            setStatusMessage(juce::String("Template: ") + tp.name + " - " + tp.moduleName);
+        }
+        else
+        {
+            templateBox.setSelectedId(1, juce::sendNotificationSync);
+            setStatusMessage("Template reset to Minimal Meter");
         }
     };
     syncUiToProcessorState();
@@ -171,6 +193,77 @@ void MixPulseAudioProcessorEditor::setStatusMessage(const juce::String& msg)
     statusUntilSeconds = juce::Time::getMillisecondCounterHiRes() / 1000.0 + 3.0;
 }
 
+void MixPulseAudioProcessorEditor::configureTooltips()
+{
+    visualizerButton.setTooltip("Open a clean capture window for OBS.");
+    screenshotButton.setTooltip("Save the current output as a still PNG frame.");
+    hudButton.setTooltip("Toggle the compact meter/HUD view.");
+    fullscreenButton.setTooltip("Toggle fullscreen for the output window.");
+    infoButton.setTooltip("Show WaveFrame version and beta status.");
+    copyInfoButton.setTooltip("Copy version, mode, HUD, output, and frame status.");
+    savePresetButton.setTooltip("Save the current local WaveFrame preset.");
+    loadPresetButton.setTooltip("Load the local WaveFrame preset if it exists.");
+    resetDefaultButton.setTooltip("Restore default module, template, export, brand, intensity, and motion values.");
+    moduleBox.setTooltip("Choose the active visual module.");
+    templateBox.setTooltip("Choose a starter creator template.");
+    exportPresetBox.setTooltip("Choose a still-image aspect preset.");
+    themeBox.setTooltip("Choose the editor theme. Extra themes are TODO.");
+    beatSyncButton.setTooltip("Use the beat pulse for reactive visuals.");
+    tapButton.setTooltip("Tap tempo for beat-reactive visual timing.");
+    intensitySlider.setTooltip("Visual intensity, from calm to extra reactive.");
+    motionSlider.setTooltip("Motion amount for reactive visual movement.");
+}
+
+void MixPulseAudioProcessorEditor::configureControlSlider(juce::Slider& slider, double min, double max, double interval, const juce::String& suffix)
+{
+    slider.setSliderStyle(juce::Slider::LinearHorizontal);
+    slider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 54, 18);
+    slider.setRange(min, max, interval);
+    slider.setNumDecimalPlacesToDisplay(2);
+    slider.setTextValueSuffix(suffix);
+}
+
+void MixPulseAudioProcessorEditor::syncControlSlidersToProcessor()
+{
+    intensitySlider.setValue(juce::jlimit(0.0f, 2.0f, processor.visualRackState.visualIntensity.load()), juce::dontSendNotification);
+    motionSlider.setValue(juce::jlimit(0.0f, 1.0f, processor.visualRackState.motionAmount.load()), juce::dontSendNotification);
+}
+
+int MixPulseAudioProcessorEditor::getSelectedTemplateIndex() const
+{
+    const auto count = (int)getBuiltInCreatorTemplates().size();
+    return count > 0 ? juce::jlimit(0, count - 1, templateBox.getSelectedId() - 1) : 0;
+}
+
+int MixPulseAudioProcessorEditor::getSelectedExportPresetIndex() const
+{
+    const auto count = (int)getBuiltInExportPresets().size();
+    return count > 0 ? juce::jlimit(0, count - 1, exportPresetBox.getSelectedId() - 1) : 0;
+}
+
+juce::String MixPulseAudioProcessorEditor::getTemplateStatusText() const
+{
+    const auto& templates = getBuiltInCreatorTemplates();
+    if (templates.empty())
+        return "No templates";
+
+    const auto& tp = templates[(size_t)getSelectedTemplateIndex()];
+    return tp.bestFor + " / " + tp.moduleName;
+}
+
+juce::String MixPulseAudioProcessorEditor::getExportStatusText() const
+{
+    const auto& presets = getBuiltInExportPresets();
+    if (presets.empty())
+        return "Still PNG";
+
+    const auto& preset = presets[(size_t)getSelectedExportPresetIndex()];
+    if (preset.width > 0 && preset.height > 0)
+        return preset.aspectLabel + " / " + juce::String(preset.width) + "x" + juce::String(preset.height);
+
+    return preset.aspectLabel + " / current window";
+}
+
 void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(theme.background);
@@ -217,6 +310,8 @@ void MixPulseAudioProcessorEditor::resized()
         templateBox.setBounds(0, 0, 0, 0);
         exportPresetBox.setBounds(0, 0, 0, 0);
         themeBox.setBounds(0, 0, 0, 0);
+        intensitySlider.setBounds(0, 0, 0, 0);
+        motionSlider.setBounds(0, 0, 0, 0);
         tapButton.setBounds(0, 0, 0, 0);
         beatSyncButton.setBounds(0, 0, 0, 0);
         fullscreenButton.setBounds(0, 0, 0, 0);
@@ -229,9 +324,14 @@ void MixPulseAudioProcessorEditor::resized()
     b.removeFromLeft(218);
     b.removeFromLeft(12);
     auto right = b.removeFromRight(326).reduced(14, 42);
-    auto controls = right.removeFromTop(104);
+    auto controls = right.removeFromTop(152);
     controls.removeFromTop(22);
-    moduleBox.setBounds(controls.removeFromTop(26));
+    moduleBox.setBounds(controls.removeFromTop(26).withTrimmedLeft(92));
+    controls.removeFromTop(6);
+    intensitySlider.setBounds(controls.removeFromTop(24).withTrimmedLeft(92));
+    controls.removeFromTop(6);
+    motionSlider.setBounds(controls.removeFromTop(24).withTrimmedLeft(92));
+    controls.removeFromTop(6);
     auto beatRow = controls.removeFromTop(28);
     beatSyncButton.setBounds(beatRow.removeFromLeft(118));
     beatRow.removeFromLeft(8);
@@ -240,9 +340,9 @@ void MixPulseAudioProcessorEditor::resized()
     fullscreenButton.setBounds(beatRow.removeFromLeft(56));
 
     right.removeFromTop(10);
-    right.removeFromTop(98);
+    right.removeFromTop(76);
     right.removeFromTop(10);
-    auto brand = right.removeFromTop(124);
+    auto brand = right.removeFromTop(112);
     auto brandButtons = brand.removeFromBottom(26);
     savePresetButton.setBounds(brandButtons.removeFromLeft(84));
     brandButtons.removeFromLeft(8);
@@ -251,7 +351,7 @@ void MixPulseAudioProcessorEditor::resized()
     resetDefaultButton.setBounds(brandButtons.removeFromLeft(88));
 
     right.removeFromTop(10);
-    auto templates = right.removeFromTop(76);
+    auto templates = right.removeFromTop(82);
     templates.removeFromTop(22);
     templateBox.setBounds(templates.removeFromTop(26));
 
@@ -269,6 +369,8 @@ bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
     if(k.getTextCharacter()=='b'||k.getTextCharacter()=='B'){beatSyncButton.setToggleState(!beatSyncButton.getToggleState(),juce::sendNotification);return true;}
     if(k.getTextCharacter()=='v'||k.getTextCharacter()=='V'){ auto m=(int)processor.visualizerState.mode.load(); processor.visualizerState.mode.store((VisualizerMode)((m+1)%10)); return true;}
     if(k.getTextCharacter()=='r'||k.getTextCharacter()=='R'){processor.analyzer.getMeterData().clipLatched.store(false,std::memory_order_relaxed); return true;}
+    if(k.getTextCharacter()=='o'||k.getTextCharacter()=='O'){openVisualizer();return true;}
+    if(k.getTextCharacter()=='i'||k.getTextCharacter()=='I'){infoButton.triggerClick();return true;}
     if(k.getTextCharacter()=='s'||k.getTextCharacter()=='S'){exportScreenshot();return true;}
     if(k.getTextCharacter()=='f'||k.getTextCharacter()=='F'){ if(!visualizer) openVisualizer(); if(visualizer) visualizer->toggleFullscreen(); return true;}
     if(k.getTextCharacter()=='h'||k.getTextCharacter()=='H'){ hudButton.triggerClick(); return true;}
@@ -304,7 +406,7 @@ void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Re
     auto meta = inner.removeFromTop(56);
     const auto moduleName = visualModuleName((VisualModuleType)processor.visualRackState.selectedModule.load());
     drawLabelValue(g, meta.removeFromTop(22), "Module", moduleName);
-    drawLabelValue(g, meta.removeFromTop(22), "Template", templateBox.getText().isNotEmpty() ? templateBox.getText() : "Minimal Meter");
+    drawLabelValue(g, meta.removeFromTop(22), "Template", (templateBox.getText().isNotEmpty() ? templateBox.getText() : "Minimal Meter") + " / " + getTemplateStatusText());
 
     inner.removeFromTop(8);
     auto canvas = inner.toFloat().reduced(2.0f);
@@ -346,7 +448,7 @@ void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Re
     auto footer = inner.removeFromBottom(42);
     drawPill(g, footer.removeFromLeft(118).reduced(0, 8), exportPresetShortLabel(exportPresetBox.getSelectedId() - 1), theme.accent);
     footer.removeFromLeft(8);
-    drawPill(g, footer.removeFromLeft(150).reduced(0, 8), "PNG frame only", theme.secondary);
+    drawPill(g, footer.removeFromLeft(190).reduced(0, 8), getExportStatusText(), theme.secondary);
     footer.removeFromLeft(8);
     drawPill(g, footer.removeFromLeft(162).reduced(0, 8), "Video export: future", theme.mutedText);
 }
@@ -356,22 +458,24 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     drawPanel(g, area, "Creator Controls");
     auto r = area.reduced(14, 42);
 
-    auto controls = r.removeFromTop(104);
+    auto controls = r.removeFromTop(152);
     drawSectionTitle(g, controls.removeFromTop(20), "Controls");
     drawLabelValue(g, controls.removeFromTop(28), "Visual", "");
-    drawLabelValue(g, controls.removeFromTop(22), "Intensity", juce::String(processor.visualRackState.visualIntensity.load(), 2));
-    drawLabelValue(g, controls.removeFromTop(22), "Motion", juce::String(processor.visualRackState.motionAmount.load(), 2));
+    drawLabelValue(g, controls.removeFromTop(26), "Intensity", "");
+    drawLabelValue(g, controls.removeFromTop(26), "Motion", "");
+    drawLabelValue(g, controls.removeFromTop(22), "Template", templateBox.getText().isNotEmpty() ? templateBox.getText() : "Minimal Meter");
+    drawLabelValue(g, controls.removeFromTop(22), "Export", getExportStatusText());
     drawLabelValue(g, controls.removeFromTop(22), "Beat sync", processor.visualizerState.beatSync.load() ? "On" : "Off");
 
     r.removeFromTop(10);
-    auto motion = r.removeFromTop(98);
+    auto motion = r.removeFromTop(76);
     drawSectionTitle(g, motion.removeFromTop(20), "Motion / Audio");
     drawLabelValue(g, motion.removeFromTop(20), "Pulse", "beat pulse placeholder");
-    drawLabelValue(g, motion.removeFromTop(20), "Bass/Mid/High", "sensitivity TODO");
-    drawLabelValue(g, motion.removeFromTop(20), "Glow / Scale", "reactive placeholders");
+    drawLabelValue(g, motion.removeFromTop(20), "Audio", "sensitivity TODO");
+    drawLabelValue(g, motion.removeFromTop(20), "Glow", "0.45 placeholder");
 
     r.removeFromTop(10);
-    auto brand = r.removeFromTop(124);
+    auto brand = r.removeFromTop(112);
     drawSectionTitle(g, brand.removeFromTop(20), "Brand");
     drawLabelValue(g, brand.removeFromTop(20), "Artist", processor.brandState.artistName);
     drawLabelValue(g, brand.removeFromTop(20), "Track", processor.brandState.trackTitle);
@@ -380,19 +484,21 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     drawLabelValue(g, brand.removeFromTop(20), "Logo", processor.brandState.logoPath.isNotEmpty() ? "preset path" : "placeholder layer");
 
     r.removeFromTop(10);
-    auto templates = r.removeFromTop(76);
+    auto templates = r.removeFromTop(82);
     drawSectionTitle(g, templates.removeFromTop(20), "Templates");
-    templates.removeFromTop(30);
+    drawLabelValue(g, templates.removeFromTop(22), "Selected", templateBox.getText().isNotEmpty() ? templateBox.getText() : "Minimal Meter");
+    drawLabelValue(g, templates.removeFromTop(22), "Use case", getTemplateStatusText());
     g.setColour(theme.mutedText); g.setFont(11.0f);
-    g.drawText("Minimal Meter / Logo Reactor / Release / Label / Stream / Reel / Album", templates, juce::Justification::topLeft);
+    g.drawText("Status: implemented presets / deeper editing TODO", templates, juce::Justification::topLeft);
 
     r.removeFromTop(10);
     auto exportCard = r;
     drawSectionTitle(g, exportCard.removeFromTop(20), "Export");
     exportCard.removeFromTop(30);
     drawLabelValue(g, exportCard.removeFromTop(20), "Still", "Current frame PNG");
-    drawLabelValue(g, exportCard.removeFromTop(20), "Aspects", "9:16 / 1:1 / 4:5 / 16:9");
-    drawLabelValue(g, exportCard.removeFromTop(20), "OBS", "use Output window capture");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Aspect", getExportStatusText());
+    drawLabelValue(g, exportCard.removeFromTop(20), "OBS", "Output window capture");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Video", "future/TODO");
 }
 
 void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectangle<int> area)
@@ -411,7 +517,7 @@ void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectang
 }
 
 void MixPulseAudioProcessorEditor::timerCallback(){ repaint(); }
-void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true);}
+void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true); setStatusMessage("Output window ready"); }
 void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
 {
     const int idx = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
@@ -424,6 +530,7 @@ void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
         case 4: case 5: processor.visualRackState.outputPreset.store((int) OutputPreset::Landscape16x9); break;
         default: processor.visualRackState.outputPreset.store((int) OutputPreset::Free); break;
     }
+    setStatusMessage(juce::String("Export preset: ") + getExportStatusText() + " / still PNG");
 }
 
 void MixPulseAudioProcessorEditor::exportScreenshot()
@@ -435,7 +542,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     const auto& preset = presets[(size_t)presetIndex];
     if (!preset.enabled)
     {
-        setStatusMessage("Fixed-size export coming soon: " + preset.name);
+        setStatusMessage(juce::String("Still PNG preset coming soon: ") + preset.name);
         return;
     }
 
@@ -448,7 +555,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
 
     int w = sourceComponent->getWidth(), h = sourceComponent->getHeight();
     if (preset.width > 0 && preset.height > 0) { w = preset.width; h = preset.height; }
-    if (w <= 0 || h <= 0) { setStatusMessage("Export failed: invalid render size"); return; }
+    if (w <= 0 || h <= 0) { setStatusMessage("Still PNG failed: invalid render size"); return; }
 
     juce::Image img(juce::Image::ARGB, w, h, true);
     juce::Graphics gg(img);
@@ -467,10 +574,10 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     auto file = exportDir.getChildFile("WaveFrame_" + safeName + "_" + stamp + ".png");
     juce::FileOutputStream os(file);
     juce::PNGImageFormat png;
-    if (!os.openedOk()) { setStatusMessage("Export failed: cannot create output file"); return; }
-    if (!png.writeImageToStream(img, os)) { setStatusMessage("Export failed: PNG encoder error"); return; }
+    if (!os.openedOk()) { setStatusMessage("Still PNG failed: cannot create output file"); return; }
+    if (!png.writeImageToStream(img, os)) { setStatusMessage("Still PNG failed: PNG encoder error"); return; }
 
-    setStatusMessage("Saved " + exportPresetShortLabel(presetIndex) + " PNG " + juce::String(w) + "x" + juce::String(h));
+    setStatusMessage(juce::String("Saved still PNG ") + exportPresetShortLabel(presetIndex) + " " + juce::String(w) + "x" + juce::String(h));
 }
 
 
@@ -481,6 +588,7 @@ void MixPulseAudioProcessorEditor::syncUiToProcessorState()
     exportPresetBox.setSelectedId(processor.selectedExportPreset + 1, juce::dontSendNotification);
     themeBox.setSelectedId(processor.selectedTheme, juce::dontSendNotification);
     syncModuleBoxToProcessor();
+    syncControlSlidersToProcessor();
     applySelectedExportPresetToOutputGuide();
 }
 
@@ -514,6 +622,7 @@ void MixPulseAudioProcessorEditor::loadUserPreset()
         else setStatusMessage("Preset loaded - Logo file missing");
     }
     else setStatusMessage("Preset loaded");
+    syncControlSlidersToProcessor();
 }
 
 void MixPulseAudioProcessorEditor::resetDefaults()
@@ -534,6 +643,7 @@ void MixPulseAudioProcessorEditor::resetDefaults()
     processor.selectedExportPreset = 0;
     processor.selectedTheme = 1;
     processor.hudEnabled = false;
+    templateBox.setSelectedId(1, juce::dontSendNotification);
     syncUiToProcessorState();
     setStatusMessage("Defaults restored");
 }

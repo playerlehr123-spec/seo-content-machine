@@ -35,11 +35,19 @@ The center canvas is the main creator surface.
 
 The right panel organizes creator workflow into predictable groups.
 
-- Controls: visual module selector, intensity, motion, beat sync, tap, fullscreen.
+- Controls: visual module selector, selected template, selected export preset, output status, intensity, motion, beat sync, tap, fullscreen.
 - Motion / Audio: beat pulse, bass/mid/high sensitivity, glow, and reactive scale placeholders.
 - Brand: artist, track, label, CTA, color/logo placeholders.
-- Templates: starter social template set.
-- Export: PNG frame export, aspect presets, OBS capture note.
+- Templates: selected template, use case, recommended module, and status text.
+- Export: PNG frame export, aspect/dimensions, OBS capture note, and video future/TODO status.
+
+Interaction polish:
+
+- Intensity is clamped to `0.0` through `2.0`.
+- Motion is clamped to `0.0` through `1.0`.
+- Selectors validate IDs before applying UI-side state.
+- Buttons provide short tooltips and status messages.
+- Reset restores default module, template, export, brand, intensity, motion, beat sync, theme, and HUD state.
 
 ## Templates Panel
 
