@@ -14,6 +14,9 @@ public:
     void paint(juce::Graphics&) override;
     void timerCallback() override;
 private:
+    void drawCaptureOverlay(juce::Graphics&, juce::Rectangle<int>);
+    static juce::String aspectLabelForPreset(OutputPreset);
+
     AudioAnalyzer& analyzer;
     BeatPulseEngine& pulse;
     VisualizerState& state;

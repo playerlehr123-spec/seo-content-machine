@@ -15,6 +15,9 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
 {
     setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
     addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox);
+    visualizerButton.setTooltip("Open the WaveFrame output window for OBS Window Capture");
+    screenshotButton.setTooltip("Save the current output frame as a still PNG");
+    fullscreenButton.setTooltip("Toggle fullscreen on the output window");
     tapButton.onClick = [this]{ processor.tapTempo.tap(juce::Time::getMillisecondCounterHiRes()/1000.0); processor.beatPulse.trigger(processor.tapTempo.getBpm().value_or(0.0)); };
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
@@ -411,7 +414,7 @@ void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectang
 }
 
 void MixPulseAudioProcessorEditor::timerCallback(){ repaint(); }
-void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true);}
+void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true); setStatusMessage("Output window ready for OBS Window Capture"); }
 void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
 {
     const int idx = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
@@ -435,7 +438,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     const auto& preset = presets[(size_t)presetIndex];
     if (!preset.enabled)
     {
-        setStatusMessage("Fixed-size export coming soon: " + preset.name);
+        setStatusMessage("Still PNG preset coming soon: " + preset.name);
         return;
     }
 
@@ -448,7 +451,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
 
     int w = sourceComponent->getWidth(), h = sourceComponent->getHeight();
     if (preset.width > 0 && preset.height > 0) { w = preset.width; h = preset.height; }
-    if (w <= 0 || h <= 0) { setStatusMessage("Export failed: invalid render size"); return; }
+    if (w <= 0 || h <= 0) { setStatusMessage("Still PNG failed: invalid render size"); return; }
 
     juce::Image img(juce::Image::ARGB, w, h, true);
     juce::Graphics gg(img);
@@ -467,10 +470,10 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     auto file = exportDir.getChildFile("WaveFrame_" + safeName + "_" + stamp + ".png");
     juce::FileOutputStream os(file);
     juce::PNGImageFormat png;
-    if (!os.openedOk()) { setStatusMessage("Export failed: cannot create output file"); return; }
-    if (!png.writeImageToStream(img, os)) { setStatusMessage("Export failed: PNG encoder error"); return; }
+    if (!os.openedOk()) { setStatusMessage("Still PNG failed: cannot create output file"); return; }
+    if (!png.writeImageToStream(img, os)) { setStatusMessage("Still PNG failed: PNG encoder error"); return; }
 
-    setStatusMessage("Saved " + exportPresetShortLabel(presetIndex) + " PNG " + juce::String(w) + "x" + juce::String(h));
+    setStatusMessage("Saved still PNG " + exportPresetShortLabel(presetIndex) + " " + juce::String(w) + "x" + juce::String(h));
 }
 
 

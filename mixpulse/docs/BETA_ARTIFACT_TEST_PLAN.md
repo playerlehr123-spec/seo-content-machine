@@ -66,10 +66,12 @@ C:\Program Files\Common Files\VST3\
 ## OBS / Content Test
 1. Open the Output window.
 2. Use OBS Window Capture.
-3. Confirm capture works.
-4. Confirm fullscreen capture works.
-5. Resize the output window.
-6. Confirm no crash occurs while resizing.
+3. Confirm the output overlay shows WaveFrame, OBS capture readiness, module, aspect, and still-PNG-only status.
+4. Confirm capture works.
+5. Confirm fullscreen capture works.
+6. Resize the output window.
+7. Confirm no crash occurs while resizing.
+8. Click Frame and confirm a still PNG is saved or a clear failure status is shown.
 
 ## Known Limitations
 - Unsigned beta.
@@ -106,5 +108,6 @@ C:\Program Files\Common Files\VST3\
 | FL Studio load | Plugin loads |  |  |  |
 | FL Studio pass-through | Audio passes through unchanged |  |  |  |
 | OBS capture | Output window captures in OBS |  |  |  |
+| OBS status overlay | Output overlay shows module/aspect/still PNG status |  |  |  |
 | OBS fullscreen | Fullscreen capture works |  |  |  |
 | Resize stability | Output resize does not crash |  |  |  |

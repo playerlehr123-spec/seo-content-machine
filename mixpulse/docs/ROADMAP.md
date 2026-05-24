@@ -26,6 +26,7 @@
 - spectrum bars v2
 - frame export reliability
 - UI/UX Polish Pass 1: cleaner layout, larger preview, grouped controls, right-side creator panels, clearer export/template workflow, still no video export
+- Output Window + OBS Creator Mode: capture-ready output overlay, clearer aspect/status messaging, still PNG export wording, and OBS workflow docs
 
 ## Tier 3 — Creator Templates
 - Brand Layer
