@@ -15,18 +15,39 @@ assignees: ""
 ## Windows version
 
 
-## DAW / standalone
+## Artifact / run number
 
 
-## Artifact version or commit
+## Standalone or VST3
+- [ ] Standalone
+- [ ] VST3
+- [ ] Both
 
+## DAW name/version
+
+
+## Audio interface / device
+
+
+## Module/template selected
+
+
+## Output window open?
+- [ ] Yes
+- [ ] No
+- [ ] Not sure
+
+## OBS involved?
+- [ ] Yes
+- [ ] No
+- [ ] Not sure
 
 ## Steps to reproduce
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
-## Screenshot/log
+## Screenshot/video/log
 
 
 ## Did audio pass-through change?
@@ -34,9 +55,11 @@ assignees: ""
 - [ ] No
 - [ ] Not sure
 
-## Did plugin crash?
-- [ ] Yes
-- [ ] No
+## Did the app/plugin/DAW crash?
+- [ ] App crashed
+- [ ] Plugin crashed
+- [ ] DAW crashed
+- [ ] No crash
 - [ ] Not sure
 
 ## Does it reproduce after restart?
