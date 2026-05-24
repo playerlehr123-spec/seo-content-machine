@@ -248,7 +248,7 @@ juce::String MixPulseAudioProcessorEditor::getTemplateStatusText() const
         return "No templates";
 
     const auto& tp = templates[(size_t)getSelectedTemplateIndex()];
-    return tp.useCase + " / " + tp.moduleName;
+    return tp.bestFor + " / " + tp.moduleName;
 }
 
 juce::String MixPulseAudioProcessorEditor::getExportStatusText() const
