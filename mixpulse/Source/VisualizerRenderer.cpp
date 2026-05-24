@@ -15,6 +15,37 @@ float averageBins(const std::array<float, AudioAnalyzer::spectrumBins>& spectrum
     return juce::jlimit(0.0f, 1.0f, sum / (float)(end - start));
 }
 
+void drawWaveFrameBackground(juce::Graphics& g, juce::Rectangle<int> bounds, juce::Colour primary, juce::Colour secondary, float energy)
+{
+    g.fillAll(juce::Colour::fromRGB(4, 7, 14));
+
+    auto area = bounds.toFloat();
+    g.setColour(secondary.darker(0.72f).withAlpha(0.72f));
+    g.fillRoundedRectangle(area.reduced(18.0f), 18.0f);
+
+    g.setColour(primary.withAlpha(0.035f + energy * 0.035f));
+    for (int x = bounds.getX(); x < bounds.getRight(); x += 34)
+        g.drawVerticalLine(x, (float)bounds.getY(), (float)bounds.getBottom());
+
+    g.setColour(juce::Colours::white.withAlpha(0.035f));
+    for (int y = bounds.getY(); y < bounds.getBottom(); y += 34)
+        g.drawHorizontalLine(y, (float)bounds.getX(), (float)bounds.getRight());
+}
+
+void drawCornerTicks(juce::Graphics& g, juce::Rectangle<float> r, juce::Colour colour, float alpha)
+{
+    const auto len = juce::jmin(34.0f, juce::jmin(r.getWidth(), r.getHeight()) * 0.12f);
+    g.setColour(colour.withAlpha(alpha));
+    g.drawLine(r.getX(), r.getY(), r.getX() + len, r.getY(), 1.4f);
+    g.drawLine(r.getX(), r.getY(), r.getX(), r.getY() + len, 1.4f);
+    g.drawLine(r.getRight(), r.getY(), r.getRight() - len, r.getY(), 1.4f);
+    g.drawLine(r.getRight(), r.getY(), r.getRight(), r.getY() + len, 1.4f);
+    g.drawLine(r.getX(), r.getBottom(), r.getX() + len, r.getBottom(), 1.4f);
+    g.drawLine(r.getX(), r.getBottom(), r.getX(), r.getBottom() - len, 1.4f);
+    g.drawLine(r.getRight(), r.getBottom(), r.getRight() - len, r.getBottom(), 1.4f);
+    g.drawLine(r.getRight(), r.getBottom(), r.getRight(), r.getBottom() - len, 1.4f);
+}
+
 juce::Point<float> logoCentreForMode(juce::Rectangle<float> guide, int mode)
 {
     const auto inset = juce::jmin(guide.getWidth(), guide.getHeight()) * 0.18f;
@@ -69,9 +100,7 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
     const auto highs = averageBins(spectrumData, 34, (int)AudioAnalyzer::spectrumBins);
     const auto energy = juce::jlimit(0.0f, 1.0f, bass * 0.45f + mids * 0.35f + highs * 0.20f + pulseAmount * 0.25f);
 
-    g.fillAll(juce::Colour::fromRGB(6, 9, 18));
-    g.setColour(juce::Colour::fromRGB(16, 30, 44));
-    for (int y = b.getY(); y < b.getBottom(); y += 22) g.drawHorizontalLine(y, (float)b.getX(), (float)b.getRight());
+    drawWaveFrameBackground(g, b, primary, secondary, energy);
 
     auto guide = b.toFloat().reduced(24.0f);
     const auto preset = (OutputPreset) rack.outputPreset.load();
@@ -87,6 +116,7 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
         guide = juce::Rectangle<float>(0,0,w,h).withCentre(guide.getCentre());
         g.setColour(juce::Colours::white.withAlpha(0.12f));
         g.drawRoundedRectangle(guide, 6.0f, 1.0f);
+        drawCornerTicks(g, guide.reduced(5.0f), primary, 0.22f);
     }
 
     if (module == VisualModuleType::LogoPulse)
@@ -95,33 +125,48 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
         const auto centre = logoCentreForMode(guide, placementMode);
         const auto scale = juce::jmax(0.65f, brand != nullptr ? brand->logoScale : 1.0f);
         const auto opacity = juce::jlimit(0.2f, 1.0f, brand != nullptr ? brand->logoOpacity : 0.85f);
-        const auto logoSize = (118.0f + 74.0f * energy) * scale;
-        const auto mark = juce::Rectangle<float>(logoSize, logoSize * 0.72f).withCentre(centre);
+        const auto logoSize = (122.0f + 82.0f * energy) * scale;
+        const auto mark = juce::Rectangle<float>(logoSize, logoSize).withCentre(centre);
 
-        g.setColour(secondary.darker(0.6f).withAlpha(0.78f));
-        g.fillRoundedRectangle(guide.reduced(18.0f), 18.0f);
-        g.setColour(primary.withAlpha(0.10f + energy * 0.20f));
-        g.fillEllipse(mark.withSizeKeepingCentre(logoSize + 84.0f, logoSize + 84.0f));
-        g.setColour(accent.withAlpha(0.18f + pulseAmount * 0.34f));
-        g.drawEllipse(mark.withSizeKeepingCentre(logoSize + 44.0f, logoSize + 44.0f), 2.0f + 3.0f * pulseAmount);
-        g.setColour(primary.withAlpha((0.55f + energy * 0.28f) * opacity));
-        g.fillRoundedRectangle(mark, 20.0f);
-        g.setColour(accent.withAlpha(0.45f + pulseAmount * 0.35f));
-        g.drawRoundedRectangle(mark.reduced(7.0f), 15.0f, 1.4f + pulseAmount * 1.4f);
-        g.setColour(juce::Colours::white.withAlpha(0.82f * opacity));
-        g.setFont(juce::Font(28.0f + 12.0f * energy, juce::Font::bold));
-        g.drawText(label.substring(0, 18), mark.toNearestInt().reduced(10), juce::Justification::centred);
+        auto stage = guide.reduced(22.0f);
+        g.setColour(secondary.darker(0.50f).withAlpha(0.82f));
+        g.fillRoundedRectangle(stage, 22.0f);
+        g.setColour(primary.withAlpha(0.08f + energy * 0.12f));
+        g.fillRoundedRectangle(stage.reduced(18.0f), 18.0f);
 
-        auto lower = guide.reduced(28.0f).removeFromBottom(70.0f);
-        g.setColour(juce::Colours::white.withAlpha(0.55f));
+        for (int i = 3; i >= 0; --i)
+        {
+            const auto spread = logoSize + 54.0f + (float)i * 26.0f + pulseAmount * 18.0f;
+            g.setColour((i % 2 == 0 ? primary : accent).withAlpha((0.035f + energy * 0.045f) * opacity));
+            g.fillEllipse(mark.withSizeKeepingCentre(spread, spread));
+        }
+
+        g.setColour(juce::Colours::black.withAlpha(0.34f));
+        g.fillEllipse(mark.translated(0.0f, 10.0f).expanded(10.0f));
+        g.setColour(primary.withAlpha((0.70f + energy * 0.22f) * opacity));
+        g.fillEllipse(mark);
+        g.setColour(secondary.darker(0.72f).withAlpha(0.88f * opacity));
+        g.fillEllipse(mark.reduced(12.0f));
+        g.setColour(accent.withAlpha(0.48f + pulseAmount * 0.34f));
+        g.drawEllipse(mark.reduced(8.0f), 1.6f + pulseAmount * 2.2f);
+
+        auto initials = label.trim().substring(0, 2).toUpperCase();
+        if (initials.isEmpty())
+            initials = "WF";
+        g.setColour(juce::Colours::white.withAlpha(0.92f * opacity));
+        g.setFont(juce::Font(36.0f + 13.0f * energy, juce::Font::bold));
+        g.drawText(initials, mark.toNearestInt().reduced(12), juce::Justification::centred);
+
+        auto lower = guide.reduced(34.0f).removeFromBottom(92.0f);
+        g.setColour(juce::Colours::white.withAlpha(0.58f));
         g.setFont(13.0f + 2.0f * pulseAmount);
         g.drawText(artist.toUpperCase(), lower.removeFromTop(24.0f).toNearestInt(), juce::Justification::centred);
-        g.setColour(juce::Colours::white.withAlpha(0.72f));
-        g.setFont(17.0f);
-        g.drawText(title, lower.removeFromTop(24.0f).toNearestInt(), juce::Justification::centred);
-        g.setColour(accent.withAlpha(0.78f));
+        g.setColour(juce::Colours::white.withAlpha(0.88f));
+        g.setFont(juce::Font(22.0f, juce::Font::bold));
+        g.drawFittedText(title, lower.removeFromTop(34.0f).toNearestInt(), juce::Justification::centred, 1);
+        g.setColour(accent.withAlpha(0.82f));
         g.setFont(12.0f);
-        g.drawText("Logo import TODO / beat-reactive brand mark", lower.toNearestInt(), juce::Justification::centred);
+        g.drawText("BEAT-REACTIVE BRAND MARK", lower.removeFromTop(22.0f).toNearestInt(), juce::Justification::centred);
     }
     else if (module == VisualModuleType::TypePulse)
     {
@@ -129,24 +174,29 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
         const auto scale = 1.0f + (pulseAmount * 0.16f + energy * 0.10f) * motion;
         const auto repeated = (artist + "  /  " + title + "  /  " + cta).toUpperCase();
 
-        for (int i = 0; i < 7; ++i)
+        g.setColour(secondary.darker(0.55f).withAlpha(0.68f));
+        g.fillRoundedRectangle(textArea.expanded(10.0f), 18.0f);
+
+        for (int i = 0; i < 8; ++i)
         {
-            const auto y = textArea.getY() + (float)i * textArea.getHeight() / 7.0f;
-            const auto alpha = 0.08f + 0.10f * pulseAmount + 0.04f * (float)(i % 2);
+            const auto y = textArea.getY() + (float)i * textArea.getHeight() / 8.0f;
+            const auto alpha = 0.055f + 0.08f * pulseAmount + 0.035f * (float)(i % 2);
             g.setColour((i % 2 == 0 ? primary : accent).withAlpha(alpha));
-            g.setFont(15.0f + (float)(i % 3) * 3.0f);
-            g.drawText(repeated, (int)textArea.getX(), (int)y, (int)textArea.getWidth(), 28, juce::Justification::centred);
+            g.setFont(14.0f + (float)(i % 3) * 2.0f);
+            g.drawText(repeated, (int)textArea.getX() - (i % 2) * 24, (int)y, (int)textArea.getWidth() + 48, 26, juce::Justification::centred);
         }
 
-        auto headline = textArea.reduced(12.0f, 40.0f);
-        g.setColour(primary.withAlpha(0.18f + energy * 0.22f));
-        g.fillRoundedRectangle(headline.expanded(16.0f, 10.0f), 16.0f);
+        auto headline = textArea.reduced(18.0f, 48.0f);
+        g.setColour(primary.withAlpha(0.12f + energy * 0.18f));
+        g.fillRoundedRectangle(headline.expanded(18.0f, 14.0f), 18.0f);
+        g.setColour(accent.withAlpha(0.16f + pulseAmount * 0.14f));
+        g.drawRoundedRectangle(headline.expanded(18.0f, 14.0f), 18.0f, 1.4f);
         g.setColour(juce::Colours::white.withAlpha(0.90f));
-        g.setFont(juce::Font(34.0f * scale, juce::Font::bold));
+        g.setFont(juce::Font(38.0f * scale, juce::Font::bold));
         g.drawFittedText(title.toUpperCase(), headline.toNearestInt(), juce::Justification::centred, 2);
         g.setColour(accent.withAlpha(0.82f));
         g.setFont(15.0f + 2.0f * pulseAmount);
-        g.drawText(artist + "  -  " + label, textArea.toNearestInt().reduced(8), juce::Justification::centredTop);
+        g.drawText(artist.toUpperCase() + "  /  " + label.toUpperCase(), textArea.toNearestInt().reduced(10), juce::Justification::centredTop);
         g.setColour(juce::Colours::white.withAlpha(0.70f + pulseAmount * 0.18f));
         g.setFont(18.0f);
         g.drawText(cta.toUpperCase(), textArea.toNearestInt().reduced(8), juce::Justification::centredBottom);
@@ -154,49 +204,56 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
     else if (module == VisualModuleType::TextCard || module == VisualModuleType::PromoCard)
     {
         auto card = guide.reduced(42.0f, 34.0f);
+        g.setColour(primary.withAlpha(0.055f + energy * 0.09f));
+        g.fillRoundedRectangle(guide.reduced(20.0f), 22.0f);
         g.setColour(secondary.darker(0.55f));
-        g.fillRoundedRectangle(guide.reduced(22.0f), 18.0f);
+        g.fillRoundedRectangle(guide.reduced(28.0f), 18.0f);
         g.setColour(secondary);
         g.fillRoundedRectangle(card, 12.0f);
         g.setColour(primary.withAlpha(0.30f + energy * 0.28f));
         g.drawRoundedRectangle(card, 12.0f, 2.0f + pulseAmount);
         auto content = card.reduced(24.0f, 20.0f);
         auto tag = content.removeFromTop(28.0f);
-        auto releaseTag = tag.removeFromLeft(132.0f);
+        auto releaseTag = tag.removeFromLeft(150.0f);
         g.setColour(accent.withAlpha(0.15f + pulseAmount * 0.16f));
         g.fillRoundedRectangle(releaseTag, 10.0f);
         g.setColour(accent);
         g.setFont(14.0f);
         g.drawText(release.toUpperCase(), releaseTag.toNearestInt().reduced(10, 0), juce::Justification::centredLeft);
+        g.setColour(juce::Colours::white.withAlpha(0.38f));
+        g.setFont(12.0f);
+        g.drawText("WAVEFRAME STILL", tag.toNearestInt(), juce::Justification::centredRight);
         content.removeFromTop(12.0f);
         const auto artSize = juce::jlimit(72.0f, 155.0f, content.getHeight() - 58.0f);
         auto art = content.removeFromLeft(artSize).withTrimmedBottom(58.0f);
         g.setColour(primary.withAlpha(0.16f + energy * 0.18f));
         g.fillRoundedRectangle(art, 12.0f);
+        g.setColour(secondary.darker(0.35f).withAlpha(0.45f));
+        g.fillRoundedRectangle(art.reduced(12.0f), 9.0f);
         g.setColour(accent.withAlpha(0.50f));
         g.drawRoundedRectangle(art.reduced(8.0f), 8.0f, 1.2f);
         g.setColour(juce::Colours::white.withAlpha(0.72f));
-        g.setFont(juce::Font(25.0f + pulseAmount * 5.0f, juce::Font::bold));
+        g.setFont(juce::Font(28.0f + pulseAmount * 5.0f, juce::Font::bold));
         g.drawText(label.substring(0, 8), art.toNearestInt().reduced(10), juce::Justification::centred);
         content.removeFromLeft(24.0f);
         auto text = content.withTrimmedBottom(58.0f);
         g.setColour(juce::Colours::white);
-        g.setFont(juce::Font(28.0f, juce::Font::bold));
-        g.drawFittedText(artist, text.removeFromTop(44.0f).toNearestInt(), juce::Justification::left, 1);
+        g.setFont(juce::Font(15.0f, juce::Font::bold));
+        g.drawFittedText(artist.toUpperCase(), text.removeFromTop(24.0f).toNearestInt(), juce::Justification::left, 1);
         g.setColour(juce::Colours::white.withAlpha(0.82f));
-        g.setFont(20.0f);
-        g.drawFittedText(title, text.removeFromTop(34.0f).toNearestInt(), juce::Justification::left, 2);
+        g.setFont(juce::Font(28.0f, juce::Font::bold));
+        g.drawFittedText(title, text.removeFromTop(54.0f).toNearestInt(), juce::Justification::left, 2);
         g.setColour(accent.withAlpha(0.86f));
         g.setFont(15.0f);
         g.drawText(cta.toUpperCase(), text.removeFromTop(28.0f).toNearestInt(), juce::Justification::left);
-        g.setColour(primary.withAlpha(0.82f));
+        g.setColour(primary.withAlpha(0.86f));
         auto strip = content.removeFromBottom(42);
         const auto binsToDraw = juce::jmin((int)AudioAnalyzer::spectrumBins, 28);
         const auto barW = juce::jmax(2.0f, strip.getWidth() / (float)binsToDraw);
         for (int i = 0; i < binsToDraw; ++i)
         {
             const auto value = juce::jlimit(0.0f, 1.0f, spectrumData[(size_t)i] * (0.8f + intensity));
-            const auto h = 4.0f + value * strip.getHeight();
+            const auto h = 3.0f + value * strip.getHeight();
             g.fillRoundedRectangle(strip.getX() + i * barW, strip.getBottom() - h, barW * 0.62f, h, 2.0f);
         }
         g.setColour(juce::Colours::white.withAlpha(0.72f));
@@ -206,21 +263,25 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
     else if (module == VisualModuleType::Particles || module == VisualModuleType::ParticleBurstPlaceholder)
     {
         auto field = guide.reduced(28.0f);
-        const int columns = 15;
-        const int rows = 9;
-        g.setColour(secondary.withAlpha(0.40f));
-        g.fillRoundedRectangle(field.expanded(10.0f), 16.0f);
+        const int columns = 17;
+        const int rows = 10;
+        g.setColour(secondary.darker(0.55f).withAlpha(0.52f));
+        g.fillRoundedRectangle(field.expanded(12.0f), 18.0f);
+        g.setColour(primary.withAlpha(0.12f + energy * 0.14f));
+        g.drawRoundedRectangle(field.expanded(12.0f), 18.0f, 1.1f);
         for (int y = 0; y < rows; ++y)
         {
             for (int x = 0; x < columns; ++x)
             {
                 const auto idx = (size_t)((x + y * columns) % (int)AudioAnalyzer::spectrumBins);
-                const auto dotEnergy = juce::jlimit(0.0f, 1.0f, spectrumData[idx] * 1.65f + pulseAmount * 0.40f + energy * 0.28f);
+                const auto dotEnergy = juce::jlimit(0.0f, 1.0f, spectrumData[idx] * 1.65f + pulseAmount * 0.34f + energy * 0.24f);
                 const auto phase = (float)(x * 19 + y * 11) * 0.17f;
                 const auto spread = (8.0f + 24.0f * dotEnergy) * motion;
                 const auto px = field.getX() + ((float)x + 0.5f) * field.getWidth() / (float)columns + std::sin(phase + pulseAmount * 3.4f) * spread;
                 const auto py = field.getY() + ((float)y + 0.5f) * field.getHeight() / (float)rows + std::cos(phase * 0.8f + pulseAmount * 2.8f) * spread;
-                const auto size = 2.0f + dotEnergy * 13.5f;
+                const auto size = 2.0f + dotEnergy * 11.5f;
+                g.setColour(primary.interpolatedWith(accent, dotEnergy).withAlpha(0.055f + dotEnergy * 0.12f));
+                g.fillEllipse(px - size, py - size, size * 2.0f, size * 2.0f);
                 g.setColour(primary.interpolatedWith(accent, dotEnergy).withAlpha(0.18f + dotEnergy * 0.62f));
                 g.fillEllipse(px - size * 0.5f, py - size * 0.5f, size, size);
             }
