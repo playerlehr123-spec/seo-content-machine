@@ -1,6 +1,6 @@
 # WaveFrame Roadmap
 
-## Tier 0 — Proven Foundation
+## Tier 0 - Proven Foundation
 - buildable Windows standalone
 - app launches
 - settings opens
@@ -9,7 +9,7 @@
 - fullscreen works
 - audio pass-through
 
-## Tier 1 — Core Stability
+## Tier 1 - Core Stability
 - CI green
 - artifact verification
 - CMake/source integration
@@ -18,7 +18,19 @@
 - no-crash basics
 - docs truth pass
 
-## Tier 2 — Meter + Output Product
+## Private Beta Readiness
+- latest main/PR CI green
+- `MixPulse-Windows-Beta` artifact verified
+- `MixPulse-Windows-Build-Folder` artifact available for debugging
+- standalone smoke test
+- VST3 DAW test matrix
+- OBS capture test
+- known issues page
+- structured beta bug reporting
+- clear WaveFrame product name with MixPulse artifact/internal naming note
+- beta/version/status labels reviewed without renaming plugin IDs or artifacts
+
+## Tier 2 - Meter + Output Product
 - WaveFrame branding polish
 - compact HUD
 - better meters
@@ -27,7 +39,7 @@
 - frame export reliability
 - UI/UX Polish Pass 1: cleaner layout, larger preview, grouped controls, right-side creator panels, clearer export/template workflow, still no video export
 
-## Tier 3 — Creator Templates
+## Tier 3 - Creator Templates
 - Brand Layer
 - Promo Card
 - Logo Reactor
@@ -38,7 +50,7 @@
 - Visual Modules Batch 2: Logo Reactor v1, Type Pulse v1, Promo Card v1, Particles v1/placeholder
 - Visual Modules Batch 2 polish: cleaner v1 renderers for Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars readability
 
-## Tier 4 — Tool Suite
+## Tier 4 - Tool Suite
 - Particles
 - Pixelator
 - Type Pulse
@@ -48,7 +60,7 @@
 - Stream Overlay
 - Reel Visualizer
 
-## Tier 5 — Template Club / Community
+## Tier 5 - Template Club / Community
 - Inspiration Wall
 - Request Tool
 - Submit Visual
@@ -56,7 +68,7 @@
 - preset packs
 - future account system
 
-## Tier 6 — Pro Visual Engine Research
+## Tier 6 - Pro Visual Engine Research
 - video export
 - video import
 - Spout/Syphon/NDI
@@ -65,3 +77,13 @@
 - timeline/clip playback
 - network/render research
 - macOS/AU
+
+## Next After Private Beta
+- plugin/artifact naming cleanup research
+- installer and signing research
+- deeper DAW test matrix coverage
+- visual modules v2
+- template packs
+- logo/image import
+- video export research later
+- NDI, Spout/Syphon, shader SDK, macOS/AU, and cloud/template club/account system remain future/TODO only
