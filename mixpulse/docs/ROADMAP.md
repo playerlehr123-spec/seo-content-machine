@@ -17,6 +17,8 @@
 - VST3 DAW test
 - no-crash basics
 - docs truth pass
+- Private beta packaging readiness plan
+- Naming cleanup staged plan; MixPulse targets/artifacts remain stable during private beta
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
@@ -65,3 +67,10 @@
 - timeline/clip playback
 - network/render research
 - macOS/AU
+
+## Future Naming / Packaging Cleanup
+- WaveFrame artifact naming after private beta docs and tester instructions are stable
+- standalone EXE display/name review
+- plugin manufacturer/name/bundle ID review after DAW compatibility testing
+- installer and code-signing research
+- CMake target/folder rename only if final release needs it
