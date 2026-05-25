@@ -1,5 +1,60 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "ExportPreset.h"
+
+namespace
+{
+juce::var getStatePropertyOrDefault(const juce::ValueTree& state, const juce::Identifier& key, juce::var fallback)
+{
+    if (state.hasProperty(key))
+        return state.getProperty(key);
+
+    return fallback;
+}
+
+VisualizerMode sanitizeVisualizerMode(int value)
+{
+    switch ((VisualizerMode)value)
+    {
+        case VisualizerMode::SpectrumBars:
+        case VisualizerMode::Waveform:
+        case VisualizerMode::Vectorscope:
+        case VisualizerMode::ParticleBurst:
+        case VisualizerMode::Tunnel:
+        case VisualizerMode::Plasma:
+        case VisualizerMode::SpectrogramWaterfall:
+        case VisualizerMode::LogoReactor:
+        case VisualizerMode::TitleCard:
+        case VisualizerMode::HudOverlay:
+            return (VisualizerMode)value;
+    }
+    return VisualizerMode::SpectrumBars;
+}
+
+int sanitizeLogoPositionMode(int value)
+{
+    switch ((BrandLayer::LogoPositionMode)value)
+    {
+        case BrandLayer::LogoPositionMode::Center:
+        case BrandLayer::LogoPositionMode::CornerTopLeft:
+        case BrandLayer::LogoPositionMode::CornerTopRight:
+        case BrandLayer::LogoPositionMode::CornerBottomLeft:
+        case BrandLayer::LogoPositionMode::CornerBottomRight:
+        case BrandLayer::LogoPositionMode::Watermark:
+            return value;
+    }
+    return (int)BrandLayer::LogoPositionMode::Center;
+}
+
+int sanitizeExportPresetIndex(int value)
+{
+    const auto& presets = getBuiltInExportPresets();
+    if (presets.empty())
+        return 0;
+
+    return juce::jlimit(0, (int)presets.size() - 1, value);
+}
+}
 
 MixPulseAudioProcessor::MixPulseAudioProcessor()
     : AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true)
@@ -69,30 +124,30 @@ void MixPulseAudioProcessor::setStateInformation(const void* data, int sizeInByt
     auto state = juce::ValueTree::fromXml(*xmlState);
     if (!state.isValid()) return;
 
-    visualizerState.mode.store((VisualizerMode)(int)state.getProperty("selectedScene", (int)visualizerState.mode.load()));
-    visualRackState.selectedModule.store((int)state.getProperty("selectedModule", visualRackState.selectedModule.load()));
-    visualRackState.outputPreset.store((int)state.getProperty("selectedOutputPreset", visualRackState.outputPreset.load()));
-    selectedExportPreset = (int)state.getProperty("selectedExportPreset", selectedExportPreset);
-    selectedTheme = (int)state.getProperty("selectedTheme", selectedTheme);
-    hudEnabled = (bool)state.getProperty("hudEnabled", hudEnabled);
-    visualizerState.beatSync.store((bool)state.getProperty("beatSyncEnabled", visualizerState.beatSync.load()));
-    visualRackState.fxBloom.store((bool)state.getProperty("fxBloom", visualRackState.fxBloom.load()));
-    visualRackState.fxMirror.store((bool)state.getProperty("fxMirror", visualRackState.fxMirror.load()));
-    visualRackState.fxColorize.store((bool)state.getProperty("fxColorize", visualRackState.fxColorize.load()));
-    visualRackState.fxScanlines.store((bool)state.getProperty("fxScanlines", visualRackState.fxScanlines.load()));
-    visualRackState.fxChromaticSplit.store((bool)state.getProperty("fxChromaticSplit", visualRackState.fxChromaticSplit.load()));
-    visualRackState.visualIntensity.store((float)state.getProperty("visualIntensity", visualRackState.visualIntensity.load()));
-    visualRackState.motionAmount.store((float)state.getProperty("motionAmount", visualRackState.motionAmount.load()));
-    visualRackState.primaryModSource.store((int)state.getProperty("primaryModSource", visualRackState.primaryModSource.load()));
-    brandState.artistName = state.getProperty("artistName", brandState.artistName).toString();
-    brandState.trackTitle = state.getProperty("trackTitle", brandState.trackTitle).toString();
-    brandState.labelName = state.getProperty("labelName", brandState.labelName).toString();
-    brandState.callToAction = state.getProperty("callToAction", brandState.callToAction).toString();
-    brandState.releaseStatusText = state.getProperty("releaseStatusText", brandState.releaseStatusText).toString();
-    brandState.logoPath = state.getProperty("logoPath", brandState.logoPath).toString();
-    brandState.logoScale = (float)state.getProperty("logoScale", brandState.logoScale);
-    brandState.logoOpacity = (float)state.getProperty("logoOpacity", brandState.logoOpacity);
-    brandState.logoPositionMode = (int)state.getProperty("logoPositionMode", brandState.logoPositionMode);
+    visualizerState.mode.store(sanitizeVisualizerMode((int)getStatePropertyOrDefault(state, "selectedScene", (int)visualizerState.mode.load())));
+    visualRackState.selectedModule.store(sanitizeVisualModuleIndex((int)getStatePropertyOrDefault(state, "selectedModule", visualRackState.selectedModule.load())));
+    visualRackState.outputPreset.store(sanitizeOutputPresetIndex((int)getStatePropertyOrDefault(state, "selectedOutputPreset", visualRackState.outputPreset.load())));
+    selectedExportPreset = sanitizeExportPresetIndex((int)getStatePropertyOrDefault(state, "selectedExportPreset", selectedExportPreset));
+    selectedTheme = juce::jmax(1, (int)getStatePropertyOrDefault(state, "selectedTheme", selectedTheme));
+    hudEnabled = (bool)getStatePropertyOrDefault(state, "hudEnabled", hudEnabled);
+    visualizerState.beatSync.store((bool)getStatePropertyOrDefault(state, "beatSyncEnabled", visualizerState.beatSync.load()));
+    visualRackState.fxBloom.store((bool)getStatePropertyOrDefault(state, "fxBloom", visualRackState.fxBloom.load()));
+    visualRackState.fxMirror.store((bool)getStatePropertyOrDefault(state, "fxMirror", visualRackState.fxMirror.load()));
+    visualRackState.fxColorize.store((bool)getStatePropertyOrDefault(state, "fxColorize", visualRackState.fxColorize.load()));
+    visualRackState.fxScanlines.store((bool)getStatePropertyOrDefault(state, "fxScanlines", visualRackState.fxScanlines.load()));
+    visualRackState.fxChromaticSplit.store((bool)getStatePropertyOrDefault(state, "fxChromaticSplit", visualRackState.fxChromaticSplit.load()));
+    visualRackState.visualIntensity.store(juce::jlimit(0.0f, 2.0f, (float)getStatePropertyOrDefault(state, "visualIntensity", visualRackState.visualIntensity.load())));
+    visualRackState.motionAmount.store(juce::jlimit(0.0f, 1.0f, (float)getStatePropertyOrDefault(state, "motionAmount", visualRackState.motionAmount.load())));
+    visualRackState.primaryModSource.store((int)getStatePropertyOrDefault(state, "primaryModSource", visualRackState.primaryModSource.load()));
+    brandState.artistName = getStatePropertyOrDefault(state, "artistName", brandState.artistName).toString();
+    brandState.trackTitle = getStatePropertyOrDefault(state, "trackTitle", brandState.trackTitle).toString();
+    brandState.labelName = getStatePropertyOrDefault(state, "labelName", brandState.labelName).toString();
+    brandState.callToAction = getStatePropertyOrDefault(state, "callToAction", brandState.callToAction).toString();
+    brandState.releaseStatusText = getStatePropertyOrDefault(state, "releaseStatusText", brandState.releaseStatusText).toString();
+    brandState.logoPath = getStatePropertyOrDefault(state, "logoPath", brandState.logoPath).toString();
+    brandState.logoScale = juce::jlimit(0.1f, 3.0f, (float)getStatePropertyOrDefault(state, "logoScale", brandState.logoScale));
+    brandState.logoOpacity = juce::jlimit(0.0f, 1.0f, (float)getStatePropertyOrDefault(state, "logoOpacity", brandState.logoOpacity));
+    brandState.logoPositionMode = sanitizeLogoPositionMode((int)getStatePropertyOrDefault(state, "logoPositionMode", brandState.logoPositionMode));
     brandState.hasLogo = brandState.logoPath.isNotEmpty() && juce::File(brandState.logoPath).existsAsFile();
 }
 

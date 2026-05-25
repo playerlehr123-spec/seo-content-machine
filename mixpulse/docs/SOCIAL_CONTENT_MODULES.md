@@ -44,3 +44,18 @@
 - PNG still/frame export only.
 - OBS remains the current workaround for motion capture.
 - No built-in video export, upload, timeline, NDI, Spout, Syphon, or shader SDK.
+
+## v0.2 Sprint 3 Template Mapping
+
+| Template | Recommended module | Status |
+| --- | --- | --- |
+| Minimal Meter | Spectrum Bars | implemented |
+| Logo Reactor | Logo Reactor | implemented |
+| Release Announcement | Promo Card | implemented |
+| Label Drop | Promo Card | implemented |
+| Stream Overlay | Spectrum Bars | placeholder |
+| Reel Visualizer | Particles | placeholder |
+| Album Motion | Type Pulse | placeholder |
+| Type Pulse | Type Pulse | implemented |
+| Particle Card | Particles | placeholder |
+| Spectrum Promo | Spectrum Bars | implemented |

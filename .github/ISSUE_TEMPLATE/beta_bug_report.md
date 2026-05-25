@@ -1,24 +1,25 @@
 ---
-name: Bug report
-about: Report a WaveFrame beta bug
-title: "[Bug] "
-labels: bug
+name: Beta bug report
+about: Report a WaveFrame private beta bug
+title: "[Beta Bug] "
+labels: beta, bug
 assignees: ""
 ---
 
-## What happened?
+## Beta artifact / run number
 
 
-## Expected behavior
+## Standalone or VST3?
+- [ ] Standalone
+- [ ] VST3
+
+## DAW and version
 
 
 ## Windows version
 
 
-## DAW / standalone
-
-
-## Artifact version or commit
+## Audio interface
 
 
 ## Module / template selected
@@ -34,6 +35,17 @@ assignees: ""
 - [ ] No
 - [ ] Not sure
 
+## What happened?
+
+
+## Expected behavior
+
+
+## Steps to reproduce
+1.
+2.
+3.
+
 ## Repro rate
 - [ ] Always
 - [ ] Often
@@ -48,12 +60,7 @@ assignees: ""
 - [ ] P3 polish
 - [ ] Not sure
 
-## Steps to reproduce
-1. 
-2. 
-3. 
-
-## Screenshot/log
+## Screenshot / video / log
 
 
 ## Did audio pass-through change?
@@ -61,12 +68,7 @@ assignees: ""
 - [ ] No
 - [ ] Not sure
 
-## Did plugin crash?
-- [ ] Yes
-- [ ] No
-- [ ] Not sure
-
-## Does it reproduce after restart?
+## Did it crash or freeze?
 - [ ] Yes
 - [ ] No
 - [ ] Not sure

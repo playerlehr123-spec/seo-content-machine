@@ -10,12 +10,23 @@ Creator Templates are workflow presets that combine:
 
 | Template | Best For | Aspect | Module | Status |
 |---|---|---|---|---|
-| Release Announcement | IG post / reel cover | 4:5 / 9:16 | Promo Card | beta |
-| New Music Teaser | Reels/TikTok | 9:16 | Reel Visualizer | beta |
-| Label Drop | Label social | 1:1 | Logo Reactor | beta |
-| DJ Stream Overlay | OBS | 16:9 | Stream Overlay | beta |
-| YouTube Thumbnail | YouTube | 16:9 | Promo Card | planned |
-| Minimal Meter | Utility | Free | Meter Overlay | beta |
+| Minimal Meter | Producer utility / quick level check | Current | Spectrum Bars | implemented |
+| Logo Reactor | Artist or label identity post | 1:1 | Logo Reactor | implemented |
+| Release Announcement | IG feed / reel cover | 4:5 | Promo Card | implemented |
+| Label Drop | Label social post | 1:1 | Promo Card | implemented |
+| Stream Overlay | OBS / livestream capture | 16:9 | Spectrum Bars | placeholder |
+| Reel Visualizer | Reels/TikTok/Shorts | 9:16 | Particles | placeholder |
+| Album Motion | Album art motion concept | 1:1 | Type Pulse | placeholder |
+| Type Pulse | Lyric/title teaser | 9:16 | Type Pulse | implemented |
+| Particle Card | Visualizer card / teaser | 1:1 | Particles | placeholder |
+| Spectrum Promo | Classic visualizer promo | 16:9 | Spectrum Bars | implemented |
+
+## v0.2 Sprint 3 updates
+
+- Template metadata now includes descriptions, use cases, module recommendations, export preset preference, CTA/status defaults, and status labels.
+- The right-side Templates panel shows the selected template purpose, recommended module, status, and aspect label.
+- The preview canvas shows template/module context and Brand Layer text so testers can see the current creator state.
+- Invalid template selections fall back to Minimal Meter.
 
 ## Brand Layer connection
 - Templates prefer: Artist Name, Track Title, Out Now, Label Name, WaveFrame.
@@ -39,6 +50,6 @@ Creator Templates are workflow presets that combine:
 
 ## Future
 - richer template styling and typography
-- deeper module/template auto-wiring
+- deeper field editing controls
 - fixed-size export quality controls
 - video export investigation (later)

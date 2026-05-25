@@ -17,12 +17,30 @@ Current preset persistence focus:
 - artist/track/label/CTA text
 - release status text
 - logo path + logo transform settings
+- brand color hints
+
+v0.2 Sprint 4 makes this behavior explicit in the UI as Brand preset save/load, adds schema metadata to saved JSON, normalizes missing text defaults, and clamps logo scale/opacity/placement before applying loaded data.
+
+## Built-in creator session presets
+The editor includes safe built-in session presets:
+
+- Minimal Meter - Dark Cyan
+- Logo Reactor - Neon Green
+- Release Announcement - Vertical
+- Label Drop - Square
+- Stream Overlay - Wide
+- Type Pulse - Dark Glow
+- Particle Card - Accent Motion
+- Spectrum Promo - Clean Grid
+
+These presets compose existing template, module, export/aspect, brand color, intensity, motion, and glow values. They are local UI presets, not cloud/account presets.
 
 ## Not saved
 - live meter values, FFT data, clip latch runtime state
 - output window pointers/streams
 - audio device settings
 - audio signal content
+- full creator session JSON for local file save/load
 
 ## Logo path behavior
 - State/presets store logo file path only.
