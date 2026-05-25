@@ -28,3 +28,7 @@ WaveFrame is a Windows-first private beta. Some artifacts, plugin names, and int
 - Confirm meters move.
 - Test Output, Frame, HUD, fullscreen, module switching, and OBS capture.
 - Report artifact/run number, Windows version, DAW version, audio interface, and reproduction steps.
+- Use `mixpulse/docs/BUG_BASH_PLAN.md` to run a focused QA session.
+- Track pass/fail status in `mixpulse/docs/QA_MATRIX.md` and `mixpulse/docs/DAW_TEST_MATRIX.md`.
+- Use `mixpulse/docs/BLOCKER_CRITERIA.md` to decide whether a bug blocks private beta.
+- Send testers `mixpulse/docs/TESTER_INSTRUCTIONS.md` before the session.

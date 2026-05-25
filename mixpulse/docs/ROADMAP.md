@@ -18,6 +18,7 @@
 - no-crash basics
 - docs truth pass
 - Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
+- Bug Bash + QA Matrix v1: structured QA levels, blocker criteria, tester instructions, DAW matrix, OBS checks, artifact checks.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
