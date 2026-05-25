@@ -8,6 +8,13 @@
 namespace {
 float gainToDb(float g) { return juce::jlimit(-60.0f, 0.0f, juce::Decibels::gainToDecibels(std::max(1.0e-6f, g))); }
 float dbToY(float db, const juce::Rectangle<float>& r) { return juce::jmap(db, -60.0f, 0.0f, r.getBottom(), r.getY()); }
+int maxVisualModuleIndex() { return (int)VisualModuleType::Particles; }
+int clampVisualModuleIndex(int index) { return juce::jlimit(0, maxVisualModuleIndex(), index); }
+int clampExportPresetIndex(int index)
+{
+    const auto count = (int)getBuiltInExportPresets().size();
+    return count > 0 ? juce::jlimit(0, count - 1, index) : 0;
+}
 }
 
 MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcessor& p)
@@ -19,7 +26,7 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
     screenshotButton.onClick = [this]{ exportScreenshot(); };
-    fullscreenButton.onClick = [this]{ if(visualizer) visualizer->toggleFullscreen(); };
+    fullscreenButton.onClick = [this]{ if(!visualizer) openVisualizer(); if(visualizer) visualizer->toggleFullscreen(); };
     hudButton.onClick = [this]{ hudMode = !hudMode; processor.hudEnabled = hudMode; setStatusMessage(hudMode ? "HUD mode ON" : "HUD mode OFF"); resized(); repaint(); };
     infoButton.onClick = [this]{ setStatusMessage("Info: " + juce::String(Branding::ProductDisplayName) + " " + Branding::ProductVersion + " (" + Branding::ProductCodename + ")"); };
     copyInfoButton.onClick = [this]{
@@ -45,8 +52,9 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     moduleBox.setSelectedId((int)processor.visualRackState.selectedModule.load() + 1);
     moduleBox.onChange = [this]
     {
-        const auto module = juce::jmax(0, moduleBox.getSelectedId() - 1);
+        const auto module = clampVisualModuleIndex(moduleBox.getSelectedId() - 1);
         processor.visualRackState.selectedModule.store(module);
+        moduleBox.setSelectedId(module + 1, juce::dontSendNotification);
         setStatusMessage("Module: " + visualModuleName((VisualModuleType)module));
     };
 
@@ -64,16 +72,22 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
     templateBox.setSelectedId(1);
     templateBox.onChange = [this]
     {
+        const auto& templates = getBuiltInCreatorTemplates();
         const int idx = templateBox.getSelectedId() - 1;
-        if (idx >= 0 && idx < (int)getBuiltInCreatorTemplates().size())
+        if (idx >= 0 && idx < (int)templates.size())
         {
-            const auto& tp = getBuiltInCreatorTemplates()[(size_t)idx];
-            processor.visualRackState.selectedModule.store((int)tp.module);
+            const auto& tp = templates[(size_t)idx];
+            processor.visualRackState.selectedModule.store(clampVisualModuleIndex((int)tp.module));
             processor.brandState.callToAction = tp.ctaText;
             processor.brandState.releaseStatusText = tp.releaseStatusText;
             syncModuleBoxToProcessor();
-            exportPresetBox.setSelectedId(tp.preferredExportPresetIndex + 1, juce::sendNotificationSync);
+            exportPresetBox.setSelectedId(clampExportPresetIndex(tp.preferredExportPresetIndex) + 1, juce::sendNotificationSync);
             setStatusMessage("Template: " + tp.name + " - " + tp.moduleName);
+        }
+        else
+        {
+            templateBox.setSelectedId(1, juce::dontSendNotification);
+            setStatusMessage("Template fallback: Minimal Meter");
         }
     };
     syncUiToProcessorState();
@@ -411,10 +425,19 @@ void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectang
 }
 
 void MixPulseAudioProcessorEditor::timerCallback(){ repaint(); }
-void MixPulseAudioProcessorEditor::openVisualizer(){ if(!visualizer) visualizer=std::make_unique<VisualizerWindow>(processor.analyzer,processor.beatPulse,processor.visualizerState,processor.visualRackState,processor.brandState); visualizer->setVisible(true); visualizer->toFront(true);}
+void MixPulseAudioProcessorEditor::openVisualizer()
+{
+    if (!visualizer)
+        visualizer = std::make_unique<VisualizerWindow>(processor.analyzer, processor.beatPulse, processor.visualizerState, processor.visualRackState, processor.brandState);
+
+    visualizer->setVisible(true);
+    visualizer->toFront(true);
+    setStatusMessage("Output window ready");
+}
 void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
 {
-    const int idx = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
+    const int idx = clampExportPresetIndex(exportPresetBox.getSelectedId() - 1);
+    exportPresetBox.setSelectedId(idx + 1, juce::dontSendNotification);
     processor.selectedExportPreset = idx;
     switch (idx)
     {
@@ -424,6 +447,7 @@ void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
         case 4: case 5: processor.visualRackState.outputPreset.store((int) OutputPreset::Landscape16x9); break;
         default: processor.visualRackState.outputPreset.store((int) OutputPreset::Free); break;
     }
+    setStatusMessage("Export preset: " + exportPresetShortLabel(idx) + " PNG still");
 }
 
 void MixPulseAudioProcessorEditor::exportScreenshot()
@@ -431,7 +455,13 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     if (!visualizer) openVisualizer();
 
     const auto& presets = getBuiltInExportPresets();
-    const int presetIndex = juce::jlimit(0, (int)presets.size() - 1, exportPresetBox.getSelectedId() - 1);
+    if (presets.empty())
+    {
+        setStatusMessage("Frame failed: no export presets");
+        return;
+    }
+
+    const int presetIndex = clampExportPresetIndex(exportPresetBox.getSelectedId() - 1);
     const auto& preset = presets[(size_t)presetIndex];
     if (!preset.enabled)
     {
@@ -440,7 +470,12 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     }
 
     auto exportDir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile(Branding::ProductDisplayName).getChildFile("Exports");
-    exportDir.createDirectory();
+    const auto exportDirResult = exportDir.createDirectory();
+    if (exportDirResult.failed())
+    {
+        setStatusMessage("Frame failed: cannot create export folder");
+        return;
+    }
 
     auto* sourceComponent = visualizer ? visualizer->getContentComponent() : nullptr;
     if (!sourceComponent || sourceComponent->getWidth() <= 0 || sourceComponent->getHeight() <= 0)
@@ -478,15 +513,21 @@ void MixPulseAudioProcessorEditor::syncUiToProcessorState()
 {
     beatSyncButton.setToggleState(processor.visualizerState.beatSync.load(), juce::dontSendNotification);
     hudMode = processor.hudEnabled;
+    processor.selectedExportPreset = clampExportPresetIndex(processor.selectedExportPreset);
     exportPresetBox.setSelectedId(processor.selectedExportPreset + 1, juce::dontSendNotification);
+    processor.selectedTheme = processor.selectedTheme == 2 ? 2 : 1;
     themeBox.setSelectedId(processor.selectedTheme, juce::dontSendNotification);
+    if (templateBox.getSelectedId() <= 0)
+        templateBox.setSelectedId(1, juce::dontSendNotification);
     syncModuleBoxToProcessor();
     applySelectedExportPresetToOutputGuide();
 }
 
 void MixPulseAudioProcessorEditor::syncModuleBoxToProcessor()
 {
-    moduleBox.setSelectedId((int)processor.visualRackState.selectedModule.load() + 1, juce::dontSendNotification);
+    const auto module = clampVisualModuleIndex((int)processor.visualRackState.selectedModule.load());
+    processor.visualRackState.selectedModule.store(module);
+    moduleBox.setSelectedId(module + 1, juce::dontSendNotification);
 }
 
 void MixPulseAudioProcessorEditor::saveUserPreset()
@@ -536,4 +577,6 @@ void MixPulseAudioProcessorEditor::resetDefaults()
     processor.hudEnabled = false;
     syncUiToProcessorState();
     setStatusMessage("Defaults restored");
+    resized();
+    repaint();
 }
