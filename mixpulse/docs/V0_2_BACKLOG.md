@@ -21,6 +21,9 @@ Status values:
 | WF-S1-001 | Templates | Bug | P1 | Add safe fallback for invalid module/template selection state | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify rapid switching and default/malformed states |
 | WF-S1-002 | Presets | Bug | P1 | Clamp malformed brand preset logo values | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify malformed preset load does not crash or over-scale |
 | WF-S1-003 | Output | Bug | P2 | Add safe fallback for missing/invalid export preset selection | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify export preset and template switching |
+| WF-S3-001 | Templates | Polish | P2 | Expand starter template metadata and status labels | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify all 10 templates display purpose/module/status |
+| WF-S3-002 | Brand Kit | Polish | P2 | Improve brand defaults and preview fallback text | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify reset restores readable defaults |
+| WF-S3-003 | Templates | Polish | P2 | Show template/module/brand state in preview canvas | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify overlay remains readable at common window sizes |
 
 ## Areas
 

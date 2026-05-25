@@ -57,6 +57,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - Template status.
 - Template preview overlays.
 - Better default templates.
+- Sprint 3 implemented safer template metadata, 10 starter presets, template/module mapping display, and preview overlay context. Deeper field editing remains future work.
 
 ### C. Brand Kit v2
 
@@ -65,6 +66,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - Text placement options.
 - Save/load brand defaults.
 - Logo/image import research only, not implementation unless approved later as safe.
+- Sprint 3 improved default brand text, reset expectations, and preview fallback display. Color pickers and logo/image import remain future/TODO.
 
 ### D. Presets v2
 

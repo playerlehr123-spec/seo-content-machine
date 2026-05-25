@@ -104,6 +104,11 @@ Merge criteria:
 - Current/future docs updated.
 - No broken output/frame/HUD behavior.
 
+Sprint 3 status:
+- WF-S3-001 template metadata/status labels: implemented, needs retest.
+- WF-S3-002 Brand Kit defaults and fallback display: implemented, needs retest.
+- WF-S3-003 preview overlay template/module/brand context: implemented, needs retest.
+
 ## Sprint 4 - Preset / Session Polish
 
 Goal:

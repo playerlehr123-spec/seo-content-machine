@@ -9,6 +9,9 @@ Brand Layer provides local-only creator content state for:
 ## Current beta scope
 - Local state model (`CreatorBrandState`).
 - Local JSON preset save/load helpers.
+- v0.2 Sprint 3 default text is `Artist Name`, `Track Title`, `Label Name`, and `Out Now`.
+- Empty UI display values fall back to safe defaults.
+- Logo scale, opacity, and placement are clamped or sanitized on load.
 - Default preset path:
   `Documents/WaveFrame/Presets/WaveFrame_UserPreset.json`
 - No processBlock file I/O.
@@ -22,6 +25,7 @@ Brand Layer provides local-only creator content state for:
 ## Release Promo Card scope
 - Artist/Track/Label/CTA text model exists in state foundation.
 - Creator templates can set CTA/status defaults and route the preview to Promo Card or Logo Reactor placeholders.
+- The editor preview now shows the current brand text, selected template, and recommended module context.
 - Rich typography/template styling is future work.
 
 ## Future
