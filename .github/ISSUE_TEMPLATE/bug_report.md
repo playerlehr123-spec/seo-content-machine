@@ -15,10 +15,33 @@ assignees: ""
 ## Windows version
 
 
-## DAW / standalone
+## Artifact / run number
 
 
-## Artifact version or commit
+## Standalone or VST3
+- [ ] Standalone
+- [ ] VST3
+- [ ] Both
+
+## DAW involved?
+- [ ] Yes
+- [ ] No
+
+## DAW name/version
+
+
+## Module/template selected
+
+
+## Output window open?
+- [ ] Yes
+- [ ] No
+- [ ] Not sure
+
+## OBS involved?
+- [ ] Yes
+- [ ] No
+- [ ] Not sure
 
 
 ## Steps to reproduce
@@ -29,14 +52,24 @@ assignees: ""
 ## Screenshot/log
 
 
+## Repro rate
+- [ ] Always
+- [ ] Often
+- [ ] Sometimes
+- [ ] Once
+- [ ] Not reproduced
+
+
 ## Did audio pass-through change?
 - [ ] Yes
 - [ ] No
 - [ ] Not sure
 
-## Did plugin crash?
-- [ ] Yes
-- [ ] No
+## Did the app/plugin/DAW crash?
+- [ ] App crashed
+- [ ] Plugin crashed
+- [ ] DAW crashed
+- [ ] No crash
 - [ ] Not sure
 
 ## Does it reproduce after restart?

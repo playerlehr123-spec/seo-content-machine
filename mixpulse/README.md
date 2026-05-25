@@ -112,6 +112,17 @@ See `mixpulse/docs/QA_CHECKLIST.md`.
 
 
 ## Beta tester docs
+- Private Beta v0.1:
+  - Release notes: `mixpulse/docs/RELEASE_NOTES_v0.1.md`
+  - Tester README: `mixpulse/docs/PRIVATE_BETA_README.md`
+  - Private beta guide: `mixpulse/docs/PRIVATE_BETA_GUIDE.md`
+  - Known issues: `mixpulse/docs/KNOWN_ISSUES.md`
+  - RC checklist: `mixpulse/docs/RC_CHECKLIST_v0.1.md`
+  - Bug bash plan: `mixpulse/docs/BUG_BASH_PLAN.md`
+  - QA matrix: `mixpulse/docs/QA_MATRIX.md`
+  - Tester instructions: `mixpulse/docs/TESTER_INSTRUCTIONS.md`
+  - Installer/signing research: `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`
+  - Distribution plan: `mixpulse/docs/DISTRIBUTION_PLAN.md`
 - Install guide: `mixpulse/docs/BETA_INSTALL.md`
 - Beta artifact test plan: `mixpulse/docs/BETA_ARTIFACT_TEST_PLAN.md`
 - DAW smoke test checklist: `mixpulse/docs/DAW_SMOKE_TEST_CHECKLIST.md`
@@ -208,6 +219,15 @@ Current CI is intentionally **Windows-first**. Standalone remains the gating art
 - `mixpulse/docs/FEATURE_BACKLOG.md`
 - `mixpulse/docs/BRAND_LAYER.md`
 - `mixpulse/docs/CREATOR_TEMPLATES.md`
+- `mixpulse/docs/RELEASE_NOTES_v0.1.md`
+- `mixpulse/docs/PRIVATE_BETA_README.md`
+- `mixpulse/docs/KNOWN_ISSUES.md`
+- `mixpulse/docs/RC_CHECKLIST_v0.1.md`
+- `mixpulse/docs/BUG_BASH_PLAN.md`
+- `mixpulse/docs/QA_MATRIX.md`
+- `mixpulse/docs/TESTER_INSTRUCTIONS.md`
+- `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`
+- `mixpulse/docs/DISTRIBUTION_PLAN.md`
 
 ## Privacy note
 - WaveFrame does not send analytics or telemetry.
