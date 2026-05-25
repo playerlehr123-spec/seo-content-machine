@@ -9,6 +9,7 @@ Status: v0.2 Sprint 3 improves metadata, template/module mapping, status labels,
 - Each preset stores display name, description, use case, recommended module, preferred export preset, CTA text, release/status text, and implementation status.
 - Selecting a template safely updates the recommended visual module, CTA text, release text, and export preset.
 - Invalid template selection falls back to Minimal Meter.
+- v0.2 Sprint 4 built-in session presets can choose template presets as part of a larger creator session default.
 
 ## Starter Templates
 

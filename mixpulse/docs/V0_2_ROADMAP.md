@@ -75,6 +75,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - Preset validation.
 - Recent presets if safe.
 - Clearer status messages.
+- Sprint 4 adds a UI-side built-in session preset selector, normalized Brand preset save/load, clearer reset/default behavior, and docs that separate Brand preset JSON from full creator session presets.
 
 ### E. Output / OBS v2
 

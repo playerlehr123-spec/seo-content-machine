@@ -1,6 +1,6 @@
 # WaveFrame Brand Kit
 
-Status: v0.2 Sprint 3 clarifies Brand Kit defaults and display behavior. The current implementation uses `BrandLayer::CreatorBrandState`.
+Status: v0.2 Sprint 3 clarified Brand Kit display behavior. v0.2 Sprint 4 adds normalization before save/load use and keeps malformed local presets from replacing the current session.
 
 ## Fields
 
@@ -34,6 +34,8 @@ Status: v0.2 Sprint 3 clarifies Brand Kit defaults and display behavior. The cur
 - Brand state is local and UI-side.
 - Brand text appears in the editor Brand panel and preview overlay.
 - Preset save/load uses local JSON under `Documents/WaveFrame/Presets`.
+- Saved JSON includes schema metadata for the current beta format.
+- Missing/empty text fields normalize back to readable defaults.
 - Malformed logo scale, opacity, and placement values are clamped or reset safely.
 - Reset restores default Brand Kit text and visual defaults.
 

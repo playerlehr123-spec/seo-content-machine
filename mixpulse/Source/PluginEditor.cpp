@@ -41,13 +41,41 @@ juce::String fallbackText(const juce::String& value, const juce::String& fallbac
 {
     return value.trim().isNotEmpty() ? value : fallback;
 }
+
+struct BuiltInSessionPreset
+{
+    const char* name;
+    int templateIndex;
+    float visualIntensity;
+    float motionAmount;
+    float bloomAmount;
+    juce::Colour primary;
+    juce::Colour secondary;
+    juce::Colour accent;
+    const char* status;
+};
+
+const std::vector<BuiltInSessionPreset>& getBuiltInSessionPresets()
+{
+    static const std::vector<BuiltInSessionPreset> presets {
+        { "Minimal Meter - Dark Cyan", 0, 0.75f, 0.65f, 0.45f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(20, 30, 50), juce::Colour::fromRGB(255, 220, 120), "implemented" },
+        { "Logo Reactor - Neon Green", 1, 0.78f, 0.58f, 0.52f, juce::Colour::fromRGB(80, 255, 160), juce::Colour::fromRGB(8, 18, 16), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Release Announcement - Vertical", 2, 0.72f, 0.42f, 0.30f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(14, 14, 24), juce::Colour::fromRGB(255, 220, 120), "implemented" },
+        { "Label Drop - Square", 3, 0.68f, 0.38f, 0.28f, juce::Colour::fromRGB(255, 220, 120), juce::Colour::fromRGB(18, 16, 24), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Stream Overlay - Wide", 4, 0.70f, 0.70f, 0.35f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(8, 13, 24), juce::Colour::fromRGB(80, 255, 160), "placeholder" },
+        { "Type Pulse - Dark Glow", 7, 0.82f, 0.66f, 0.42f, juce::Colour::fromRGB(190, 255, 245), juce::Colour::fromRGB(7, 10, 18), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Particle Card - Accent Motion", 8, 0.76f, 0.82f, 0.48f, juce::Colour::fromRGB(160, 255, 120), juce::Colour::fromRGB(8, 12, 20), juce::Colour::fromRGB(32, 218, 255), "placeholder" },
+        { "Spectrum Promo - Clean Grid", 9, 0.70f, 0.48f, 0.25f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(10, 14, 22), juce::Colour::fromRGB(255, 220, 120), "implemented" }
+    };
+    return presets;
+}
 }
 
 MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcessor& p)
     : AudioProcessorEditor(&p), processor(p), theme(ThemeManager::darkNeon())
 {
     setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
-    addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox);
+    addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox); addAndMakeVisible(sessionPresetBox);
     tapButton.onClick = [this]{ processor.tapTempo.tap(juce::Time::getMillisecondCounterHiRes()/1000.0); processor.beatPulse.trigger(processor.tapTempo.getBpm().value_or(0.0)); };
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
@@ -68,6 +96,12 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
         setStatusMessage("Info copied");
     };
     themeBox.addItem("Dark Neon", 1); themeBox.addItem("Lo-Fi Warm (TODO)", 2); themeBox.setSelectedId(1);
+
+    const auto& sessionPresets = getBuiltInSessionPresets();
+    for (int i = 0; i < (int)sessionPresets.size(); ++i)
+        sessionPresetBox.addItem(sessionPresets[(size_t)i].name, i + 1);
+    sessionPresetBox.setSelectedId(1);
+    sessionPresetBox.onChange = [this] { applyBuiltInSessionPreset(sessionPresetBox.getSelectedId() - 1); };
 
     moduleBox.addItem("Spectrum Bars", (int)VisualModuleType::SpectrumBars + 1);
     moduleBox.addItem("Logo Reactor", (int)VisualModuleType::LogoPulse + 1);
@@ -269,6 +303,7 @@ void MixPulseAudioProcessorEditor::resized()
         templateBox.setBounds(0, 0, 0, 0);
         exportPresetBox.setBounds(0, 0, 0, 0);
         themeBox.setBounds(0, 0, 0, 0);
+        sessionPresetBox.setBounds(0, 0, 0, 0);
         tapButton.setBounds(0, 0, 0, 0);
         beatSyncButton.setBounds(0, 0, 0, 0);
         fullscreenButton.setBounds(0, 0, 0, 0);
@@ -281,8 +316,10 @@ void MixPulseAudioProcessorEditor::resized()
     b.removeFromLeft(218);
     b.removeFromLeft(12);
     auto right = b.removeFromRight(326).reduced(14, 42);
-    auto controls = right.removeFromTop(104);
+    auto controls = right.removeFromTop(146);
     controls.removeFromTop(22);
+    sessionPresetBox.setBounds(controls.removeFromTop(26));
+    controls.removeFromTop(4);
     moduleBox.setBounds(controls.removeFromTop(26));
     auto beatRow = controls.removeFromTop(28);
     beatSyncButton.setBounds(beatRow.removeFromLeft(118));
@@ -415,8 +452,9 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     drawPanel(g, area, "Creator Controls");
     auto r = area.reduced(14, 42);
 
-    auto controls = r.removeFromTop(104);
+    auto controls = r.removeFromTop(146);
     drawSectionTitle(g, controls.removeFromTop(20), "Controls");
+    drawLabelValue(g, controls.removeFromTop(28), "Session", "");
     drawLabelValue(g, controls.removeFromTop(28), "Visual", "");
     drawLabelValue(g, controls.removeFromTop(22), "Intensity", juce::String(processor.visualRackState.visualIntensity.load(), 2));
     drawLabelValue(g, controls.removeFromTop(22), "Motion", juce::String(processor.visualRackState.motionAmount.load(), 2));
@@ -496,6 +534,40 @@ void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
         exportPresetBox.setSelectedId(idx + 1, juce::dontSendNotification);
 }
 
+void MixPulseAudioProcessorEditor::applyBuiltInSessionPreset(int presetIndex)
+{
+    const auto& presets = getBuiltInSessionPresets();
+    if (presets.empty())
+    {
+        setStatusMessage("Built-in presets unavailable");
+        return;
+    }
+
+    const int safePresetIndex = juce::jlimit(0, (int)presets.size() - 1, presetIndex);
+    const auto& preset = presets[(size_t)safePresetIndex];
+    const int templateIndex = sanitizeCreatorTemplateIndex(preset.templateIndex);
+    const auto& templates = getBuiltInCreatorTemplates();
+
+    if (!templates.empty())
+    {
+        templateBox.setSelectedId(templateIndex + 1, juce::sendNotificationSync);
+        const auto& selectedTemplate = templates[(size_t)templateIndex];
+        processor.visualRackState.selectedModule.store(sanitizeVisualModuleIndex((int)selectedTemplate.module));
+        const int exportIndex = safeExportPresetIndex(selectedTemplate.preferredExportPresetIndex + 1, 0);
+        exportPresetBox.setSelectedId(exportIndex + 1, juce::sendNotificationSync);
+    }
+
+    processor.visualRackState.visualIntensity.store(juce::jlimit(0.0f, 2.0f, preset.visualIntensity));
+    processor.visualRackState.motionAmount.store(juce::jlimit(0.0f, 1.0f, preset.motionAmount));
+    processor.visualRackState.bloomAmount.store(juce::jlimit(0.0f, 1.0f, preset.bloomAmount));
+    processor.brandState.brandPrimaryColor = preset.primary;
+    processor.brandState.brandSecondaryColor = preset.secondary;
+    processor.brandState.brandAccentColor = preset.accent;
+    BrandLayer::normalizeBrandState(processor.brandState);
+    syncModuleBoxToProcessor();
+    setStatusMessage("Built-in preset: " + juce::String(preset.name) + " / " + juce::String(preset.status));
+}
+
 void MixPulseAudioProcessorEditor::exportScreenshot()
 {
     if (!visualizer) openVisualizer();
@@ -548,9 +620,12 @@ void MixPulseAudioProcessorEditor::syncUiToProcessorState()
 {
     beatSyncButton.setToggleState(processor.visualizerState.beatSync.load(), juce::dontSendNotification);
     hudMode = processor.hudEnabled;
+    processor.selectedExportPreset = safeExportPresetIndex(processor.selectedExportPreset + 1, 0);
     exportPresetBox.setSelectedId(processor.selectedExportPreset + 1, juce::dontSendNotification);
-    themeBox.setSelectedId(processor.selectedTheme, juce::dontSendNotification);
+    const int themeId = processor.selectedTheme > 0 ? processor.selectedTheme : 1;
+    themeBox.setSelectedId(themeId, juce::dontSendNotification);
     syncModuleBoxToProcessor();
+    BrandLayer::normalizeBrandState(processor.brandState);
     applySelectedExportPresetToOutputGuide();
 }
 
@@ -566,29 +641,31 @@ void MixPulseAudioProcessorEditor::syncModuleBoxToProcessor()
 
 void MixPulseAudioProcessorEditor::saveUserPreset()
 {
-    processor.selectedExportPreset = juce::jmax(0, exportPresetBox.getSelectedId() - 1);
-    processor.selectedTheme = themeBox.getSelectedId();
+    processor.selectedExportPreset = safeExportPresetIndex(exportPresetBox.getSelectedId(), processor.selectedExportPreset);
+    processor.selectedTheme = themeBox.getSelectedId() > 0 ? themeBox.getSelectedId() : 1;
     processor.hudEnabled = hudMode;
+    BrandLayer::normalizeBrandState(processor.brandState);
     if (BrandLayer::savePreset(processor.brandState, BrandLayer::defaultPresetFile()))
-        setStatusMessage("Preset saved: Documents/WaveFrame/Presets");
+        setStatusMessage("Brand preset saved locally: Documents/WaveFrame/Presets");
     else
-        setStatusMessage("Preset save failed");
+        setStatusMessage("Brand preset save failed safely");
 }
 
 void MixPulseAudioProcessorEditor::loadUserPreset()
 {
     if (!BrandLayer::loadPreset(processor.brandState, BrandLayer::defaultPresetFile()))
     {
-        setStatusMessage("Preset load failed");
+        setStatusMessage("Brand preset load failed safely - current session kept");
         return;
     }
+    BrandLayer::normalizeBrandState(processor.brandState);
     if (processor.brandState.logoPath.isNotEmpty())
     {
         auto logo = juce::File(processor.brandState.logoPath);
-        if (logo.existsAsFile()) setStatusMessage("Preset loaded - Logo reloaded");
-        else setStatusMessage("Preset loaded - Logo file missing");
+        if (logo.existsAsFile()) setStatusMessage("Brand preset loaded - Logo path valid");
+        else setStatusMessage("Brand preset loaded - Logo placeholder used");
     }
-    else setStatusMessage("Preset loaded");
+    else setStatusMessage("Brand preset loaded");
 }
 
 void MixPulseAudioProcessorEditor::resetDefaults()
@@ -611,6 +688,8 @@ void MixPulseAudioProcessorEditor::resetDefaults()
     processor.hudEnabled = false;
     if (templateBox.getNumItems() > 0)
         templateBox.setSelectedId(1, juce::dontSendNotification);
+    if (sessionPresetBox.getNumItems() > 0)
+        sessionPresetBox.setSelectedId(1, juce::dontSendNotification);
     syncUiToProcessorState();
-    setStatusMessage("Defaults restored");
+    setStatusMessage("Preset reset to default session");
 }

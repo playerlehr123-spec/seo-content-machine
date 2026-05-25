@@ -24,6 +24,9 @@ Status values:
 | WF-S3-001 | Templates | Polish | P2 | Expand starter template metadata and status labels | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify all 10 templates display purpose/module/status |
 | WF-S3-002 | Brand Kit | Polish | P2 | Improve brand defaults and preview fallback text | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify reset restores readable defaults |
 | WF-S3-003 | Templates | Polish | P2 | Show template/module/brand state in preview canvas | v0.2 Sprint 3 | Needs retest | Sprint 3 | Implemented in Sprint 3; verify overlay remains readable at common window sizes |
+| WF-S4-001 | Presets | Polish | P2 | Add built-in creator session preset selector | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify all 8 presets update template/module/export/color state |
+| WF-S4-002 | Presets | Bug | P2 | Normalize Brand preset save/load values and keep current session on load failure | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify missing/malformed JSON fails safely |
+| WF-S4-003 | Presets | Polish | P2 | Clarify reset/default and Brand preset status messages | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify reset restores default session and truthful status |
 
 ## Areas
 

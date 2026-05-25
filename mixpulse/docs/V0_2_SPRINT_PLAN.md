@@ -139,6 +139,11 @@ Merge criteria:
 - No audio-thread file IO.
 - Known limitations documented.
 
+Sprint 4 status:
+- WF-S4-001 built-in creator session preset selector: implemented, needs retest.
+- WF-S4-002 Brand preset save/load normalization: implemented, needs retest.
+- WF-S4-003 reset/default and status messaging clarity: implemented, needs retest.
+
 ## Sprint 5 - Output / OBS Polish
 
 Goal:

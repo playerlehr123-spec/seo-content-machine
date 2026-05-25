@@ -22,6 +22,7 @@ namespace BrandLayer
         juce::Colour brandAccentColor { juce::Colour::fromRGB(255, 220, 120) };
     };
 
+    void normalizeBrandState(CreatorBrandState&);
     bool savePreset(const CreatorBrandState&, const juce::File&);
     bool loadPreset(CreatorBrandState&, const juce::File&);
     juce::File defaultPresetFile();
