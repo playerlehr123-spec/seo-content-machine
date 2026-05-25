@@ -22,6 +22,8 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Bug report flow ready: `mixpulse/docs/BETA_BUG_REPORTING.md`.
 - [ ] Fix sprint workflow ready: `mixpulse/docs/FIX_SPRINT_WORKFLOW.md`.
 - [ ] Tester message ready: `mixpulse/docs/BETA_TESTER_MESSAGE_TEMPLATE.md`.
+- [ ] Release freeze checked against `mixpulse/docs/RELEASE_FREEZE_v0.1.md`.
+- [ ] Final readiness checked against `mixpulse/docs/FINAL_READINESS_CHECKLIST_v0.1.md`.
 - [ ] Do not share externally until manual DAW test passes.
 
 ## Standalone Smoke Test
@@ -62,3 +64,9 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Feature request template separates beta blocker, next beta, future roadmap, and nice-to-have.
 - [ ] Recommended label system documented in `mixpulse/docs/GITHUB_LABELS.md`.
 - [ ] P0/P1 issues have an owner before beta sharing.
+
+## Release Freeze
+- [ ] v0.1 frozen scope reviewed.
+- [ ] Only P0/P1 fixes accepted after freeze.
+- [ ] v0.2 ideas routed to `mixpulse/docs/V0_2_PARKING_LOT.md`.
+- [ ] No new features, UI rewrites, export systems, renames, installer/signing, video export, cloud, telemetry, macOS/AU, NDI, Spout, Syphon, or shader SDK.

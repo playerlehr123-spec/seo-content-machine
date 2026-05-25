@@ -25,6 +25,9 @@ This bug bash plan is for private beta readiness and feedback intake.
 - Feedback tracker: `BETA_FEEDBACK_TRACKER.md`
 - Fix sprint workflow: `FIX_SPRINT_WORKFLOW.md`
 - Label recommendations: `GITHUB_LABELS.md`
+- QA matrix: `QA_MATRIX.md`
+- Blocker criteria: `BLOCKER_CRITERIA.md`
+- Final readiness checklist: `FINAL_READINESS_CHECKLIST_v0.1.md`
 
 ## Bug Bash Rules
 

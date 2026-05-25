@@ -28,6 +28,10 @@ Do not share private beta builds publicly.
 - Include artifact/run number, Windows version, DAW/version when relevant, module/template selected, output/OBS status, repro steps, and screenshots/video/logs when useful.
 
 Useful links:
+- Release freeze: `RELEASE_FREEZE_v0.1.md`
+- Final readiness checklist: `FINAL_READINESS_CHECKLIST_v0.1.md`
+- Release notes: `RELEASE_NOTES_v0.1.md`
+- Known issues: `KNOWN_ISSUES.md`
 - Bug reporting details: `BETA_BUG_REPORTING.md`
 - Manual tracker: `BETA_FEEDBACK_TRACKER.md`
 - Fix sprint rules: `FIX_SPRINT_WORKFLOW.md`

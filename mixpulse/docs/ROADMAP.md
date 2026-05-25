@@ -19,6 +19,7 @@
 - docs truth pass
 - Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
 - Beta Feedback / Triage: intake docs, severity rules, manual tracker, issue templates, label guidance, and fix sprint workflow are the current process layer.
+- v0.1 Release Freeze: frozen private beta scope, final readiness checklist, known issues, release notes, and v0.2 parking lot.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
@@ -82,3 +83,22 @@
 - Current fix process: `FIX_SPRINT_WORKFLOW.md` with top-3-issue sprint limits.
 - Recommended labels are documented in `GITHUB_LABELS.md`.
 - Future/TODO: automated label creation, project board automation, and form-backed tester submissions.
+
+## v0.1 Release Freeze
+- Current freeze docs: `RELEASE_FREEZE_v0.1.md`, `FINAL_READINESS_CHECKLIST_v0.1.md`, and `RELEASE_NOTES_v0.1.md`.
+- Known issues are tracked in `KNOWN_ISSUES.md`.
+- Tester instructions are tracked in `TESTER_INSTRUCTIONS.md`.
+- v0.2 ideas belong in `V0_2_PARKING_LOT.md`.
+- After freeze, only P0/P1 fixes should land before private beta.
+
+## v0.2 Planning
+- Better visual module controls.
+- Deeper template editing.
+- Real logo/image import.
+- Improved preset save/load UX.
+- Private beta bug fixes.
+- Naming cleanup stage 1.
+- Installer/signing follow-up.
+- Visual modules v2.
+- Performance/CPU checks.
+- Video export research only; implementation remains deferred.
