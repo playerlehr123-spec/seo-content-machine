@@ -92,13 +92,30 @@
 - After freeze, only P0/P1 fixes should land before private beta.
 
 ## v0.2 Planning
-- Better visual module controls.
-- Deeper template editing.
-- Real logo/image import.
-- Improved preset save/load UX.
-- Private beta bug fixes.
-- Naming cleanup stage 1.
-- Installer/signing follow-up.
-- Visual modules v2.
-- Performance/CPU checks.
-- Video export research only; implementation remains deferred.
+- v0.2 planning has started in `V0_2_ROADMAP.md`, `V0_2_SPRINT_PLAN.md`, `V0_2_BACKLOG.md`, `V0_2_MERGE_RULES.md`, and `V0_2_CODEX_PROMPTS.md`.
+- v0.2 remains a private beta development cycle, not a public release.
+- Primary goals: visual module quality, template editing, Brand Kit workflow, preset save/load UX, Output/OBS workflow, beta feedback fixes, naming cleanup stage 1 if safe, and DAW compatibility confidence.
+- First sprint should be beta feedback fixes: P0/P1 issues before polish.
+- Suggested follow-up sprints: Visual Modules v2, Template + Brand UX, Preset / Session Polish, Output / OBS Polish, and v0.2 Release Candidate.
+
+## v0.2 Out Of Scope
+- Public release.
+- Installer implementation.
+- Code signing implementation.
+- Built-in video export.
+- NDI / Spout / Syphon.
+- Shader SDK.
+- Virtual camera.
+- macOS / AU.
+- Cloud accounts/templates.
+- Telemetry.
+- Plugin ID rename.
+- CMake target rename.
+
+## v0.3 / Future Ideas
+- Video export research after v0.2, with implementation still deferred.
+- Installer/signing implementation after research and beta feedback.
+- Staged naming cleanup after DAW compatibility confidence improves.
+- macOS/AU future research only.
+- NDI/Spout/Syphon future research only.
+- Template packs and community workflows after private beta scope is stable.

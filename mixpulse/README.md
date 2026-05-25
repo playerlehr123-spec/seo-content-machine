@@ -39,6 +39,18 @@ Release-freeze and readiness docs:
 
 v0.1 is a private beta candidate only. It is not a public release, signed installer, video export release, plugin rename, or artifact rename.
 
+## WaveFrame v0.2 Planning
+
+v0.2 planning docs:
+- `docs/V0_2_ROADMAP.md`
+- `docs/V0_2_SPRINT_PLAN.md`
+- `docs/V0_2_BACKLOG.md`
+- `docs/V0_2_MERGE_RULES.md`
+- `docs/V0_2_CODEX_PROMPTS.md`
+- `docs/V0_2_PARKING_LOT.md`
+
+v0.2 is still a private beta cycle. It should focus on beta feedback fixes, visual module quality, template/brand/preset workflow, Output/OBS polish, DAW confidence, and safe naming clarity. Public release, installer/signing implementation, video export, NDI/Spout/Syphon, shader SDK, macOS/AU, cloud, telemetry, plugin ID rename, and CMake target rename remain future/out of scope.
+
 ## Private Beta Feedback
 
 Feedback intake and triage docs:

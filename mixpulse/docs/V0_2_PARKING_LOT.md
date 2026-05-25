@@ -14,14 +14,20 @@ This document captures future ideas only. These are not part of the v0.1 private
 - Visual modules v2.
 - Performance/CPU checks.
 - Possible video export research only.
+- DAW compatibility confidence improvements.
+- Output/OBS capture polish.
+- Template/module mapping cleanup.
 
 ## Explicitly Deferred
 
 - Video export implementation.
 - NDI / Spout / Syphon.
+- Shader SDK.
+- Virtual camera.
 - macOS / AU.
 - Public release.
 - Plugin ID rename.
+- CMake target rename.
 - Artifact rename.
 - Installer implementation.
 - Code signing implementation.
