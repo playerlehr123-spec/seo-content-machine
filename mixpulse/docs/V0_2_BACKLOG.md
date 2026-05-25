@@ -18,6 +18,9 @@ Status values:
 | EX-002 | Visual Modules | Polish | P2 | Example placeholder: Logo Reactor needs stronger visual hierarchy | Internal review | New | Sprint 2 | Placeholder row only |
 | EX-003 | Templates | Feature | P3 | Example placeholder: deeper template field editing | Parking lot | Deferred | Sprint 3 | Placeholder row only |
 | EX-004 | Naming | Research | P2 | Example placeholder: WaveFrame naming cleanup stage 1 plan | Naming plan | New | Sprint 6 | Placeholder row only |
+| WF-S1-001 | Templates | Bug | P1 | Add safe fallback for invalid module/template selection state | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify rapid switching and default/malformed states |
+| WF-S1-002 | Presets | Bug | P1 | Clamp malformed brand preset logo values | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify malformed preset load does not crash or over-scale |
+| WF-S1-003 | Output | Bug | P2 | Add safe fallback for missing/invalid export preset selection | Defensive QA | Needs retest | Sprint 1 | Fixed in Sprint 1; verify export preset and template switching |
 
 ## Areas
 

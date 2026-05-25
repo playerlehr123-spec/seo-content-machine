@@ -31,6 +31,7 @@ This document lists known limitations and test areas for the v0.1 private beta. 
 - DAW remove/reload.
 - OBS Window Capture workflow.
 - Artifact contents after download/unzip.
+- v0.2 Sprint 1 selection fallback fixes need retest: module/template switching, export preset fallback, and malformed brand preset load.
 
 ## Blocking Issues
 

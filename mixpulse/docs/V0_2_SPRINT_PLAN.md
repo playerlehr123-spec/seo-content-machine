@@ -37,6 +37,11 @@ Merge criteria:
 - Retest notes added.
 - QA tracker updated.
 
+Sprint 1 status:
+- WF-S1-001 module/template fallback guard: fixed, needs retest.
+- WF-S1-002 malformed brand preset clamp: fixed, needs retest.
+- WF-S1-003 export preset fallback guard: fixed, needs retest.
+
 ## Sprint 2 - Visual Modules v2
 
 Goal:

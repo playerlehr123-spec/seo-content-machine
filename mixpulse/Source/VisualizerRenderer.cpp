@@ -51,7 +51,7 @@ juce::String VisualizerRenderer::modeName(VisualizerMode mode)
 
 void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const std::array<float, AudioAnalyzer::spectrumBins>& spectrumData, VisualizerMode mode, float pulse, const VisualRackState& rack, const BrandLayer::CreatorBrandState* brand)
 {
-    const auto module = (VisualModuleType) rack.selectedModule.load();
+    const auto module = (VisualModuleType) sanitizeVisualModuleIndex(rack.selectedModule.load());
     if (mode == VisualizerMode::SpectrumBars && module == VisualModuleType::SpectrumBars) { spectrum.render(g, b, spectrumData, pulse, rack); return; }
     const auto primary = brand != nullptr ? brand->brandPrimaryColor : juce::Colour::fromRGB(32, 218, 255);
     const auto secondary = brand != nullptr ? brand->brandSecondaryColor : juce::Colour::fromRGB(20, 30, 50);
@@ -74,7 +74,7 @@ void VisualizerRenderer::render(juce::Graphics& g, juce::Rectangle<int> b, const
     for (int y = b.getY(); y < b.getBottom(); y += 22) g.drawHorizontalLine(y, (float)b.getX(), (float)b.getRight());
 
     auto guide = b.toFloat().reduced(24.0f);
-    const auto preset = (OutputPreset) rack.outputPreset.load();
+    const auto preset = (OutputPreset) sanitizeOutputPresetIndex(rack.outputPreset.load());
     float ratio = 0.0f;
     if (preset == OutputPreset::Landscape16x9 || preset == OutputPreset::Thumbnail16x9) ratio = 16.0f / 9.0f;
     else if (preset == OutputPreset::Square1x1) ratio = 1.0f;

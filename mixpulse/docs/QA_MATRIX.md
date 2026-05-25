@@ -56,3 +56,11 @@ When a test fails:
 - Classify severity with `FEEDBACK_TRIAGE_RULES.md`.
 - Mark ambiguous reports `Needs info`.
 - Move confirmed P0/P1 issues into the next fix sprint.
+
+## v0.2 Sprint 1 Stability Fix Retest
+
+| Fix ID | Area | Status | Retest |
+| --- | --- | --- | --- |
+| WF-S1-001 | Module/template selection fallback | Needs retest | Switch modules/templates rapidly; verify invalid/default state falls back to Spectrum Bars / first template |
+| WF-S1-002 | Brand preset malformed state clamp | Needs retest | Load malformed preset JSON; verify logo opacity/scale/placement remain sane |
+| WF-S1-003 | Export preset fallback | Needs retest | Clear or force invalid export preset state; verify UI/export falls back to a valid preset |
