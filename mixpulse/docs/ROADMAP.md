@@ -18,6 +18,7 @@
 - no-crash basics
 - docs truth pass
 - Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
+- WaveFrame v0.1 private beta release-candidate docs: release notes, private beta README, RC checklist, known issues, QA matrix, and bug reporting flow.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish

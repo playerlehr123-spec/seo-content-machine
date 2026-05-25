@@ -13,6 +13,11 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] `processBlock` pass-through behavior unchanged.
 - [ ] Known limitations listed.
 - [ ] Version/tag decision made.
+- [ ] `mixpulse/docs/RELEASE_NOTES_v0.1.md` checked.
+- [ ] `mixpulse/docs/PRIVATE_BETA_README.md` checked.
+- [ ] `mixpulse/docs/RC_CHECKLIST_v0.1.md` checked.
+- [ ] `mixpulse/docs/KNOWN_ISSUES.md` checked.
+- [ ] `mixpulse/docs/QA_MATRIX.md` checked or updated.
 - [ ] Release notes created from `mixpulse/docs/RELEASE_NOTES_TEMPLATE.md`.
 - [ ] Installer/signing status checked against `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`.
 - [ ] Distribution level checked against `mixpulse/docs/DISTRIBUTION_PLAN.md`.
@@ -49,3 +54,12 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] macOS/AU not enabled.
 - [ ] Installer not implemented yet.
 - [ ] Code signing not implemented yet.
+
+## v0.1 RC Blocker Review
+- [ ] App launches.
+- [ ] CI is green.
+- [ ] Artifacts are present.
+- [ ] Audio pass-through is unchanged.
+- [ ] No crash on open.
+- [ ] Output window does not crash during smoke test.
+- [ ] `processBlock` unchanged.
