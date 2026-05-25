@@ -27,9 +27,12 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Settings opens.
 - [ ] Meters move with input/audio.
 - [ ] Output window opens.
+- [ ] Fullscreen opens Output first if needed.
 - [ ] Fullscreen works.
 - [ ] Frame does not crash.
+- [ ] Frame reports a clear failure if export folder or preset state is invalid.
 - [ ] HUD does not crash.
+- [ ] Module/template/export preset fallback does not leave blank selections.
 - [ ] App closes cleanly.
 
 ## VST3 DAW Test
