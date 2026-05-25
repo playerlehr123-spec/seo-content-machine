@@ -28,3 +28,12 @@ WaveFrame is a Windows-first private beta. Some artifacts, plugin names, and int
 - Confirm meters move.
 - Test Output, Frame, HUD, fullscreen, module switching, and OBS capture.
 - Report artifact/run number, Windows version, DAW version, audio interface, and reproduction steps.
+
+## Feedback Intake
+- Start with `PRIVATE_BETA_README.md` for tester-facing instructions.
+- Use `BETA_FEEDBACK_INTAKE.md` to collect structured feedback.
+- Use `FEEDBACK_TRIAGE_RULES.md` to classify severity and release impact.
+- Track reports in `BETA_FEEDBACK_TRACKER.md` or GitHub issues.
+- Use `BETA_BUG_REPORTING.md` for required bug report details.
+- Use `FIX_SPRINT_WORKFLOW.md` when selecting the top issues for a focused fix PR.
+- Use `BETA_TESTER_MESSAGE_TEMPLATE.md` when inviting private testers.

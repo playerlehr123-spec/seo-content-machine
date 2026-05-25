@@ -14,6 +14,21 @@ juce::var getPropertyOrDefault(const juce::DynamicObject* obj, const juce::Ident
 
     return fallback;
 }
+
+int sanitizeLogoPositionMode(int value)
+{
+    switch ((LogoPositionMode)value)
+    {
+        case LogoPositionMode::Center:
+        case LogoPositionMode::CornerTopLeft:
+        case LogoPositionMode::CornerTopRight:
+        case LogoPositionMode::CornerBottomLeft:
+        case LogoPositionMode::CornerBottomRight:
+        case LogoPositionMode::Watermark:
+            return value;
+    }
+    return (int)LogoPositionMode::Center;
+}
 }
 
 static juce::var toVar(const CreatorBrandState& s)
@@ -54,9 +69,9 @@ bool loadPreset(CreatorBrandState& s, const juce::File& path)
     s.releaseStatusText = getPropertyOrDefault(o, "releaseStatusText", s.releaseStatusText).toString();
     s.logoPath = getPropertyOrDefault(o, "logoPath", s.logoPath).toString();
     s.hasLogo = (bool) getPropertyOrDefault(o, "hasLogo", s.hasLogo);
-    s.logoOpacity = (float) (double) getPropertyOrDefault(o, "logoOpacity", s.logoOpacity);
-    s.logoScale = (float) (double) getPropertyOrDefault(o, "logoScale", s.logoScale);
-    s.logoPositionMode = (int) getPropertyOrDefault(o, "logoPositionMode", s.logoPositionMode);
+    s.logoOpacity = juce::jlimit(0.0f, 1.0f, (float) (double) getPropertyOrDefault(o, "logoOpacity", s.logoOpacity));
+    s.logoScale = juce::jlimit(0.1f, 3.0f, (float) (double) getPropertyOrDefault(o, "logoScale", s.logoScale));
+    s.logoPositionMode = sanitizeLogoPositionMode((int) getPropertyOrDefault(o, "logoPositionMode", s.logoPositionMode));
     s.brandPrimaryColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandPrimaryColor", s.brandPrimaryColor.toString()).toString());
     s.brandSecondaryColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandSecondaryColor", s.brandSecondaryColor.toString()).toString());
     s.brandAccentColor = juce::Colour::fromString(getPropertyOrDefault(o, "brandAccentColor", s.brandAccentColor.toString()).toString());
