@@ -13,6 +13,9 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] `processBlock` pass-through behavior unchanged.
 - [ ] Known limitations listed.
 - [ ] Version/tag decision made.
+- [ ] Release notes created from `mixpulse/docs/RELEASE_NOTES_TEMPLATE.md`.
+- [ ] Installer/signing status checked against `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`.
+- [ ] Distribution level checked against `mixpulse/docs/DISTRIBUTION_PLAN.md`.
 - [ ] Do not share externally until manual DAW test passes.
 
 ## Standalone Smoke Test
@@ -44,3 +47,5 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Video export not implemented.
 - [ ] NDI/Spout/Syphon not implemented.
 - [ ] macOS/AU not enabled.
+- [ ] Installer not implemented yet.
+- [ ] Code signing not implemented yet.

@@ -17,6 +17,7 @@
 - VST3 DAW test
 - no-crash basics
 - docs truth pass
+- Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
@@ -65,3 +66,11 @@
 - timeline/clip playback
 - network/render research
 - macOS/AU
+
+## Packaging / Distribution
+- Current private beta path: ZIP-style `MixPulse-Windows-Beta` artifact.
+- Current debug path: `MixPulse-Windows-Build-Folder`.
+- Future installer research: Inno Setup, NSIS, WiX, and MSIX comparison.
+- Future signing research: standalone EXE, installer, and VST3 signing strategy.
+- Future naming cleanup: WaveFrame artifact/plugin display names after beta testing.
+- Installer, signing, artifact renames, plugin ID renames, macOS/AU, cloud upload, telemetry, and video export are not implemented.
