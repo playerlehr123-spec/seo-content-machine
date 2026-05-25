@@ -16,6 +16,10 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Release notes created from `mixpulse/docs/RELEASE_NOTES_TEMPLATE.md`.
 - [ ] Installer/signing status checked against `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`.
 - [ ] Distribution level checked against `mixpulse/docs/DISTRIBUTION_PLAN.md`.
+- [ ] Bug bash completed using `mixpulse/docs/BUG_BASH_PLAN.md`.
+- [ ] QA matrix updated in `mixpulse/docs/QA_MATRIX.md`.
+- [ ] DAW matrix updated in `mixpulse/docs/DAW_TEST_MATRIX.md`.
+- [ ] Blockers checked against `mixpulse/docs/BLOCKER_CRITERIA.md`.
 - [ ] Do not share externally until manual DAW test passes.
 
 ## Standalone Smoke Test
@@ -49,3 +53,8 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] macOS/AU not enabled.
 - [ ] Installer not implemented yet.
 - [ ] Code signing not implemented yet.
+
+## Blocker Review
+- [ ] No open P0 blockers.
+- [ ] Repeated P1 issues are fixed, excluded from beta scope, or documented.
+- [ ] P2/P3 issues are listed in known issues or release notes when relevant.
