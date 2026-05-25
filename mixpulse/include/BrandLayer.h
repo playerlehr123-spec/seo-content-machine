@@ -9,7 +9,7 @@ namespace BrandLayer
     {
         juce::String artistName { "Artist Name" };
         juce::String trackTitle { "Track Title" };
-        juce::String labelName { "WaveFrame" };
+        juce::String labelName { "Label Name" };
         juce::String callToAction { "Out Now" };
         juce::String releaseStatusText { "Out Now" };
         juce::String logoPath;

@@ -18,6 +18,8 @@
 - no-crash basics
 - docs truth pass
 - Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
+- Beta Feedback / Triage: intake docs, severity rules, manual tracker, issue templates, label guidance, and fix sprint workflow are the current process layer.
+- v0.1 Release Freeze: frozen private beta scope, final readiness checklist, known issues, release notes, and v0.2 parking lot.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
@@ -38,6 +40,7 @@
 - template selector
 - Visual Modules Batch 2: Logo Reactor v1, Type Pulse v1, Promo Card v1, Particles v1/placeholder
 - Visual Modules Batch 2 polish: cleaner v1 renderers for Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars readability
+- v0.2 Sprint 3: Template + Brand UX improves starter template metadata, module recommendations, Brand Kit defaults, preview overlay context, and status labels. Full template editor, logo import, and video export remain future/TODO.
 
 ## Tier 4 — Tool Suite
 - Particles
@@ -74,3 +77,47 @@
 - Future signing research: standalone EXE, installer, and VST3 signing strategy.
 - Future naming cleanup: WaveFrame artifact/plugin display names after beta testing.
 - Installer, signing, artifact renames, plugin ID renames, macOS/AU, cloud upload, telemetry, and video export are not implemented.
+
+## Beta Feedback / Triage
+- Current intake docs: `BETA_FEEDBACK_INTAKE.md`, `FEEDBACK_TRIAGE_RULES.md`, and `BETA_FEEDBACK_TRACKER.md`.
+- Current issue templates: beta bug report, beta feedback, bug report, DAW test report, and feature request.
+- Current fix process: `FIX_SPRINT_WORKFLOW.md` with top-3-issue sprint limits.
+- Recommended labels are documented in `GITHUB_LABELS.md`.
+- Future/TODO: automated label creation, project board automation, and form-backed tester submissions.
+
+## v0.1 Release Freeze
+- Current freeze docs: `RELEASE_FREEZE_v0.1.md`, `FINAL_READINESS_CHECKLIST_v0.1.md`, and `RELEASE_NOTES_v0.1.md`.
+- Known issues are tracked in `KNOWN_ISSUES.md`.
+- Tester instructions are tracked in `TESTER_INSTRUCTIONS.md`.
+- v0.2 ideas belong in `V0_2_PARKING_LOT.md`.
+- After freeze, only P0/P1 fixes should land before private beta.
+
+## v0.2 Planning
+- v0.2 planning has started in `V0_2_ROADMAP.md`, `V0_2_SPRINT_PLAN.md`, `V0_2_BACKLOG.md`, `V0_2_MERGE_RULES.md`, and `V0_2_CODEX_PROMPTS.md`.
+- v0.2 remains a private beta development cycle, not a public release.
+- Primary goals: visual module quality, template editing, Brand Kit workflow, preset save/load UX, Output/OBS workflow, beta feedback fixes, naming cleanup stage 1 if safe, and DAW compatibility confidence.
+- First sprint should be beta feedback fixes: P0/P1 issues before polish.
+- Suggested follow-up sprints: Visual Modules v2, Template + Brand UX, Preset / Session Polish, Output / OBS Polish, and v0.2 Release Candidate.
+- Sprint 3 Template + Brand UX is in progress as a compile-safe creator workflow polish pass.
+
+## v0.2 Out Of Scope
+- Public release.
+- Installer implementation.
+- Code signing implementation.
+- Built-in video export.
+- NDI / Spout / Syphon.
+- Shader SDK.
+- Virtual camera.
+- macOS / AU.
+- Cloud accounts/templates.
+- Telemetry.
+- Plugin ID rename.
+- CMake target rename.
+
+## v0.3 / Future Ideas
+- Video export research after v0.2, with implementation still deferred.
+- Installer/signing implementation after research and beta feedback.
+- Staged naming cleanup after DAW compatibility confidence improves.
+- macOS/AU future research only.
+- NDI/Spout/Syphon future research only.
+- Template packs and community workflows after private beta scope is stable.

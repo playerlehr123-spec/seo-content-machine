@@ -27,6 +27,8 @@ The center canvas is the main creator surface.
 
 - Shows the selected visual module.
 - Shows the selected creator template.
+- Shows Brand Layer artist/title/CTA placeholders in the guide frame.
+- Shows the current template use case in the metadata strip.
 - Displays aspect-ratio and safe-area guide placeholders.
 - Shows current export preset and PNG-only status.
 - Marks video export as future only.
@@ -52,8 +54,11 @@ Starter templates:
 - Stream Overlay
 - Reel Visualizer
 - Album Motion
+- Type Pulse
+- Particle Card
+- Spectrum Promo
 
-Templates can safely set a visual module, CTA text, release text, and preferred still export preset.
+Templates can safely set a visual module, CTA text, release text, and preferred still export preset. v0.2 Sprint 3 also displays the selected template purpose, recommended module, status, and aspect/use-case summary.
 
 ## Export Panel
 

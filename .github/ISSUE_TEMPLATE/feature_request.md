@@ -31,8 +31,18 @@ assignees: ""
 ## MVP version
 
 
+## Release priority
+- [ ] Beta blocker
+- [ ] Next beta
+- [ ] Future roadmap
+- [ ] Nice-to-have
+
+## Is this required for v0.1 private beta?
+- [ ] Yes
+- [ ] No
+- [ ] Not sure
+
 ## Future version
 
 
 ## Risks / similar files touched
-

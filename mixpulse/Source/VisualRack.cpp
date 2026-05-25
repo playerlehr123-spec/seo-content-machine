@@ -56,8 +56,57 @@ float getModulationValue(ModSource source, const MeterData& meter, const BeatPul
     return 0.0f;
 }
 
+bool isValidVisualModuleIndex(int value)
+{
+    switch ((VisualModuleType)value)
+    {
+        case VisualModuleType::SpectrumBars:
+        case VisualModuleType::Waveform:
+        case VisualModuleType::Vectorscope:
+        case VisualModuleType::LogoPulse:
+        case VisualModuleType::TextCard:
+        case VisualModuleType::GradientField:
+        case VisualModuleType::ParticleBurstPlaceholder:
+        case VisualModuleType::TunnelPlaceholder:
+        case VisualModuleType::PlasmaPlaceholder:
+        case VisualModuleType::TypePulse:
+        case VisualModuleType::PromoCard:
+        case VisualModuleType::Particles:
+            return true;
+    }
+    return false;
+}
+
+int sanitizeVisualModuleIndex(int value)
+{
+    return isValidVisualModuleIndex(value) ? value : (int)VisualModuleType::SpectrumBars;
+}
+
+bool isValidOutputPresetIndex(int value)
+{
+    switch ((OutputPreset)value)
+    {
+        case OutputPreset::Free:
+        case OutputPreset::Landscape16x9:
+        case OutputPreset::Square1x1:
+        case OutputPreset::Portrait9x16:
+        case OutputPreset::Portrait4x5:
+        case OutputPreset::Thumbnail16x9:
+            return true;
+    }
+    return false;
+}
+
+int sanitizeOutputPresetIndex(int value)
+{
+    return isValidOutputPresetIndex(value) ? value : (int)OutputPreset::Landscape16x9;
+}
+
 juce::String visualModuleName(VisualModuleType module)
 {
+    if (!isValidVisualModuleIndex((int)module))
+        module = VisualModuleType::SpectrumBars;
+
     switch (module)
     {
         case VisualModuleType::SpectrumBars: return "Spectrum Bars";
