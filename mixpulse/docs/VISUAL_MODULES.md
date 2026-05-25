@@ -28,6 +28,15 @@ WaveFrame visual modules are audio-reactive creator surfaces for still PNG expor
 - Particles now uses a denser deterministic field with audio-reactive spread, brightness, and size.
 - Spectrum Bars now has a clearer scope frame, center guide, and rounded bars while preserving existing meter/reference behavior elsewhere.
 
+## Visual Quality Pass 1
+
+- Shared renderer background now uses a darker framed stage, subtler grid, and safe-frame corner ticks.
+- Logo Reactor uses a cleaner circular brand mark, layered glow, stronger center/corner placement behavior, and clearer artist/title hierarchy.
+- Type Pulse uses a stronger centered title plate, repeated text texture, better CTA placement, and restrained glow.
+- Promo Card has a more release-ready card hierarchy, still-output tag, cover placeholder depth, and improved spectrum strip.
+- Particles uses a denser field, soft dot halos, and more polished contrast while remaining deterministic and CPU-light.
+- Spectrum Bars uses a more intentional scope panel, quieter grid, clearer center line, and refined glow/fill balance.
+
 ## Future Modules
 
 | Module | Purpose | Status |

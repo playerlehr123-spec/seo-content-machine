@@ -39,6 +39,7 @@
 - template selector
 - Visual Modules Batch 2: Logo Reactor v1, Type Pulse v1, Promo Card v1, Particles v1/placeholder
 - Visual Modules Batch 2 polish: cleaner v1 renderers for Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars readability
+- Visual Quality Pass 1: release-worthy renderer polish, shared dark/neon style, stronger Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars visuals
 
 ## Tier 4 — Tool Suite
 - Particles
