@@ -18,6 +18,7 @@
 - no-crash basics
 - docs truth pass
 - Packaging / Distribution: current ZIP beta artifact, installer research, signing research, and naming cleanup remain future/TODO.
+- Beta Feedback / Triage: intake docs, severity rules, manual tracker, issue templates, label guidance, and fix sprint workflow are the current process layer.
 
 ## Tier 2 — Meter + Output Product
 - WaveFrame branding polish
@@ -74,3 +75,10 @@
 - Future signing research: standalone EXE, installer, and VST3 signing strategy.
 - Future naming cleanup: WaveFrame artifact/plugin display names after beta testing.
 - Installer, signing, artifact renames, plugin ID renames, macOS/AU, cloud upload, telemetry, and video export are not implemented.
+
+## Beta Feedback / Triage
+- Current intake docs: `BETA_FEEDBACK_INTAKE.md`, `FEEDBACK_TRIAGE_RULES.md`, and `BETA_FEEDBACK_TRACKER.md`.
+- Current issue templates: beta bug report, beta feedback, bug report, DAW test report, and feature request.
+- Current fix process: `FIX_SPRINT_WORKFLOW.md` with top-3-issue sprint limits.
+- Recommended labels are documented in `GITHUB_LABELS.md`.
+- Future/TODO: automated label creation, project board automation, and form-backed tester submissions.

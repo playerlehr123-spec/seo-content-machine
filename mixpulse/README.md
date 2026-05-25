@@ -19,6 +19,19 @@ Current status:
 - creator/template roadmap
 - not public release ready
 
+## Private Beta Feedback
+
+Feedback intake and triage docs:
+- `docs/BETA_FEEDBACK_INTAKE.md`
+- `docs/FEEDBACK_TRIAGE_RULES.md`
+- `docs/BETA_FEEDBACK_TRACKER.md`
+- `docs/BETA_BUG_REPORTING.md`
+- `docs/FIX_SPRINT_WORKFLOW.md`
+- `docs/GITHUB_LABELS.md`
+- `docs/BETA_TESTER_MESSAGE_TEMPLATE.md`
+
+Use these docs to classify P0/P1 blockers, route feature requests to roadmap/TODO, and keep private beta fix sprints focused.
+
 # WaveFrame Phase 1.5 / Phase 2 Foundation
 
 ## Implemented
