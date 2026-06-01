@@ -3,22 +3,22 @@
 ## 1) Promo Card
 - Purpose: release announcement stills/reels
 - Controls: artist, title, label, CTA, logo, colors, aspect
-- Status: v1 renderer with stronger release-card hierarchy, still-output tag, cover placeholder, artist/title/CTA text, label footer, and audio-reactive accent/spectrum strip
+- Status: v1 renderer with release tag, cover placeholder, artist/title/CTA text, label footer, and audio-reactive accent/spectrum strip
 
 ## 2) Logo Reactor
 - Purpose: audio-reactive logo visual
 - Controls: logo, glow, scale, beat pulse, background
-- Status: v1 renderer using a polished circular brand mark, Brand Layer text, color, opacity, scale, and placement placeholders; image import is TODO
+- Status: v1 renderer using Brand Layer text, color, opacity, scale, and placement placeholders; image import is TODO
 
 ## 3) Particles
 - Purpose: particle-inspired audio motion
 - Controls: density, size, frequency, motion, audio amount
-- Status: v1 renderer with deterministic dot field, soft halos, audio-reactive brightness, size, and spread; no heavy physics or shader SDK
+- Status: v1 renderer with deterministic dot field, audio-reactive brightness, size, and spread; no heavy physics or shader SDK
 
 ## 4) Type Pulse
 - Purpose: audio-reactive text pattern
 - Controls: text, font size, repetition, color, pulse amount
-- Status: v1 renderer using repeated artist/title/CTA text, a stronger pulsing centered title plate, and CTA footer; editable text UI is TODO
+- Status: v1 renderer using repeated artist/title/CTA text and a pulsing centered title; editable text UI is TODO
 
 ## 5) Pixelator
 - Purpose: image/logo pixel treatment
@@ -44,3 +44,18 @@
 - PNG still/frame export only.
 - OBS remains the current workaround for motion capture.
 - No built-in video export, upload, timeline, NDI, Spout, Syphon, or shader SDK.
+
+## v0.2 Sprint 3 Template Mapping
+
+| Template | Recommended module | Status |
+| --- | --- | --- |
+| Minimal Meter | Spectrum Bars | implemented |
+| Logo Reactor | Logo Reactor | implemented |
+| Release Announcement | Promo Card | implemented |
+| Label Drop | Promo Card | implemented |
+| Stream Overlay | Spectrum Bars | placeholder |
+| Reel Visualizer | Particles | placeholder |
+| Album Motion | Type Pulse | placeholder |
+| Type Pulse | Type Pulse | implemented |
+| Particle Card | Particles | placeholder |
+| Spectrum Promo | Spectrum Bars | implemented |

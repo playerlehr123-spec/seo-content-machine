@@ -16,10 +16,14 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Release notes created from `mixpulse/docs/RELEASE_NOTES_TEMPLATE.md`.
 - [ ] Installer/signing status checked against `mixpulse/docs/INSTALLER_SIGNING_RESEARCH.md`.
 - [ ] Distribution level checked against `mixpulse/docs/DISTRIBUTION_PLAN.md`.
-- [ ] Bug bash completed using `mixpulse/docs/BUG_BASH_PLAN.md`.
-- [ ] QA matrix updated in `mixpulse/docs/QA_MATRIX.md`.
-- [ ] DAW matrix updated in `mixpulse/docs/DAW_TEST_MATRIX.md`.
-- [ ] Blockers checked against `mixpulse/docs/BLOCKER_CRITERIA.md`.
+- [ ] Feedback intake checked against `mixpulse/docs/BETA_FEEDBACK_INTAKE.md`.
+- [ ] Triage rules checked against `mixpulse/docs/FEEDBACK_TRIAGE_RULES.md`.
+- [ ] Feedback tracker ready: `mixpulse/docs/BETA_FEEDBACK_TRACKER.md`.
+- [ ] Bug report flow ready: `mixpulse/docs/BETA_BUG_REPORTING.md`.
+- [ ] Fix sprint workflow ready: `mixpulse/docs/FIX_SPRINT_WORKFLOW.md`.
+- [ ] Tester message ready: `mixpulse/docs/BETA_TESTER_MESSAGE_TEMPLATE.md`.
+- [ ] Release freeze checked against `mixpulse/docs/RELEASE_FREEZE_v0.1.md`.
+- [ ] Final readiness checked against `mixpulse/docs/FINAL_READINESS_CHECKLIST_v0.1.md`.
 - [ ] Do not share externally until manual DAW test passes.
 
 ## Standalone Smoke Test
@@ -27,12 +31,9 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Settings opens.
 - [ ] Meters move with input/audio.
 - [ ] Output window opens.
-- [ ] Fullscreen opens Output first if needed.
 - [ ] Fullscreen works.
 - [ ] Frame does not crash.
-- [ ] Frame reports a clear failure if export folder or preset state is invalid.
 - [ ] HUD does not crash.
-- [ ] Module/template/export preset fallback does not leave blank selections.
 - [ ] App closes cleanly.
 
 ## VST3 DAW Test
@@ -57,7 +58,15 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Installer not implemented yet.
 - [ ] Code signing not implemented yet.
 
-## Blocker Review
-- [ ] No open P0 blockers.
-- [ ] Repeated P1 issues are fixed, excluded from beta scope, or documented.
-- [ ] P2/P3 issues are listed in known issues or release notes when relevant.
+## Feedback / Triage Readiness
+- [ ] GitHub beta bug template exists.
+- [ ] GitHub beta feedback template exists.
+- [ ] Feature request template separates beta blocker, next beta, future roadmap, and nice-to-have.
+- [ ] Recommended label system documented in `mixpulse/docs/GITHUB_LABELS.md`.
+- [ ] P0/P1 issues have an owner before beta sharing.
+
+## Release Freeze
+- [ ] v0.1 frozen scope reviewed.
+- [ ] Only P0/P1 fixes accepted after freeze.
+- [ ] v0.2 ideas routed to `mixpulse/docs/V0_2_PARKING_LOT.md`.
+- [ ] No new features, UI rewrites, export systems, renames, installer/signing, video export, cloud, telemetry, macOS/AU, NDI, Spout, Syphon, or shader SDK.

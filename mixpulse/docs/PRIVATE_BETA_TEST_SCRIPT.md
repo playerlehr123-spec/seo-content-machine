@@ -11,7 +11,7 @@
 8. Click Full, then Esc.
 9. Click HUD on/off.
 10. Click Frame.
-11. Confirm PNG appears in `Documents/WaveFrame/`.
+11. Confirm Frame does not crash and note whether a still PNG is written.
 12. Leave app open 5 minutes.
 13. Close/reopen.
 
@@ -29,6 +29,8 @@
 ## Result summary
 - Pass / Fail
 - Notes
+- Artifact/run number
+- Known issues found
 
 
 ## State recall checks

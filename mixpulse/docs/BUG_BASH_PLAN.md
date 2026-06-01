@@ -1,68 +1,47 @@
 # WaveFrame Bug Bash Plan
 
-Use this plan for a focused private beta QA session. WaveFrame is the user-facing name; MixPulse may still appear in artifacts, plugin names, and build output.
+This bug bash plan is for private beta readiness and feedback intake.
 
 ## Goals
-- Find launch, crash, install, DAW, output, OBS, and audio pass-through blockers before private beta.
-- Record reproducible bugs with artifact/run number and environment details.
-- Separate product blockers from polish issues.
-- Keep testing scoped to current features. Do not test future video export, NDI, Spout/Syphon, shader SDK, virtual camera, cloud upload, telemetry, macOS/AU, or installer flows as if they are implemented.
+
+- Find P0/P1 issues before wider sharing.
+- Confirm audio pass-through remains unchanged.
+- Exercise standalone, VST3, output window, OBS, module/template, and preset workflows.
+- Capture reproducible reports with enough detail to fix them.
 
 ## QA Levels
-| Level | Name | Purpose | Required before private beta? |
-| --- | --- | --- | --- |
-| Level 0 | CI Build Check | Confirm build and artifacts exist. | Yes |
-| Level 1 | Standalone Smoke Test | Confirm app launches and core UI works. | Yes |
-| Level 2 | VST3 DAW Smoke Test | Confirm scan/load/pass-through in at least one DAW. | Yes for plugin sharing |
-| Level 3 | Creator Workflow Test | Confirm modules/templates/brand/presets/frame flow. | Yes |
-| Level 4 | OBS Workflow Test | Confirm Output window capture path. | Yes for motion capture sharing |
-| Level 5 | Longer Stability Test | Catch close/reopen, repeated actions, and idle crashes. | Recommended |
 
-## Session Roles
-- Driver: runs tests and records exact steps.
-- Observer: watches for UI, audio, and output behavior.
-- Triage owner: assigns severity and decides blocker status.
+- Level 0: CI Build Check.
+- Level 1: Standalone Smoke Test.
+- Level 2: VST3 DAW Smoke Test.
+- Level 3: Creator Workflow Test.
+- Level 4: OBS Workflow Test.
+- Level 5: Longer Stability Test.
 
-One person can cover all roles for a small internal pass.
+## Intake Links
 
-## Test Order
-1. Download the latest approved `MixPulse-Windows-Beta` artifact.
-2. Record GitHub Actions run number and commit SHA.
-3. Run Level 0 artifact checks.
-4. Run Level 1 standalone smoke test.
-5. Run Level 3 creator workflow test in standalone.
-6. Run Level 4 OBS workflow test.
-7. Run Level 2 VST3 DAW smoke tests.
-8. Run Level 5 longer stability test if no P0/P1 issue blocks progress.
-9. File bugs using severity and QA level.
-10. Update `QA_MATRIX.md` and `DAW_TEST_MATRIX.md`.
+- Feedback intake: `BETA_FEEDBACK_INTAKE.md`
+- Triage rules: `FEEDBACK_TRIAGE_RULES.md`
+- Feedback tracker: `BETA_FEEDBACK_TRACKER.md`
+- Fix sprint workflow: `FIX_SPRINT_WORKFLOW.md`
+- Label recommendations: `GITHUB_LABELS.md`
+- QA matrix: `QA_MATRIX.md`
+- Blocker criteria: `BLOCKER_CRITERIA.md`
+- Final readiness checklist: `FINAL_READINESS_CHECKLIST_v0.1.md`
 
-## Coverage Areas
-- Standalone app launch/close.
-- VST3 scan/load/remove/reload.
-- Audio pass-through.
-- Peak/RMS meters and visual activity.
-- UI controls and selectors.
-- Output window open/close/reopen/fullscreen.
-- OBS Window Capture.
-- Template/module switching.
-- Brand/template/preset save/load/reset.
-- Export/Frame button.
-- HUD toggle.
-- Crash/freeze cases.
-- Artifact packaging and README instructions.
+## Bug Bash Rules
 
-## Stop Conditions
-Stop broad testing and file a blocker if:
-- The app will not launch.
-- The plugin will not scan/load in any tested DAW.
-- Audio is muted, clipped, processed, or changed unexpectedly.
-- CI cannot produce `MixPulse-Windows-Beta`.
-- A repeated crash prevents reaching core workflows.
+- Log one issue per report.
+- Include artifact/run number.
+- Include standalone/VST3 and DAW details.
+- Include module/template selected.
+- Include output/OBS status.
+- Escalate audio pass-through reports immediately.
+- Defer feature requests unless they block private beta testing.
 
-## Reporting Rules
-- Every bug needs artifact/run number.
-- Every DAW bug needs DAW name/version and plugin format.
-- Every audio bug must answer whether pass-through changed.
-- Every visual bug should include selected module/template and Output window status.
-- Every OBS bug should state whether OBS was involved and how the source was captured.
+## Fix Sprint Hand-off
+
+- P0/P1 confirmed issues should be handed to `FIX_SPRINT_WORKFLOW.md`.
+- Select no more than 3 fixable issues per sprint.
+- Update `BETA_FEEDBACK_TRACKER.md` after fix and retest.
+- Keep feature requests in roadmap/TODO unless they block v0.1 testing.

@@ -9,7 +9,7 @@ namespace BrandLayer
     {
         juce::String artistName { "Artist Name" };
         juce::String trackTitle { "Track Title" };
-        juce::String labelName { "WaveFrame" };
+        juce::String labelName { "Label Name" };
         juce::String callToAction { "Out Now" };
         juce::String releaseStatusText { "Out Now" };
         juce::String logoPath;
@@ -22,6 +22,7 @@ namespace BrandLayer
         juce::Colour brandAccentColor { juce::Colour::fromRGB(255, 220, 120) };
     };
 
+    void normalizeBrandState(CreatorBrandState&);
     bool savePreset(const CreatorBrandState&, const juce::File&);
     bool loadPreset(CreatorBrandState&, const juce::File&);
     juce::File defaultPresetFile();

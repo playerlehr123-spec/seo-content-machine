@@ -11,6 +11,14 @@ Use this checklist before sharing any Windows beta artifact externally. Current 
 6. Locate `MixPulse.exe` if present.
 7. Locate `MixPulse.vst3` if present.
 
+If older workflow runs show a red X, ignore them unless they are the latest run for the branch or PR being tested. Private beta readiness is based on the latest relevant green run and its artifacts.
+
+## Artifact Names
+- `MixPulse-Windows-Beta`: primary tester download.
+- `MixPulse-Windows-Build-Folder`: debug fallback for developers.
+
+Artifact, binary, and plugin names may still say MixPulse. WaveFrame is the user-facing product name.
+
 ## Standalone Smoke Test
 1. Run `MixPulse.exe`.
 2. Confirm the app launches.
@@ -80,6 +88,13 @@ C:\Program Files\Common Files\VST3\
 - Video export is not implemented.
 - NDI, Spout, and Syphon are not implemented.
 - macOS/AU is not enabled.
+
+## If An Artifact Is Missing
+1. Confirm the workflow run completed successfully.
+2. Confirm the branch or PR is the one intended for testing.
+3. Check whether `MixPulse-Windows-Beta` and `MixPulse-Windows-Build-Folder` both appear under run artifacts.
+4. If the VST3 is missing inside the beta artifact, inspect the build summary and `MixPulse-Windows-Build-Folder`.
+5. Do not share a private beta build until the expected artifact contents are confirmed.
 
 ## Pass / Fail Table
 | Test | Expected result | Actual result | Pass/fail | Notes |

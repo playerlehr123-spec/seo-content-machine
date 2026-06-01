@@ -36,4 +36,8 @@ const std::vector<VisualRackPreset>& getBuiltInVisualRackPresets();
 void applyPresetToRack(const VisualRackPreset& preset, VisualRackState& rack);
 float getModulationValue(ModSource source, const MeterData& meter, const BeatPulseEngine& beatPulse, const TapTempoEngine& tapTempo);
 
+bool isValidVisualModuleIndex(int value);
+int sanitizeVisualModuleIndex(int value);
+bool isValidOutputPresetIndex(int value);
+int sanitizeOutputPresetIndex(int value);
 juce::String visualModuleName(VisualModuleType module);
