@@ -84,6 +84,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - OBS capture mode polish.
 - Full-screen capture reliability.
 - Still-frame workflow clarity.
+- Sprint 5 improves output close/reopen/fullscreen safety, adds an OBS Capture Mode overlay, shows aspect/dimension/safe-area guidance, and keeps Frame messaging still-PNG-only.
 
 ### F. Naming Cleanup Stage 1
 

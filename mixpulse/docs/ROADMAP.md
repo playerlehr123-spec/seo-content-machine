@@ -42,6 +42,7 @@
 - Visual Modules Batch 2 polish: cleaner v1 renderers for Logo Reactor, Type Pulse, Promo Card, Particles, and Spectrum Bars readability
 - v0.2 Sprint 3: Template + Brand UX improves starter template metadata, module recommendations, Brand Kit defaults, preview overlay context, and status labels. Full template editor, logo import, and video export remain future/TODO.
 - v0.2 Sprint 4: Preset / Session polish adds built-in session presets, safer Brand preset save/load normalization, clearer reset/default behavior, and truthful docs. Full creator-session file serialization remains future/TODO.
+- v0.2 Sprint 5: Output / OBS polish improves output close/reopen/fullscreen safety, OBS Capture Mode messaging, aspect/safe-area guides, and still-frame status clarity. Built-in video export remains future/TODO.
 
 ## Tier 4 — Tool Suite
 - Particles
@@ -101,6 +102,7 @@
 - Suggested follow-up sprints: Visual Modules v2, Template + Brand UX, Preset / Session Polish, Output / OBS Polish, and v0.2 Release Candidate.
 - Sprint 3 Template + Brand UX is in progress as a compile-safe creator workflow polish pass.
 - Sprint 4 Preset / Session polish is in progress as a compile-safe reliability and status pass.
+- Sprint 5 Output / OBS polish is in progress as a compile-safe capture workflow clarity pass.
 
 ## v0.2 Out Of Scope
 - Public release.

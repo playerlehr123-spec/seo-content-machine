@@ -14,6 +14,8 @@ public:
     void paint(juce::Graphics&) override;
     void timerCallback() override;
 private:
+    void drawCaptureOverlay(juce::Graphics&);
+
     AudioAnalyzer& analyzer;
     BeatPulseEngine& pulse;
     VisualizerState& state;
@@ -26,6 +28,7 @@ class VisualizerWindow : public juce::DocumentWindow
 public:
     VisualizerWindow(AudioAnalyzer&, BeatPulseEngine&, VisualizerState&, VisualRackState&, BrandLayer::CreatorBrandState&);
     void closeButtonPressed() override;
+    void prepareToShow();
     void toggleFullscreen();
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VisualizerWindow)
