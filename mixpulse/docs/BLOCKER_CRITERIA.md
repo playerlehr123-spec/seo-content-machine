@@ -1,50 +1,31 @@
 # WaveFrame Blocker Criteria
 
-Use this document to decide whether a bug blocks private beta sharing.
+Use this document to decide whether v0.1 private beta can proceed.
 
-## P0 Blocker
-P0 issues block private beta until fixed or explicitly accepted.
+## P0 Blockers
 
 - App will not launch.
-- Plugin will not scan or load in any tested DAW.
-- Audio is muted, clipped, processed, delayed, or changed unexpectedly.
-- `processBlock` modifies valid audio samples beyond pass-through/analysis expectations.
+- Plugin will not scan/load.
+- CI cannot produce artifacts.
+- `MixPulse-Windows-Beta` artifact is missing.
+- Audio is muted or changed unexpectedly.
+- `processBlock` modifies audio.
 - Crash on open.
-- CI cannot build the artifact.
-- `MixPulse-Windows-Beta` is missing from the latest relevant green run.
+- Repeatable crash in a common basic workflow.
 
-## P1 Major
-P1 issues may block sharing depending on frequency and affected workflow.
+## P1 Major Issues
 
 - Output window crashes.
 - Module switching crashes.
-- Frame crashes.
-- HUD crashes.
+- Frame/HUD crashes.
 - Preset save/load/reset crashes.
 - DAW remove/reload crashes.
-- OBS capture workflow cannot be completed.
-- Artifact README gives materially wrong install instructions.
+- OBS capture is unusable.
+- Major UI path is broken.
 
-## P2 Minor
-P2 issues should be logged and prioritized but usually do not block private beta alone.
+## Release Rule
 
-- UI layout issue.
-- Text unclear.
-- Visual artifact.
-- Docs mismatch.
-- Missing status message.
-- A non-core template/module looks incomplete but does not crash.
-
-## P3 Polish
-P3 issues are cleanup candidates.
-
-- Spacing.
-- Wording.
-- Visual style.
-- Tooltip improvements.
-- Minor consistency issues.
-
-## Release Decision Rule
-- Any open P0 blocks private beta.
-- Any repeated P1 should block unless the affected workflow is explicitly excluded from the beta.
-- P2/P3 issues can ship if documented in known issues or release notes.
+- P0 issues block v0.1 private beta.
+- P1 issues should be fixed before beta if reproducible in common workflows.
+- P2/P3 issues can be deferred unless they create serious tester confusion.
+- Feature requests go to `V0_2_PARKING_LOT.md` or roadmap unless they are required for v0.1 testing.

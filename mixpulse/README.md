@@ -19,6 +19,51 @@ Current status:
 - creator/template roadmap
 - not public release ready
 
+## WaveFrame v0.1 Private Beta
+
+Release-freeze and readiness docs:
+- `docs/RELEASE_FREEZE_v0.1.md`
+- `docs/FINAL_READINESS_CHECKLIST_v0.1.md`
+- `docs/RELEASE_NOTES_v0.1.md`
+- `docs/PRIVATE_BETA_README.md`
+- `docs/PRIVATE_BETA_GUIDE.md`
+- `docs/KNOWN_ISSUES.md`
+- `docs/BUG_BASH_PLAN.md`
+- `docs/QA_MATRIX.md`
+- `docs/TESTER_INSTRUCTIONS.md`
+- `docs/BETA_FEEDBACK_INTAKE.md`
+- `docs/FEEDBACK_TRIAGE_RULES.md`
+- `docs/BETA_FEEDBACK_TRACKER.md`
+- `docs/FIX_SPRINT_WORKFLOW.md`
+- `docs/V0_2_PARKING_LOT.md`
+
+v0.1 is a private beta candidate only. It is not a public release, signed installer, video export release, plugin rename, or artifact rename.
+
+## WaveFrame v0.2 Planning
+
+v0.2 planning docs:
+- `docs/V0_2_ROADMAP.md`
+- `docs/V0_2_SPRINT_PLAN.md`
+- `docs/V0_2_BACKLOG.md`
+- `docs/V0_2_MERGE_RULES.md`
+- `docs/V0_2_CODEX_PROMPTS.md`
+- `docs/V0_2_PARKING_LOT.md`
+
+v0.2 is still a private beta cycle. It should focus on beta feedback fixes, visual module quality, template/brand/preset workflow, Output/OBS polish, DAW confidence, and safe naming clarity. Public release, installer/signing implementation, video export, NDI/Spout/Syphon, shader SDK, macOS/AU, cloud, telemetry, plugin ID rename, and CMake target rename remain future/out of scope.
+
+## Private Beta Feedback
+
+Feedback intake and triage docs:
+- `docs/BETA_FEEDBACK_INTAKE.md`
+- `docs/FEEDBACK_TRIAGE_RULES.md`
+- `docs/BETA_FEEDBACK_TRACKER.md`
+- `docs/BETA_BUG_REPORTING.md`
+- `docs/FIX_SPRINT_WORKFLOW.md`
+- `docs/GITHUB_LABELS.md`
+- `docs/BETA_TESTER_MESSAGE_TEMPLATE.md`
+
+Use these docs to classify P0/P1 blockers, route feature requests to roadmap/TODO, and keep private beta fix sprints focused.
+
 # WaveFrame Phase 1.5 / Phase 2 Foundation
 
 ## Implemented

@@ -23,6 +23,7 @@ private:
     void resetDefaults();
     void syncUiToProcessorState();
     void applySelectedExportPresetToOutputGuide();
+    void applyBuiltInSessionPreset(int presetIndex);
     void syncModuleBoxToProcessor();
     void drawHeader(juce::Graphics&, juce::Rectangle<int> area);
     void drawPreviewCanvas(juce::Graphics&, juce::Rectangle<int> area);
@@ -38,9 +39,9 @@ private:
 
     MixPulseAudioProcessor& processor;
     ThemeManager::Theme theme;
-    juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset Default" };
+    juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset" };
     juce::ToggleButton beatSyncButton { "Beat Sync" };
-    juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox;
+    juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox, sessionPresetBox;
 
     float peakHoldL = -60.0f, peakHoldR = -60.0f, rmsHoldL = -60.0f, rmsHoldR = -60.0f;
     bool hudMode = false;

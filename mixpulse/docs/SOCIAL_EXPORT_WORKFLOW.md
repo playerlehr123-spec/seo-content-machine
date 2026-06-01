@@ -17,6 +17,8 @@
 - 16:9 YouTube/stream
 - album-art square (future)
 
+v0.2 Sprint 4 adds built-in creator session presets that can choose these aspect/export recommendations. The export workflow remains PNG stills plus OBS capture for motion.
+
 ## Use cases
 - release announcements
 - teaser clips (via OBS)
