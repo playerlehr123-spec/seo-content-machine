@@ -27,6 +27,9 @@ Status values:
 | WF-S4-001 | Presets | Polish | P2 | Add built-in creator session preset selector | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify all 8 presets update template/module/export/color state |
 | WF-S4-002 | Presets | Bug | P2 | Normalize Brand preset save/load values and keep current session on load failure | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify missing/malformed JSON fails safely |
 | WF-S4-003 | Presets | Polish | P2 | Clarify reset/default and Brand preset status messages | v0.2 Sprint 4 | Needs retest | Sprint 4 | Implemented in Sprint 4; verify reset restores default session and truthful status |
+| WF-S5-001 | Output | Bug | P2 | Harden output close/reopen/fullscreen state | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify repeated Output clicks, close/reopen, and fullscreen do not crash |
+| WF-S5-002 | OBS | Polish | P2 | Add clearer OBS Capture Mode and still-PNG-only messaging | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify output overlay is readable in OBS Window Capture |
+| WF-S5-003 | Export | Polish | P2 | Clarify aspect/safe-area guides and Frame status text | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify 9:16, 1:1, 4:5, and 16:9 guide/status behavior |
 
 ## Areas
 

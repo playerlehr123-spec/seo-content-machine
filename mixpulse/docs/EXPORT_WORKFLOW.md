@@ -1,6 +1,6 @@
 # WaveFrame Export Workflow
 
-Status: still-frame only. v0.2 Sprint 4 clarifies how export preset state relates to creator session presets.
+Status: still-frame only. v0.2 Sprint 5 clarifies how output capture, aspect guides, and current-frame PNG status relate to OBS workflows.
 
 ## Implemented Now
 
@@ -13,6 +13,8 @@ Status: still-frame only. v0.2 Sprint 4 clarifies how export preset state relate
   - YouTube Thumbnail 16:9
   - Stream Overlay 16:9
 - Built-in creator session presets can choose an export preset/aspect recommendation.
+- Output window overlay shows OBS Capture Mode, selected aspect, output dimensions, and a safe-area guide.
+- `Frame` status text says current-frame PNG/still image and reports future-only presets honestly.
 - Future video export presets remain disabled or clearly marked future/TODO.
 
 ## Current Workflow
@@ -36,5 +38,6 @@ Status: still-frame only. v0.2 Sprint 4 clarifies how export preset state relate
 
 - Switch built-in session presets and confirm export preset changes safely.
 - Switch export presets manually and confirm preview aspect guide remains coherent.
+- Open, close, reopen, resize, and fullscreen the output window.
 - Press Frame and confirm no crash.
 - Confirm future/TODO export paths do not imply video export exists.
