@@ -37,6 +37,31 @@ const CreatorTemplatePreset* getTemplateForSelectedId(int selectedId)
     return &templates[(size_t)sanitizeCreatorTemplateIndex(selectedId - 1)];
 }
 
+juce::String templateBrandFieldHint(const CreatorTemplatePreset* preset)
+{
+    if (preset == nullptr)
+        return "artist/title/CTA";
+
+    if (preset->name == "Release Announcement")
+        return "artist/title/label/CTA";
+    if (preset->name == "Label Drop")
+        return "label/title/CTA";
+    if (preset->name == "Logo Reactor")
+        return "artist/title/logo";
+    if (preset->name == "Type Pulse")
+        return "title/CTA";
+    if (preset->name == "Minimal Meter")
+        return "brand optional";
+    if (preset->name == "Stream Overlay")
+        return "artist/title optional";
+    if (preset->name == "Particle Card")
+        return "title/CTA optional";
+    if (preset->name == "Spectrum Promo")
+        return "title/label/CTA";
+
+    return "artist/title/CTA";
+}
+
 juce::String fallbackText(const juce::String& value, const juce::String& fallback)
 {
     return value.trim().isNotEmpty() ? value : fallback;
@@ -64,10 +89,37 @@ juce::String exportPresetStatusText(int selectedId, int fallbackIndex)
     return "Export preset unavailable";
 }
 
+juce::String sanitizeBrandTextInput(const juce::String& value, const juce::String& fallback, int maxChars = 64)
+{
+    auto trimmed = value.trim();
+    if (trimmed.isEmpty())
+        return fallback;
+
+    return trimmed.substring(0, maxChars);
+}
+
+void configureBrandTextEditor(juce::TextEditor& editor, const juce::String& placeholder)
+{
+    editor.setMultiLine(false);
+    editor.setReturnKeyStartsNewLine(false);
+    editor.setSelectAllWhenFocused(true);
+    editor.setInputRestrictions(64);
+    editor.setTextToShowWhenEmpty(placeholder, juce::Colours::white.withAlpha(0.35f));
+    editor.setColour(juce::TextEditor::backgroundColourId, juce::Colour::fromRGB(8, 13, 24));
+    editor.setColour(juce::TextEditor::outlineColourId, juce::Colour::fromRGB(32, 218, 255).withAlpha(0.30f));
+    editor.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colour::fromRGB(80, 255, 160).withAlpha(0.70f));
+    editor.setColour(juce::TextEditor::textColourId, juce::Colours::white.withAlpha(0.90f));
+    editor.setColour(juce::TextEditor::highlightColourId, juce::Colour::fromRGB(32, 218, 255).withAlpha(0.40f));
+}
+
 struct BuiltInSessionPreset
 {
     const char* name;
     int templateIndex;
+    const char* artist;
+    const char* title;
+    const char* label;
+    const char* cta;
     float visualIntensity;
     float motionAmount;
     float bloomAmount;
@@ -80,14 +132,14 @@ struct BuiltInSessionPreset
 const std::vector<BuiltInSessionPreset>& getBuiltInSessionPresets()
 {
     static const std::vector<BuiltInSessionPreset> presets {
-        { "Minimal Meter - Dark Cyan", 0, 0.75f, 0.65f, 0.45f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(20, 30, 50), juce::Colour::fromRGB(255, 220, 120), "implemented" },
-        { "Logo Reactor - Neon Green", 1, 0.78f, 0.58f, 0.52f, juce::Colour::fromRGB(80, 255, 160), juce::Colour::fromRGB(8, 18, 16), juce::Colour::fromRGB(32, 218, 255), "implemented" },
-        { "Release Announcement - Vertical", 2, 0.72f, 0.42f, 0.30f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(14, 14, 24), juce::Colour::fromRGB(255, 220, 120), "implemented" },
-        { "Label Drop - Square", 3, 0.68f, 0.38f, 0.28f, juce::Colour::fromRGB(255, 220, 120), juce::Colour::fromRGB(18, 16, 24), juce::Colour::fromRGB(32, 218, 255), "implemented" },
-        { "Stream Overlay - Wide", 4, 0.70f, 0.70f, 0.35f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(8, 13, 24), juce::Colour::fromRGB(80, 255, 160), "placeholder" },
-        { "Type Pulse - Dark Glow", 7, 0.82f, 0.66f, 0.42f, juce::Colour::fromRGB(190, 255, 245), juce::Colour::fromRGB(7, 10, 18), juce::Colour::fromRGB(32, 218, 255), "implemented" },
-        { "Particle Card - Accent Motion", 8, 0.76f, 0.82f, 0.48f, juce::Colour::fromRGB(160, 255, 120), juce::Colour::fromRGB(8, 12, 20), juce::Colour::fromRGB(32, 218, 255), "placeholder" },
-        { "Spectrum Promo - Clean Grid", 9, 0.70f, 0.48f, 0.25f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(10, 14, 22), juce::Colour::fromRGB(255, 220, 120), "implemented" }
+        { "Minimal Meter - Dark Cyan", 0, "Artist Name", "Track Title", "WaveFrame", "Meter", 0.75f, 0.65f, 0.45f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(20, 30, 50), juce::Colour::fromRGB(255, 220, 120), "implemented" },
+        { "Logo Reactor - Neon Green", 1, "Artist Name", "Track Title", "Label Name", "Listen", 0.78f, 0.58f, 0.52f, juce::Colour::fromRGB(80, 255, 160), juce::Colour::fromRGB(8, 18, 16), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Release Announcement - Vertical", 2, "Artist Name", "Track Title", "Label Name", "Out Now", 0.72f, 0.42f, 0.30f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(14, 14, 24), juce::Colour::fromRGB(255, 220, 120), "implemented" },
+        { "Label Drop - Square", 3, "Artist Name", "Track Title", "Label Name", "Out Now", 0.68f, 0.38f, 0.28f, juce::Colour::fromRGB(255, 220, 120), juce::Colour::fromRGB(18, 16, 24), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Stream Overlay - Wide", 4, "Artist Name", "Live Set", "Label Name", "Live", 0.70f, 0.70f, 0.35f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(8, 13, 24), juce::Colour::fromRGB(80, 255, 160), "placeholder" },
+        { "Type Pulse - Dark Glow", 7, "Artist Name", "Track Title", "Label Name", "Listen / Watch", 0.82f, 0.66f, 0.42f, juce::Colour::fromRGB(190, 255, 245), juce::Colour::fromRGB(7, 10, 18), juce::Colour::fromRGB(32, 218, 255), "implemented" },
+        { "Particle Card - Accent Motion", 8, "Artist Name", "Track Title", "Label Name", "Watch", 0.76f, 0.82f, 0.48f, juce::Colour::fromRGB(160, 255, 120), juce::Colour::fromRGB(8, 12, 20), juce::Colour::fromRGB(32, 218, 255), "placeholder" },
+        { "Spectrum Promo - Clean Grid", 9, "Artist Name", "Track Title", "Label Name", "Listen", 0.70f, 0.48f, 0.25f, juce::Colour::fromRGB(32, 218, 255), juce::Colour::fromRGB(10, 14, 22), juce::Colour::fromRGB(255, 220, 120), "implemented" }
     };
     return presets;
 }
@@ -98,6 +150,19 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
 {
     setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
     addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox); addAndMakeVisible(sessionPresetBox);
+    addAndMakeVisible(artistNameEditor); addAndMakeVisible(trackTitleEditor); addAndMakeVisible(labelNameEditor); addAndMakeVisible(ctaTextEditor);
+    configureBrandTextEditor(artistNameEditor, "Artist Name");
+    configureBrandTextEditor(trackTitleEditor, "Track Title");
+    configureBrandTextEditor(labelNameEditor, "Label Name");
+    configureBrandTextEditor(ctaTextEditor, "Out Now");
+    artistNameEditor.setTooltip("Shown in templates that use artist branding.");
+    trackTitleEditor.setTooltip("Used by title, promo, and type modules.");
+    labelNameEditor.setTooltip("Optional label/brand line.");
+    ctaTextEditor.setTooltip("Short callout like Out Now or Presave.");
+    artistNameEditor.onTextChange = [this] { applyBrandEditorsToState(); };
+    trackTitleEditor.onTextChange = [this] { applyBrandEditorsToState(); };
+    labelNameEditor.onTextChange = [this] { applyBrandEditorsToState(); };
+    ctaTextEditor.onTextChange = [this] { applyBrandEditorsToState(); };
     tapButton.onClick = [this]{ processor.tapTempo.tap(juce::Time::getMillisecondCounterHiRes()/1000.0); processor.beatPulse.trigger(processor.tapTempo.getBpm().value_or(0.0)); };
     beatSyncButton.onClick = [this]{ processor.visualizerState.beatSync.store(beatSyncButton.getToggleState()); };
     visualizerButton.onClick = [this]{ openVisualizer(); };
@@ -182,6 +247,7 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
         syncModuleBoxToProcessor();
         const int presetIndex = safeExportPresetIndex(tp.preferredExportPresetIndex + 1, 0);
         exportPresetBox.setSelectedId(presetIndex + 1, juce::sendNotificationSync);
+        syncBrandEditorsToState();
         setStatusMessage("Template: " + tp.name + " -> " + tp.moduleName + " / " + creatorTemplateStatusLabel(tp));
     };
     syncUiToProcessorState();
@@ -332,13 +398,17 @@ void MixPulseAudioProcessorEditor::resized()
         savePresetButton.setBounds(0, 0, 0, 0);
         loadPresetButton.setBounds(0, 0, 0, 0);
         resetDefaultButton.setBounds(0, 0, 0, 0);
+        artistNameEditor.setBounds(0, 0, 0, 0);
+        trackTitleEditor.setBounds(0, 0, 0, 0);
+        labelNameEditor.setBounds(0, 0, 0, 0);
+        ctaTextEditor.setBounds(0, 0, 0, 0);
         return;
     }
 
     b.removeFromLeft(218);
     b.removeFromLeft(12);
     auto right = b.removeFromRight(326).reduced(14, 42);
-    auto controls = right.removeFromTop(146);
+    auto controls = right.removeFromTop(126);
     controls.removeFromTop(22);
     sessionPresetBox.setBounds(controls.removeFromTop(26));
     controls.removeFromTop(4);
@@ -351,9 +421,22 @@ void MixPulseAudioProcessorEditor::resized()
     fullscreenButton.setBounds(beatRow.removeFromLeft(56));
 
     right.removeFromTop(10);
-    right.removeFromTop(98);
+    right.removeFromTop(74);
     right.removeFromTop(10);
-    auto brand = right.removeFromTop(124);
+    auto brand = right.removeFromTop(204);
+    brand.removeFromTop(22);
+    auto brandFields = brand.removeFromTop(116);
+    auto row = brandFields.removeFromTop(24);
+    artistNameEditor.setBounds(row.removeFromRight(204));
+    brandFields.removeFromTop(5);
+    row = brandFields.removeFromTop(24);
+    trackTitleEditor.setBounds(row.removeFromRight(204));
+    brandFields.removeFromTop(5);
+    row = brandFields.removeFromTop(24);
+    labelNameEditor.setBounds(row.removeFromRight(204));
+    brandFields.removeFromTop(5);
+    row = brandFields.removeFromTop(24);
+    ctaTextEditor.setBounds(row.removeFromRight(204));
     auto brandButtons = brand.removeFromBottom(26);
     savePresetButton.setBounds(brandButtons.removeFromLeft(84));
     brandButtons.removeFromLeft(8);
@@ -362,7 +445,7 @@ void MixPulseAudioProcessorEditor::resized()
     resetDefaultButton.setBounds(brandButtons.removeFromLeft(88));
 
     right.removeFromTop(10);
-    auto templates = right.removeFromTop(120);
+    auto templates = right.removeFromTop(104);
     templates.removeFromTop(22);
     templateBox.setBounds(templates.removeFromTop(26));
 
@@ -474,28 +557,26 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     drawPanel(g, area, "Creator Controls");
     auto r = area.reduced(14, 42);
 
-    auto controls = r.removeFromTop(146);
-    drawSectionTitle(g, controls.removeFromTop(20), "Controls");
+    auto controls = r.removeFromTop(126);
+    drawSectionTitle(g, controls.removeFromTop(20), "Session / Controls");
     drawLabelValue(g, controls.removeFromTop(28), "Session", "");
     drawLabelValue(g, controls.removeFromTop(28), "Visual", "");
-    drawLabelValue(g, controls.removeFromTop(22), "Intensity", juce::String(processor.visualRackState.visualIntensity.load(), 2));
-    drawLabelValue(g, controls.removeFromTop(22), "Motion", juce::String(processor.visualRackState.motionAmount.load(), 2));
     drawLabelValue(g, controls.removeFromTop(22), "Beat sync", processor.visualizerState.beatSync.load() ? "On" : "Off");
 
     r.removeFromTop(10);
-    auto motion = r.removeFromTop(98);
-    drawSectionTitle(g, motion.removeFromTop(20), "Motion / Audio");
-    drawLabelValue(g, motion.removeFromTop(20), "Pulse", "beat pulse placeholder");
-    drawLabelValue(g, motion.removeFromTop(20), "Bass/Mid/High", "sensitivity TODO");
-    drawLabelValue(g, motion.removeFromTop(20), "Glow / Scale", "reactive placeholders");
+    auto motion = r.removeFromTop(74);
+    drawSectionTitle(g, motion.removeFromTop(20), "Visual Controls");
+    drawLabelValue(g, motion.removeFromTop(20), "Intensity", juce::String(processor.visualRackState.visualIntensity.load(), 2));
+    drawLabelValue(g, motion.removeFromTop(20), "Motion", juce::String(processor.visualRackState.motionAmount.load(), 2));
 
     r.removeFromTop(10);
-    auto brand = r.removeFromTop(124);
-    drawSectionTitle(g, brand.removeFromTop(20), "Brand");
-    drawLabelValue(g, brand.removeFromTop(20), "Artist", fallbackText(processor.brandState.artistName, "Artist Name"));
-    drawLabelValue(g, brand.removeFromTop(20), "Track", fallbackText(processor.brandState.trackTitle, "Track Title"));
-    drawLabelValue(g, brand.removeFromTop(20), "Label", fallbackText(processor.brandState.labelName, "Label Name"));
-    drawLabelValue(g, brand.removeFromTop(20), "CTA", fallbackText(processor.brandState.callToAction, "Out Now"));
+    auto brand = r.removeFromTop(204);
+    drawSectionTitle(g, brand.removeFromTop(20), "Brand Text");
+    drawLabelValue(g, brand.removeFromTop(29), "Artist", "");
+    drawLabelValue(g, brand.removeFromTop(29), "Track", "");
+    drawLabelValue(g, brand.removeFromTop(29), "Label", "");
+    drawLabelValue(g, brand.removeFromTop(29), "CTA", "");
+    drawLabelValue(g, brand.removeFromTop(20), "Colors", "primary/accent/background TODO");
     drawLabelValue(g, brand.removeFromTop(20), "Logo", processor.brandState.logoPath.isNotEmpty() ? "preset path" : "placeholder layer");
 
     r.removeFromTop(10);
@@ -507,6 +588,7 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
         drawLabelValue(g, templates.removeFromTop(18), "Purpose", tp->bestFor);
         drawLabelValue(g, templates.removeFromTop(18), "Module", tp->moduleName);
         drawLabelValue(g, templates.removeFromTop(18), "Status", creatorTemplateStatusLabel(*tp));
+        drawLabelValue(g, templates.removeFromTop(18), "Fields", templateBrandFieldHint(tp));
         drawLabelValue(g, templates.removeFromTop(18), "Export", exportPresetStatusText(tp->preferredExportPresetIndex + 1, 0));
     }
     else
@@ -553,6 +635,27 @@ void MixPulseAudioProcessorEditor::openVisualizer()
         setStatusMessage("Output window ready for OBS Window Capture");
     }
 }
+
+void MixPulseAudioProcessorEditor::syncBrandEditorsToState()
+{
+    BrandLayer::normalizeBrandState(processor.brandState);
+    artistNameEditor.setText(processor.brandState.artistName, juce::dontSendNotification);
+    trackTitleEditor.setText(processor.brandState.trackTitle, juce::dontSendNotification);
+    labelNameEditor.setText(processor.brandState.labelName, juce::dontSendNotification);
+    ctaTextEditor.setText(processor.brandState.callToAction, juce::dontSendNotification);
+}
+
+void MixPulseAudioProcessorEditor::applyBrandEditorsToState()
+{
+    processor.brandState.artistName = sanitizeBrandTextInput(artistNameEditor.getText(), "Artist Name");
+    processor.brandState.trackTitle = sanitizeBrandTextInput(trackTitleEditor.getText(), "Track Title");
+    processor.brandState.labelName = sanitizeBrandTextInput(labelNameEditor.getText(), "Label Name");
+    processor.brandState.callToAction = sanitizeBrandTextInput(ctaTextEditor.getText(), "Out Now");
+    BrandLayer::normalizeBrandState(processor.brandState);
+    setStatusMessage("Brand updated");
+    repaint();
+}
+
 void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
 {
     const int idx = safeExportPresetIndex(exportPresetBox.getSelectedId(), processor.selectedExportPreset);
@@ -597,10 +700,16 @@ void MixPulseAudioProcessorEditor::applyBuiltInSessionPreset(int presetIndex)
     processor.visualRackState.visualIntensity.store(juce::jlimit(0.0f, 2.0f, preset.visualIntensity));
     processor.visualRackState.motionAmount.store(juce::jlimit(0.0f, 1.0f, preset.motionAmount));
     processor.visualRackState.bloomAmount.store(juce::jlimit(0.0f, 1.0f, preset.bloomAmount));
+    processor.brandState.artistName = preset.artist;
+    processor.brandState.trackTitle = preset.title;
+    processor.brandState.labelName = preset.label;
+    processor.brandState.callToAction = preset.cta;
+    processor.brandState.releaseStatusText = preset.cta;
     processor.brandState.brandPrimaryColor = preset.primary;
     processor.brandState.brandSecondaryColor = preset.secondary;
     processor.brandState.brandAccentColor = preset.accent;
     BrandLayer::normalizeBrandState(processor.brandState);
+    syncBrandEditorsToState();
     syncModuleBoxToProcessor();
     setStatusMessage("Built-in preset: " + juce::String(preset.name) + " / " + juce::String(preset.status));
 }
@@ -673,6 +782,7 @@ void MixPulseAudioProcessorEditor::syncUiToProcessorState()
     themeBox.setSelectedId(themeId, juce::dontSendNotification);
     syncModuleBoxToProcessor();
     BrandLayer::normalizeBrandState(processor.brandState);
+    syncBrandEditorsToState();
     applySelectedExportPresetToOutputGuide();
 }
 
@@ -688,6 +798,7 @@ void MixPulseAudioProcessorEditor::syncModuleBoxToProcessor()
 
 void MixPulseAudioProcessorEditor::saveUserPreset()
 {
+    applyBrandEditorsToState();
     processor.selectedExportPreset = safeExportPresetIndex(exportPresetBox.getSelectedId(), processor.selectedExportPreset);
     processor.selectedTheme = themeBox.getSelectedId() > 0 ? themeBox.getSelectedId() : 1;
     processor.hudEnabled = hudMode;
@@ -706,6 +817,7 @@ void MixPulseAudioProcessorEditor::loadUserPreset()
         return;
     }
     BrandLayer::normalizeBrandState(processor.brandState);
+    syncBrandEditorsToState();
     if (processor.brandState.logoPath.isNotEmpty())
     {
         auto logo = juce::File(processor.brandState.logoPath);
@@ -738,7 +850,9 @@ void MixPulseAudioProcessorEditor::resetDefaults()
     if (sessionPresetBox.getNumItems() > 0)
         sessionPresetBox.setSelectedId(1, juce::dontSendNotification);
     syncUiToProcessorState();
-    setStatusMessage("Preset reset to default session");
+    syncBrandEditorsToState();
+    setStatusMessage("Brand fields reset to default session");
 }
+
 
 
