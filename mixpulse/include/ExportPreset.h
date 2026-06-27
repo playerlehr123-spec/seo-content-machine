@@ -12,6 +12,7 @@ struct ExportPreset
     int width = 0;
     int height = 0;
     juce::String aspectLabel;
+    juce::String useCase;
     ExportPresetCategory category = ExportPresetCategory::Current;
     bool enabled = true;
     bool futureVideoSupported = false;
@@ -20,3 +21,5 @@ struct ExportPreset
 
 const std::vector<ExportPreset>& getBuiltInExportPresets();
 juce::String exportPresetShortLabel(int index);
+juce::String exportPresetDimensionLabel(const ExportPreset& preset);
+juce::String exportPresetWorkflowLabel(const ExportPreset& preset);
