@@ -6,7 +6,7 @@ This bug bash plan is for private beta readiness and feedback intake.
 
 - Find P0/P1 issues before wider sharing.
 - Confirm audio pass-through remains unchanged.
-- Exercise standalone, VST3, output window, OBS, module/template, and preset workflows.
+- Exercise standalone, VST3, output window, OBS, module/template, preset, export preset, and Frame/current-frame workflows.
 - Capture reproducible reports with enough detail to fix them.
 
 ## QA Levels
@@ -35,6 +35,7 @@ This bug bash plan is for private beta readiness and feedback intake.
 - Include artifact/run number.
 - Include standalone/VST3 and DAW details.
 - Include module/template selected.
+- Include export preset/aspect selected.
 - Include output/OBS status.
 - Escalate audio pass-through reports immediately.
 - Defer feature requests unless they block private beta testing.
