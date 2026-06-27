@@ -18,6 +18,12 @@ WaveFrame's current creator capture path is the standalone/plugin output window 
 5. Crop or transform the source as needed.
 6. Record or stream from OBS.
 
+## Still Frames vs Motion
+
+- Use `Frame` for still PNG capture.
+- Use OBS Window Capture for motion recording or streaming.
+- Built-in MP4/WebM export, timeline rendering, NDI, Spout/Syphon, and virtual camera output are not available in v0.2.
+
 ## Aspect Guides
 - 9:16 is for reels, shorts, and vertical clips.
 - 1:1 is for square posts.
@@ -42,3 +48,4 @@ WaveFrame's current creator capture path is the standalone/plugin output window 
 - OBS capture is a UI workflow only.
 - No file I/O is added to `processBlock`.
 - Audio remains pass-through and analysis-only.
+

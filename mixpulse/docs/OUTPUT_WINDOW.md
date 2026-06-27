@@ -26,6 +26,12 @@ The WaveFrame output window is the capture surface for live visuals, creator tem
 
 ## Frame Capture
 - `Frame` saves the current visual output as a still PNG.
+- Current Window uses the output/editor component size.
+- Social presets render fixed-size PNG stills:
+  - 9:16 at 1080x1920
+  - 1:1 at 1080x1080
+  - 4:5 at 1080x1350
+  - 16:9 at 1920x1080
 - Fixed-size presets render through the visual renderer.
 - Current-window capture uses the output component size.
 - Future-only presets report a TODO status instead of implying video export exists.
@@ -46,3 +52,4 @@ The WaveFrame output window is the capture surface for live visuals, creator tem
 - Transparent-background capture options.
 - Output window safe-area style controls.
 - Video export remains future only.
+

@@ -37,6 +37,8 @@ Use this checklist before treating WaveFrame v0.1 as a private beta candidate.
 - [ ] Output opens.
 - [ ] Output close/reopen works.
 - [ ] Frame does not crash.
+- [ ] Export preset dimensions/status are understandable.
+- [ ] Frame remains still-PNG/current-frame only.
 - [ ] HUD toggles.
 - [ ] Fullscreen works.
 - [ ] Module/template switching does not crash.

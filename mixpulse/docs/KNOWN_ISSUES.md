@@ -9,6 +9,7 @@ This document lists known limitations and test areas for the v0.1 private beta. 
 - WaveFrame is Windows-first for v0.1.
 - VST3 is experimental and needs DAW testing.
 - Built-in video export is not implemented.
+- Frame export is still PNG/current-frame only.
 - OBS/manual capture is the current motion capture workflow.
 - Installer and code signing are not implemented yet.
 - macOS/AU are not enabled.
@@ -24,6 +25,7 @@ This document lists known limitations and test areas for the v0.1 private beta. 
 - Audio pass-through unchanged in DAWs.
 - Output window close/reopen.
 - Frame/current-frame behavior.
+- Export preset switching and displayed dimensions.
 - HUD toggle.
 - Fullscreen behavior.
 - Module/template switching.

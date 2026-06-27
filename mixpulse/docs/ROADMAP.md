@@ -1,6 +1,6 @@
 # WaveFrame Roadmap
 
-## Tier 0 — Proven Foundation
+## Tier 0 Ã¢â‚¬â€ Proven Foundation
 - buildable Windows standalone
 - app launches
 - settings opens
@@ -9,7 +9,7 @@
 - fullscreen works
 - audio pass-through
 
-## Tier 1 — Core Stability
+## Tier 1 Ã¢â‚¬â€ Core Stability
 - CI green
 - artifact verification
 - CMake/source integration
@@ -21,7 +21,7 @@
 - Beta Feedback / Triage: intake docs, severity rules, manual tracker, issue templates, label guidance, and fix sprint workflow are the current process layer.
 - v0.1 Release Freeze: frozen private beta scope, final readiness checklist, known issues, release notes, and v0.2 parking lot.
 
-## Tier 2 — Meter + Output Product
+## Tier 2 Ã¢â‚¬â€ Meter + Output Product
 - WaveFrame branding polish
 - compact HUD
 - better meters
@@ -30,7 +30,7 @@
 - frame export reliability
 - UI/UX Polish Pass 1: cleaner layout, larger preview, grouped controls, right-side creator panels, clearer export/template workflow, still no video export
 
-## Tier 3 — Creator Templates
+## Tier 3 Ã¢â‚¬â€ Creator Templates
 - Brand Layer
 - Promo Card
 - Logo Reactor
@@ -43,8 +43,9 @@
 - v0.2 Sprint 3: Template + Brand UX improves starter template metadata, module recommendations, Brand Kit defaults, preview overlay context, and status labels. Full template editor, logo import, and video export remain future/TODO.
 - v0.2 Sprint 4: Preset / Session polish adds built-in session presets, safer Brand preset save/load normalization, clearer reset/default behavior, and truthful docs. Full creator-session file serialization remains future/TODO.
 - v0.2 Sprint 5: Output / OBS polish improves output close/reopen/fullscreen safety, OBS Capture Mode messaging, aspect/safe-area guides, and still-frame status clarity. Built-in video export remains future/TODO.
+- v0.2 Sprint 6: Creator Export + Frame workflow polish clarifies social still PNG presets, current-frame capture, failure messaging, and still-frame vs future video export boundaries.
 
-## Tier 4 — Tool Suite
+## Tier 4 Ã¢â‚¬â€ Tool Suite
 - Particles
 - Pixelator
 - Type Pulse
@@ -54,7 +55,7 @@
 - Stream Overlay
 - Reel Visualizer
 
-## Tier 5 — Template Club / Community
+## Tier 5 Ã¢â‚¬â€ Template Club / Community
 - Inspiration Wall
 - Request Tool
 - Submit Visual
@@ -62,7 +63,7 @@
 - preset packs
 - future account system
 
-## Tier 6 — Pro Visual Engine Research
+## Tier 6 Ã¢â‚¬â€ Pro Visual Engine Research
 - video export
 - video import
 - Spout/Syphon/NDI
@@ -103,6 +104,7 @@
 - Sprint 3 Template + Brand UX is in progress as a compile-safe creator workflow polish pass.
 - Sprint 4 Preset / Session polish is in progress as a compile-safe reliability and status pass.
 - Sprint 5 Output / OBS polish is in progress as a compile-safe capture workflow clarity pass.
+- Sprint 6 Creator Export + Frame workflow polish is in progress as a compile-safe still-image workflow clarity pass.
 
 ## v0.2 Out Of Scope
 - Public release.
@@ -125,3 +127,5 @@
 - macOS/AU future research only.
 - NDI/Spout/Syphon future research only.
 - Template packs and community workflows after private beta scope is stable.
+
+

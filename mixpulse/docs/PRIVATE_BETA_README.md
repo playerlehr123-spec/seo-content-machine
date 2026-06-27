@@ -19,6 +19,7 @@ Do not share private beta builds publicly.
 - Preset reset/save/load if present.
 - VST3 scan/load in DAWs if comfortable.
 - OBS Window Capture workflow.
+- Export preset switching and current-frame PNG capture.
 
 ## How To Report Feedback
 
@@ -42,6 +43,7 @@ Useful links:
 
 - Unsigned Windows warning is expected.
 - Built-in video export is not implemented.
+- Frame/current-frame export is still PNG only.
 - OBS is the current motion capture workflow.
 - VST3 testing is experimental.
 - Some templates/modules may be placeholders.

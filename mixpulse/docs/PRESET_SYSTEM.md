@@ -5,6 +5,7 @@ Status: v0.2 Sprint 4 adds safer creator-session defaults, built-in session pres
 ## Implemented Now
 
 - Built-in session preset selector in the editor Controls section.
+- Built-in session presets can recommend a creator template, visual module, and export preset/aspect.
 - Local Brand preset save/load under `Documents/WaveFrame/Presets/WaveFrame_UserPreset.json`.
 - Reset restores a known default creator session.
 - Brand preset load tolerates missing fields and malformed JSON safely.
@@ -28,6 +29,8 @@ Status: v0.2 Sprint 4 adds safer creator-session defaults, built-in session pres
 | Type Pulse - Dark Glow | Type Pulse | Type Pulse | 9:16 | implemented |
 | Particle Card - Accent Motion | Particle Card | Particles | 1:1 | placeholder |
 | Spectrum Promo - Clean Grid | Spectrum Promo | Spectrum Bars | 16:9 | implemented |
+
+Export preset status is still-image focused. v0.2 does not include full creator-session file serialization or video export.
 
 ## What Save/Load Means Today
 
