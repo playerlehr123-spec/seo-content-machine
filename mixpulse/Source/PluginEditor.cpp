@@ -42,18 +42,26 @@ juce::String fallbackText(const juce::String& value, const juce::String& fallbac
     return value.trim().isNotEmpty() ? value : fallback;
 }
 
-juce::String exportPresetStatusText(int selectedId, int fallbackIndex)
+const ExportPreset* getExportPresetForSelection(int selectedId, int fallbackIndex, int& safeIndex)
 {
     const auto& presets = getBuiltInExportPresets();
     if (presets.empty())
-        return "Current frame / size unavailable";
+    {
+        safeIndex = 0;
+        return nullptr;
+    }
 
-    const int idx = safeExportPresetIndex(selectedId, fallbackIndex);
-    const auto& preset = presets[(size_t)idx];
-    const auto size = preset.width > 0 && preset.height > 0
-        ? juce::String(preset.width) + "x" + juce::String(preset.height)
-        : juce::String("current window");
-    return preset.aspectLabel + " / " + size;
+    safeIndex = safeExportPresetIndex(selectedId, fallbackIndex);
+    return &presets[(size_t)safeIndex];
+}
+
+juce::String exportPresetStatusText(int selectedId, int fallbackIndex)
+{
+    int safeIndex = 0;
+    if (const auto* preset = getExportPresetForSelection(selectedId, fallbackIndex, safeIndex))
+        return preset->aspectLabel + " / " + exportPresetDimensionLabel(*preset) + " / " + exportPresetWorkflowLabel(*preset);
+
+    return "Export preset unavailable";
 }
 
 struct BuiltInSessionPreset
@@ -375,17 +383,7 @@ bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
     if(k.getTextCharacter()=='s'||k.getTextCharacter()=='S'){exportScreenshot();return true;}
     if(k.getTextCharacter()=='f'||k.getTextCharacter()=='F'){ if(!visualizer) openVisualizer(); if(visualizer) visualizer->toggleFullscreen(); return true;}
     if(k.getTextCharacter()=='h'||k.getTextCharacter()=='H'){ hudButton.triggerClick(); return true;}
-    if(k==juce::KeyPress::escapeKey){ if(visualizer) visualizer->setFullScreen(false); return true;}
-    return false;
-}
-
-void MixPulseAudioProcessorEditor::drawHeader(juce::Graphics& g, juce::Rectangle<int> area)
-{
-    drawPanel(g, area, juce::String());
-    auto header = area.reduced(18, 12);
-    auto title = header.removeFromLeft(250);
-    g.setColour(theme.accent);
-    g.setFont(juce::Font(27.0f, juce::Font::bold));
+    if(k==juce::KeyPress::escapeKey){ if(visualizer) visualizer->setFuâ€¦82 tokens truncatedâ€¦7.0f, juce::Font::bold));
     g.drawText(Branding::ProductDisplayName, title.removeFromTop(34), juce::Justification::centredLeft);
     g.setColour(theme.mutedText);
     g.setFont(12.0f);
@@ -454,7 +452,7 @@ void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Re
     g.drawText(fallbackText(processor.brandState.callToAction, "Out Now") + " / still-frame preview", frame.toNearestInt().reduced(18), juce::Justification::centredBottom);
 
     auto footer = inner.removeFromBottom(42);
-    drawPill(g, footer.removeFromLeft(156).reduced(0, 8), exportPresetStatusText(exportPresetBox.getSelectedId(), processor.selectedExportPreset), theme.accent);
+    drawPill(g, footer.removeFromLeft(176).reduced(0, 8), exportPresetStatusText(exportPresetBox.getSelectedId(), processor.selectedExportPreset), theme.accent);
     footer.removeFromLeft(8);
     drawPill(g, footer.removeFromLeft(150).reduced(0, 8), "PNG frame only", theme.secondary);
     footer.removeFromLeft(8);
@@ -499,7 +497,7 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
         drawLabelValue(g, templates.removeFromTop(18), "Purpose", tp->bestFor);
         drawLabelValue(g, templates.removeFromTop(18), "Module", tp->moduleName);
         drawLabelValue(g, templates.removeFromTop(18), "Status", creatorTemplateStatusLabel(*tp));
-        drawLabelValue(g, templates.removeFromTop(18), "Aspect", exportPresetShortLabel(tp->preferredExportPresetIndex));
+        drawLabelValue(g, templates.removeFromTop(18), "Export", exportPresetStatusText(tp->preferredExportPresetIndex + 1, 0));
     }
     else
     {
@@ -510,10 +508,12 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
     auto exportCard = r;
     drawSectionTitle(g, exportCard.removeFromTop(20), "Export");
     exportCard.removeFromTop(30);
-    drawLabelValue(g, exportCard.removeFromTop(20), "Still", "Current frame PNG");
-    drawLabelValue(g, exportCard.removeFromTop(20), "Preset", exportPresetStatusText(exportPresetBox.getSelectedId(), processor.selectedExportPreset));
-    drawLabelValue(g, exportCard.removeFromTop(20), "OBS", "Output window capture");
-    drawLabelValue(g, exportCard.removeFromTop(20), "Video", "Future/TODO only");
+    int exportIndex = 0;
+    const auto* preset = getExportPresetForSelection(exportPresetBox.getSelectedId(), processor.selectedExportPreset, exportIndex);
+    drawLabelValue(g, exportCard.removeFromTop(20), "Preset", preset != nullptr ? preset->name : "Default unavailable");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Size", preset != nullptr ? preset->aspectLabel + " / " + exportPresetDimensionLabel(*preset) : "Current window");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Use", preset != nullptr ? preset->useCase : "manual still capture");
+    drawLabelValue(g, exportCard.removeFromTop(20), "Workflow", preset != nullptr ? exportPresetWorkflowLabel(*preset) + " / OBS capture" : "Still PNG / OBS capture");
 }
 
 void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectangle<int> area)
@@ -558,7 +558,7 @@ void MixPulseAudioProcessorEditor::applySelectedExportPresetToOutputGuide()
     if (exportPresetBox.getSelectedId() <= 0)
         exportPresetBox.setSelectedId(idx + 1, juce::dontSendNotification);
 
-    setStatusMessage("Output guide: " + exportPresetStatusText(idx + 1, idx) + " / still PNG only");
+    setStatusMessage("Export preset: " + exportPresetStatusText(idx + 1, idx));
 }
 
 void MixPulseAudioProcessorEditor::applyBuiltInSessionPreset(int presetIndex)
@@ -602,7 +602,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     const auto& presets = getBuiltInExportPresets();
     if (presets.empty())
     {
-        setStatusMessage("Frame export unavailable: no export presets");
+        setStatusMessage("Frame capture failed: no export presets available");
         return;
     }
 
@@ -610,14 +610,14 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     const auto& preset = presets[(size_t)presetIndex];
     if (!preset.enabled)
     {
-        setStatusMessage("Frame export TODO: " + preset.name + " is future-only");
+        setStatusMessage("Frame capture TODO: " + preset.name + " is not available in v0.2");
         return;
     }
 
     auto exportDir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile(Branding::ProductDisplayName).getChildFile("Exports");
     if (!exportDir.createDirectory())
     {
-        setStatusMessage("Frame export failed: cannot create Documents/WaveFrame/Exports");
+        setStatusMessage("Frame capture failed: cannot create Documents/WaveFrame/Exports");
         return;
     }
 
@@ -627,7 +627,7 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
 
     int w = sourceComponent->getWidth(), h = sourceComponent->getHeight();
     if (preset.width > 0 && preset.height > 0) { w = preset.width; h = preset.height; }
-    if (w <= 0 || h <= 0) { setStatusMessage("Export failed: invalid render size"); return; }
+    if (w <= 0 || h <= 0) { setStatusMessage("Frame capture failed: invalid render size"); return; }
 
     juce::Image img(juce::Image::ARGB, w, h, true);
     juce::Graphics gg(img);
@@ -646,10 +646,10 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     auto file = exportDir.getChildFile("WaveFrame_" + safeName + "_" + stamp + ".png");
     juce::FileOutputStream os(file);
     juce::PNGImageFormat png;
-    if (!os.openedOk()) { setStatusMessage("Export failed: cannot create output file"); return; }
-    if (!png.writeImageToStream(img, os)) { setStatusMessage("Export failed: PNG encoder error"); return; }
+    if (!os.openedOk()) { setStatusMessage("Frame capture failed: cannot create output file"); return; }
+    if (!png.writeImageToStream(img, os)) { setStatusMessage("Frame capture failed: PNG encoder error"); return; }
 
-    setStatusMessage("Saved current frame PNG: " + exportPresetShortLabel(presetIndex) + " " + juce::String(w) + "x" + juce::String(h));
+    setStatusMessage("Captured still PNG: " + exportPresetShortLabel(presetIndex) + " " + juce::String(w) + "x" + juce::String(h));
 }
 
 
@@ -730,3 +730,5 @@ void MixPulseAudioProcessorEditor::resetDefaults()
     syncUiToProcessorState();
     setStatusMessage("Preset reset to default session");
 }
+
+
