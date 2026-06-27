@@ -33,6 +33,9 @@ Use this checklist before sharing a WaveFrame beta build outside the development
 - [ ] Output window opens.
 - [ ] Fullscreen works.
 - [ ] Frame does not crash.
+- [ ] Export presets switch and show expected dimensions.
+- [ ] Frame before Output, after Output, and repeated Frame clicks do not crash.
+- [ ] No UI/docs claim MP4/WebM/timeline export exists.
 - [ ] HUD does not crash.
 - [ ] App closes cleanly.
 
