@@ -9,6 +9,7 @@ WaveFrame currently keeps these creator-session values in existing editor/proces
 - selected visual module
 - selected creator template
 - selected export preset/aspect
+- selected export dimensions/use case for still PNG output
 - Brand Kit text/defaults
 - brand color hints
 - visual intensity
@@ -41,6 +42,7 @@ Selecting a built-in session preset safely composes:
 - a creator template
 - a recommended visual module
 - a recommended export preset
+- still-frame output dimensions/use case
 - brand color hints
 - visual intensity
 - motion amount
@@ -65,4 +67,5 @@ If a local preset is missing or malformed, WaveFrame keeps the current session a
 - File picker save/load.
 - Recent preset menu.
 - Template-specific editable fields.
+- Video/timeline export state.
 - Cloud sync, public sharing, and marketplace features are out of scope.
