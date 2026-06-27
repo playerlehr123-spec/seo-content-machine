@@ -383,7 +383,17 @@ bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
     if(k.getTextCharacter()=='s'||k.getTextCharacter()=='S'){exportScreenshot();return true;}
     if(k.getTextCharacter()=='f'||k.getTextCharacter()=='F'){ if(!visualizer) openVisualizer(); if(visualizer) visualizer->toggleFullscreen(); return true;}
     if(k.getTextCharacter()=='h'||k.getTextCharacter()=='H'){ hudButton.triggerClick(); return true;}
-    if(k==juce::KeyPress::escapeKey){ if(visualizer) visualizer->setFuâ€¦82 tokens truncatedâ€¦7.0f, juce::Font::bold));
+    if(k==juce::KeyPress::escapeKey){ if(visualizer) visualizer->setFullScreen(false); return true;}
+    return false;
+}
+
+void MixPulseAudioProcessorEditor::drawHeader(juce::Graphics& g, juce::Rectangle<int> area)
+{
+    drawPanel(g, area, juce::String());
+    auto header = area.reduced(18, 12);
+    auto title = header.removeFromLeft(250);
+    g.setColour(theme.accent);
+    g.setFont(juce::Font(27.0f, juce::Font::bold));
     g.drawText(Branding::ProductDisplayName, title.removeFromTop(34), juce::Justification::centredLeft);
     g.setColour(theme.mutedText);
     g.setFont(12.0f);
