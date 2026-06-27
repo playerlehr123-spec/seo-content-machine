@@ -18,6 +18,9 @@ Status values:
 | Output closes/reopens | Untested |  |  |
 | Fullscreen works | Untested |  |  |
 | Frame does not crash | Untested |  |  |
+| Export preset switching shows dimensions | Untested |  | Test Current, 9:16, 1:1, 4:5, 16:9 |
+| Frame before Output does not crash | Untested |  | Should open/fallback safely |
+| Repeated Frame clicks do not crash | Untested |  | Still PNG only |
 | HUD toggles | Untested |  |  |
 | Module/template switching | Untested |  |  |
 | Preset reset/save/load | Untested |  |  |
@@ -64,3 +67,5 @@ When a test fails:
 | WF-S1-001 | Module/template selection fallback | Needs retest | Switch modules/templates rapidly; verify invalid/default state falls back to Spectrum Bars / first template |
 | WF-S1-002 | Brand preset malformed state clamp | Needs retest | Load malformed preset JSON; verify logo opacity/scale/placement remain sane |
 | WF-S1-003 | Export preset fallback | Needs retest | Clear or force invalid export preset state; verify UI/export falls back to a valid preset |
+| WF-S6-001 | Export preset clarity | Needs retest | Switch each preset and verify aspect, dimensions, use case, and still-PNG workflow text |
+| WF-S6-002 | Frame/current-frame failure handling | Needs retest | Click Frame before Output, after Output, repeatedly, and with future-only presets |
