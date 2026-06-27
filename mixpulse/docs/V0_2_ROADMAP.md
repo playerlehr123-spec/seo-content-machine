@@ -67,6 +67,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - Save/load brand defaults.
 - Logo/image import research only, not implementation unless approved later as safe.
 - Sprint 3 improved default brand text, reset expectations, and preview fallback display. Color pickers and logo/image import remain future/TODO.
+- Sprint 7 adds editable Artist, Track, Label, and CTA fields, syncs them with preview/output, and keeps color picker/logo import work future/TODO.
 
 ### D. Presets v2
 
@@ -141,5 +142,6 @@ v0.2 can become a private beta candidate when:
 - Video/export scope can pull the project away from v0.2 goals.
 - File IO, GUI calls, locks, or allocations in `processBlock` would violate the audio safety promise.
 - Visual polish can become expensive if it turns into a renderer rewrite.
+
 
 
