@@ -39,7 +39,7 @@ The right panel organizes creator workflow into predictable groups.
 
 - Controls: visual module selector, intensity, motion, beat sync, tap, fullscreen.
 - Motion / Audio: beat pulse, bass/mid/high sensitivity, glow, and reactive scale placeholders.
-- Brand: artist, track, label, CTA, color/logo placeholders.
+- Brand Text: editable artist, track, label, and CTA fields with color/logo placeholders.
 - Templates: starter social template set.
 - Export: PNG frame export, aspect presets, OBS capture note.
 
@@ -60,6 +60,8 @@ Starter templates:
 
 Templates can safely set a visual module, CTA text, release text, and preferred still export preset. v0.2 Sprint 3 also displays the selected template purpose, recommended module, status, and aspect/use-case summary.
 
+v0.2 Sprint 7 keeps all core brand fields visible and editable while adding template-aware helper text. Field hiding and a deeper template editor remain future/TODO.
+
 ## Export Panel
 
 Current supported export scope:
@@ -78,3 +80,4 @@ Future/TODO only:
 ## Future Creative Lab
 
 The future creative lab can become a deeper authoring area for templates, brand kits, logo placement, animation presets, and reusable visual recipes. It should remain separate from the audio callback and should not introduce video export until the still-frame workflow is stable.
+
