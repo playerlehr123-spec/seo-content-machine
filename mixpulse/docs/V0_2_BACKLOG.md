@@ -30,6 +30,9 @@ Status values:
 | WF-S5-001 | Output | Bug | P2 | Harden output close/reopen/fullscreen state | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify repeated Output clicks, close/reopen, and fullscreen do not crash |
 | WF-S5-002 | OBS | Polish | P2 | Add clearer OBS Capture Mode and still-PNG-only messaging | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify output overlay is readable in OBS Window Capture |
 | WF-S5-003 | Export | Polish | P2 | Clarify aspect/safe-area guides and Frame status text | v0.2 Sprint 5 | Needs retest | Sprint 5 | Implemented in Sprint 5; verify 9:16, 1:1, 4:5, and 16:9 guide/status behavior |
+| WF-S7-001 | Brand Kit | Feature | P2 | Add editable Artist, Track, Label, and CTA fields | v0.2 Sprint 7 | Needs retest | Sprint 7 | Verify edits update preview/output text and empty fields fallback safely |
+| WF-S7-002 | Templates | Polish | P2 | Add template-aware Brand Text helper labels | v0.2 Sprint 7 | Needs retest | Sprint 7 | Verify template switching keeps fields visible and coherent |
+| WF-S7-003 | Presets | Polish | P2 | Sync editable Brand Text with reset, session presets, and Brand preset save/load | v0.2 Sprint 7 | Needs retest | Sprint 7 | Verify reset/session/load update text fields without losing safe defaults |
 | WF-S6-001 | Export | Polish | P2 | Clarify export preset labels, dimensions, use cases, and still-PNG workflow | v0.2 Sprint 6 | Needs retest | Sprint 6 | Implemented in Sprint 6; verify each preset displays correct aspect/dimensions/use case |
 | WF-S6-002 | Export | Bug | P2 | Harden Frame/current-frame PNG failure messaging | v0.2 Sprint 6 | Needs retest | Sprint 6 | Implemented in Sprint 6; verify Frame before Output, repeated Frame clicks, and future-only presets fail safely |
 | WF-S6-003 | Docs | Docs | P2 | Align export, OBS, QA, and beta docs around still-frame vs future video export | v0.2 Sprint 6 | Needs retest | Sprint 6 | Verify docs do not imply MP4/WebM/timeline export exists |
@@ -69,5 +72,6 @@ Status values:
 - Feature ideas belong here or in `V0_2_PARKING_LOT.md` until selected.
 - Do not use this backlog to justify forbidden scope.
 - Keep one backlog item per issue or feature candidate.
+
 
 
