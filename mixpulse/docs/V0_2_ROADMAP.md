@@ -85,6 +85,7 @@ WaveFrame remains the user-facing product name. MixPulse remains the current int
 - Full-screen capture reliability.
 - Still-frame workflow clarity.
 - Sprint 5 improves output close/reopen/fullscreen safety, adds an OBS Capture Mode overlay, shows aspect/dimension/safe-area guidance, and keeps Frame messaging still-PNG-only.
+- Sprint 6 clarifies export preset labels, dimensions, use cases, Frame/current-frame PNG status, and future video export limitations.
 
 ### F. Naming Cleanup Stage 1
 
@@ -140,3 +141,5 @@ v0.2 can become a private beta candidate when:
 - Video/export scope can pull the project away from v0.2 goals.
 - File IO, GUI calls, locks, or allocations in `processBlock` would violate the audio safety promise.
 - Visual polish can become expensive if it turns into a renderer rewrite.
+
+
