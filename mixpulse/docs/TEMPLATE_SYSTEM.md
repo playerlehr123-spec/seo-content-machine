@@ -8,6 +8,7 @@ Status: v0.2 Sprint 3 improves metadata, template/module mapping, status labels,
 - The template picker includes 10 starter presets.
 - Each preset stores display name, description, use case, recommended module, preferred export preset, CTA text, release/status text, and implementation status.
 - Selecting a template safely updates the recommended visual module, CTA text, release text, and export preset.
+- Template selection keeps Brand Text editable and shows which brand fields matter for the selected workflow.
 - Invalid template selection falls back to Minimal Meter.
 - v0.2 Sprint 4 built-in session presets can choose template presets as part of a larger creator session default.
 
@@ -29,6 +30,7 @@ Status: v0.2 Sprint 3 improves metadata, template/module mapping, status labels,
 ## Current Limitations
 
 - Template text editing is still mostly Brand Layer driven.
+- Full per-template field visibility/locking is not implemented; fields remain visible to avoid surprising state changes.
 - Logo/image import remains future/TODO unless already present through local preset state.
 - No social upload, marketplace, cloud templates, timeline, or video export.
 
@@ -38,3 +40,5 @@ Status: v0.2 Sprint 3 improves metadata, template/module mapping, status labels,
 - Confirm the module selector follows the template recommendation.
 - Confirm selected template info updates in the right panel.
 - Confirm the preview canvas shows template, module, brand text, aspect guide, and still-frame messaging.
+- Confirm editable Brand Text remains coherent after template switching.
+

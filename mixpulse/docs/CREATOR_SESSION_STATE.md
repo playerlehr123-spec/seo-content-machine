@@ -1,6 +1,6 @@
 # WaveFrame Creator Session State
 
-Status: v0.2 Sprint 4 clarifies which pieces of creator state are active in the editor, which pieces are saved locally, and which pieces are future/TODO.
+Status: v0.2 Sprint 7 makes core Brand Text editable in the editor and keeps that state connected to the existing preview/output renderer path.
 
 ## Current Session Fields
 
@@ -11,6 +11,7 @@ WaveFrame currently keeps these creator-session values in existing editor/proces
 - selected export preset/aspect
 - selected export dimensions/use case for still PNG output
 - Brand Kit text/defaults
+- editable Artist Name, Track Title, Label Name, and CTA Text
 - brand color hints
 - visual intensity
 - motion amount
@@ -44,6 +45,7 @@ Selecting a built-in session preset safely composes:
 - a recommended export preset
 - still-frame output dimensions/use case
 - brand color hints
+- safe starter Brand Text values
 - visual intensity
 - motion amount
 - bloom/glow amount
@@ -58,6 +60,8 @@ Save/Load Preset currently applies only to Brand Kit JSON:
 - logo path/placeholder settings
 - brand colors
 
+Editable Brand Text fields are included in this Brand Kit JSON path.
+
 If a local preset is missing or malformed, WaveFrame keeps the current session and shows a failure status.
 
 ## Future/TODO
@@ -69,3 +73,4 @@ If a local preset is missing or malformed, WaveFrame keeps the current session a
 - Template-specific editable fields.
 - Video/timeline export state.
 - Cloud sync, public sharing, and marketplace features are out of scope.
+

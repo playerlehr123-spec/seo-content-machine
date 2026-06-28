@@ -1,10 +1,11 @@
 # WaveFrame Preset System
 
-Status: v0.2 Sprint 4 adds safer creator-session defaults, built-in session presets, clearer status messages, and more truthful local Brand preset save/load behavior.
+Status: v0.2 Sprint 7 keeps the Sprint 4 preset safety work and adds editable Brand Text fields that save/load through the local Brand preset path.
 
 ## Implemented Now
 
 - Built-in session preset selector in the editor Controls section.
+- Built-in session presets set safe starter Brand Text values.
 - Built-in session presets can recommend a creator template, visual module, and export preset/aspect.
 - Local Brand preset save/load under `Documents/WaveFrame/Presets/WaveFrame_UserPreset.json`.
 - Reset restores a known default creator session.
@@ -57,6 +58,8 @@ Session state such as selected module/template/export preset is handled by the c
 ## Manual Tests
 
 - Select every built-in session preset and confirm template/module/export state updates.
+- Confirm built-in session presets update editable Artist, Track, Label, and CTA fields.
 - Reset and confirm Minimal Meter / Spectrum Bars / Current export / default Brand Kit values.
 - Save a Brand preset and confirm status reports local save.
 - Load a missing or malformed Brand preset and confirm the app fails safely without losing the current session.
+

@@ -43,6 +43,7 @@
 - v0.2 Sprint 3: Template + Brand UX improves starter template metadata, module recommendations, Brand Kit defaults, preview overlay context, and status labels. Full template editor, logo import, and video export remain future/TODO.
 - v0.2 Sprint 4: Preset / Session polish adds built-in session presets, safer Brand preset save/load normalization, clearer reset/default behavior, and truthful docs. Full creator-session file serialization remains future/TODO.
 - v0.2 Sprint 5: Output / OBS polish improves output close/reopen/fullscreen safety, OBS Capture Mode messaging, aspect/safe-area guides, and still-frame status clarity. Built-in video export remains future/TODO.
+- v0.2 Sprint 7: Editable Brand Fields + Creator Controls v2 adds UI-side Artist, Track, Label, and CTA editing, template-aware helper text, and safer reset/preset synchronization. Logo import, full color picker UX, and deeper template editing remain future/TODO.
 - v0.2 Sprint 6: Creator Export + Frame workflow polish clarifies social still PNG presets, current-frame capture, failure messaging, and still-frame vs future video export boundaries.
 
 ## Tier 4 Ã¢â‚¬â€ Tool Suite
@@ -104,6 +105,7 @@
 - Sprint 3 Template + Brand UX is in progress as a compile-safe creator workflow polish pass.
 - Sprint 4 Preset / Session polish is in progress as a compile-safe reliability and status pass.
 - Sprint 5 Output / OBS polish is in progress as a compile-safe capture workflow clarity pass.
+- Sprint 7 Editable Brand Fields + Creator Controls v2 is in progress as a compile-safe creator panel polish pass.
 - Sprint 6 Creator Export + Frame workflow polish is in progress as a compile-safe still-image workflow clarity pass.
 
 ## v0.2 Out Of Scope
@@ -127,5 +129,6 @@
 - macOS/AU future research only.
 - NDI/Spout/Syphon future research only.
 - Template packs and community workflows after private beta scope is stable.
+
 
 

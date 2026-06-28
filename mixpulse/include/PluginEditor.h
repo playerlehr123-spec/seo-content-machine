@@ -22,6 +22,8 @@ private:
     void loadUserPreset();
     void resetDefaults();
     void syncUiToProcessorState();
+    void syncBrandEditorsToState();
+    void applyBrandEditorsToState();
     void applySelectedExportPresetToOutputGuide();
     void applyBuiltInSessionPreset(int presetIndex);
     void syncModuleBoxToProcessor();
@@ -42,6 +44,7 @@ private:
     juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset" };
     juce::ToggleButton beatSyncButton { "Beat Sync" };
     juce::ComboBox themeBox, exportPresetBox, templateBox, moduleBox, sessionPresetBox;
+    juce::TextEditor artistNameEditor, trackTitleEditor, labelNameEditor, ctaTextEditor;
 
     float peakHoldL = -60.0f, peakHoldR = -60.0f, rmsHoldL = -60.0f, rmsHoldR = -60.0f;
     bool hudMode = false;
@@ -51,3 +54,4 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MixPulseAudioProcessorEditor)
 };
+
