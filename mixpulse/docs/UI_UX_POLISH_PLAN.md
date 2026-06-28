@@ -26,6 +26,16 @@ WaveFrame should read as a creator tool with four stable zones:
 - Made the preview canvas larger and more central with aspect/safe-area guide placeholders.
 - Kept export messaging limited to PNG still frames.
 
+## Modular UI Foundation Pass A
+
+- Replaces the static guide-heavy preview with the live audio-reactive renderer.
+- Compacts the command bar and creator inspector so signal content dominates.
+- Replaces rounded dashboard cards with sharper modular panels and narrow separators.
+- Adds live Peak, RMS, LUFS M, and True Peak metric tiles beneath the workspace.
+- Introduces an original WaveFrame signal palette built around cyan, magenta, orange, and graphite.
+- Applies a dark compact popup/control theme while preserving current workflows.
+- Uses MiniMeters-class density and modularity as category inspiration without copying its branding, assets, code, or exact layout.
+
 ## Implementation Phases
 
 1. Polish Pass 1: layout hierarchy, grouped controls, larger preview, clearer WaveFrame identity.

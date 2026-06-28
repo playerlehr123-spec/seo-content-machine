@@ -104,12 +104,28 @@ void configureBrandTextEditor(juce::TextEditor& editor, const juce::String& plac
     editor.setReturnKeyStartsNewLine(false);
     editor.setSelectAllWhenFocused(true);
     editor.setInputRestrictions(64);
-    editor.setTextToShowWhenEmpty(placeholder, juce::Colours::white.withAlpha(0.35f));
-    editor.setColour(juce::TextEditor::backgroundColourId, juce::Colour::fromRGB(8, 13, 24));
-    editor.setColour(juce::TextEditor::outlineColourId, juce::Colour::fromRGB(32, 218, 255).withAlpha(0.30f));
-    editor.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colour::fromRGB(80, 255, 160).withAlpha(0.70f));
-    editor.setColour(juce::TextEditor::textColourId, juce::Colours::white.withAlpha(0.90f));
-    editor.setColour(juce::TextEditor::highlightColourId, juce::Colour::fromRGB(32, 218, 255).withAlpha(0.40f));
+    editor.setTextToShowWhenEmpty(placeholder, juce::Colour::fromString("ff8793a3"));
+    editor.setColour(juce::TextEditor::backgroundColourId, juce::Colour::fromString("ff080b10"));
+    editor.setColour(juce::TextEditor::outlineColourId, juce::Colour::fromString("ff252c38"));
+    editor.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colour::fromString("ff31d7ff"));
+    editor.setColour(juce::TextEditor::textColourId, juce::Colour::fromString("fff2f5f8"));
+    editor.setColour(juce::TextEditor::highlightColourId, juce::Colour::fromString("88ff3d9a"));
+}
+
+void configureCompactButton(juce::TextButton& button, const ThemeManager::Theme& theme)
+{
+    button.setColour(juce::TextButton::buttonColourId, theme.panel);
+    button.setColour(juce::TextButton::buttonOnColourId, theme.accent.withAlpha(0.24f));
+    button.setColour(juce::TextButton::textColourOffId, theme.text);
+    button.setColour(juce::TextButton::textColourOnId, theme.text);
+}
+
+void configureCompactCombo(juce::ComboBox& box, const ThemeManager::Theme& theme)
+{
+    box.setColour(juce::ComboBox::backgroundColourId, juce::Colour::fromString("ff080b10"));
+    box.setColour(juce::ComboBox::outlineColourId, theme.panelBorder);
+    box.setColour(juce::ComboBox::textColourId, theme.text);
+    box.setColour(juce::ComboBox::arrowColourId, theme.accent);
 }
 
 struct BuiltInSessionPreset
@@ -148,9 +164,23 @@ const std::vector<BuiltInSessionPreset>& getBuiltInSessionPresets()
 MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcessor& p)
     : AudioProcessorEditor(&p), processor(p), theme(ThemeManager::darkNeon())
 {
-    setWantsKeyboardFocus(true); setSize(1240, 760); setResizeLimits(760, 520, 2000, 1400);
+    setWantsKeyboardFocus(true); setSize(1280, 720); setResizeLimits(980, 620, 2000, 1400);
+    waveLookAndFeel.setColour(juce::PopupMenu::backgroundColourId, juce::Colour::fromString("ff0d1118"));
+    waveLookAndFeel.setColour(juce::PopupMenu::textColourId, theme.text);
+    waveLookAndFeel.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.secondary.withAlpha(0.32f));
+    waveLookAndFeel.setColour(juce::PopupMenu::highlightedTextColourId, theme.text);
+    waveLookAndFeel.setColour(juce::Label::textColourId, theme.text);
+    waveLookAndFeel.setColour(juce::ScrollBar::thumbColourId, theme.accent.withAlpha(0.55f));
+    setLookAndFeel(&waveLookAndFeel);
     addAndMakeVisible(tapButton); addAndMakeVisible(visualizerButton); addAndMakeVisible(beatSyncButton); addAndMakeVisible(screenshotButton); addAndMakeVisible(hudButton); addAndMakeVisible(fullscreenButton); addAndMakeVisible(infoButton); addAndMakeVisible(copyInfoButton); addAndMakeVisible(savePresetButton); addAndMakeVisible(loadPresetButton); addAndMakeVisible(resetDefaultButton); addAndMakeVisible(themeBox); addAndMakeVisible(exportPresetBox); addAndMakeVisible(templateBox); addAndMakeVisible(moduleBox); addAndMakeVisible(sessionPresetBox);
     addAndMakeVisible(artistNameEditor); addAndMakeVisible(trackTitleEditor); addAndMakeVisible(labelNameEditor); addAndMakeVisible(ctaTextEditor);
+    for (auto* button : { &tapButton, &visualizerButton, &screenshotButton, &hudButton, &fullscreenButton, &infoButton, &copyInfoButton, &savePresetButton, &loadPresetButton, &resetDefaultButton })
+        configureCompactButton(*button, theme);
+    for (auto* box : { &themeBox, &exportPresetBox, &templateBox, &moduleBox, &sessionPresetBox })
+        configureCompactCombo(*box, theme);
+    beatSyncButton.setColour(juce::ToggleButton::textColourId, theme.text);
+    beatSyncButton.setColour(juce::ToggleButton::tickColourId, theme.accent);
+    beatSyncButton.setColour(juce::ToggleButton::tickDisabledColourId, theme.mutedText);
     configureBrandTextEditor(artistNameEditor, "Artist Name");
     configureBrandTextEditor(trackTitleEditor, "Track Title");
     configureBrandTextEditor(labelNameEditor, "Label Name");
@@ -255,6 +285,7 @@ MixPulseAudioProcessorEditor::MixPulseAudioProcessorEditor(MixPulseAudioProcesso
 }
 MixPulseAudioProcessorEditor::~MixPulseAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
     if (visualizer) {
         visualizer->setVisible(false);
         visualizer.reset();
@@ -265,41 +296,50 @@ void MixPulseAudioProcessorEditor::drawPanel(juce::Graphics& g, juce::Rectangle<
 {
     auto panel = area.toFloat();
     g.setColour(theme.panel);
-    g.fillRoundedRectangle(panel, 8.0f);
+    g.fillRect(panel);
     g.setColour(theme.panelBorder);
-    g.drawRoundedRectangle(panel, 8.0f, 1.0f);
+    g.drawRect(panel, 1.0f);
     if (title.isNotEmpty())
-        drawSectionTitle(g, area.reduced(14, 10).removeFromTop(22), title);
+    {
+        auto titleBar = area.removeFromTop(28);
+        g.setColour(juce::Colour::fromString("ff090c12"));
+        g.fillRect(titleBar);
+        g.setColour(theme.panelBorder);
+        g.drawHorizontalLine(titleBar.getBottom() - 1, (float)titleBar.getX(), (float)titleBar.getRight());
+        drawSectionTitle(g, titleBar.reduced(10, 0), title);
+    }
 }
 
 void MixPulseAudioProcessorEditor::drawSectionTitle(juce::Graphics& g, juce::Rectangle<int> area, const juce::String& text)
 {
     g.setColour(theme.text);
-    g.setFont(juce::Font(14.0f, juce::Font::bold));
-    g.drawText(text, area, juce::Justification::centredLeft);
+    g.setFont(juce::Font(11.0f, juce::Font::bold));
+    g.drawText(text.toUpperCase(), area, juce::Justification::centredLeft);
 }
 
 void MixPulseAudioProcessorEditor::drawLabelValue(juce::Graphics& g, juce::Rectangle<int> area, const juce::String& label, const juce::String& value)
 {
-    auto left = area.removeFromLeft(92);
+    auto left = area.removeFromLeft(82);
     g.setColour(theme.mutedText);
-    g.setFont(11.0f);
-    g.drawText(label, left, juce::Justification::centredLeft);
+    g.setFont(10.0f);
+    g.drawText(label.toUpperCase(), left, juce::Justification::centredLeft);
     g.setColour(theme.text);
-    g.setFont(12.0f);
+    g.setFont(11.0f);
     g.drawText(value, area, juce::Justification::centredLeft);
 }
 
 void MixPulseAudioProcessorEditor::drawPill(juce::Graphics& g, juce::Rectangle<int> area, const juce::String& text, juce::Colour colour)
 {
     auto pill = area.toFloat();
-    g.setColour(colour.withAlpha(0.13f));
-    g.fillRoundedRectangle(pill, 12.0f);
-    g.setColour(colour.withAlpha(0.55f));
-    g.drawRoundedRectangle(pill, 12.0f, 1.0f);
+    g.setColour(juce::Colour::fromString("ff080b10"));
+    g.fillRect(pill);
+    g.setColour(colour.withAlpha(0.72f));
+    g.fillRect(pill.removeFromLeft(3.0f));
+    g.setColour(theme.panelBorder);
+    g.drawRect(area.toFloat(), 1.0f);
     g.setColour(theme.text);
-    g.setFont(11.0f);
-    g.drawText(text, area.reduced(8, 0), juce::Justification::centred);
+    g.setFont(10.0f);
+    g.drawText(text, area.reduced(8, 0), juce::Justification::centredLeft);
 }
 
 void MixPulseAudioProcessorEditor::drawVerticalBar(juce::Graphics& g, juce::Rectangle<float> r, float v, juce::Colour c, const juce::String& label, float& holdDb)
@@ -307,11 +347,13 @@ void MixPulseAudioProcessorEditor::drawVerticalBar(juce::Graphics& g, juce::Rect
     const auto db = gainToDb(v);
     holdDb = std::max(db, holdDb - 0.6f);
 
-    g.setColour(theme.panelBorder); g.drawRoundedRectangle(r, 4.0f, 1.0f);
+    g.setColour(juce::Colour::fromString("ff05070a")); g.fillRect(r);
+    g.setColour(theme.panelBorder); g.drawRect(r, 1.0f);
     auto y = dbToY(db, r);
     auto fill = juce::Rectangle<float>(r.getX()+1.0f, y, r.getWidth()-2.0f, r.getBottom()-y);
-    g.setColour(c.withAlpha(0.22f)); g.fillRoundedRectangle(fill.expanded(2.0f), 3.0f);
-    g.setColour(c); g.fillRoundedRectangle(fill, 3.0f);
+    juce::ColourGradient gradient(c.brighter(0.35f), fill.getX(), fill.getY(), c.darker(0.25f), fill.getX(), fill.getBottom(), false);
+    gradient.addColour(0.48, theme.secondary);
+    g.setGradientFill(gradient); g.fillRect(fill);
     g.setColour(juce::Colours::white.withAlpha(0.9f));
     auto holdY = dbToY(holdDb, r); g.fillRect(r.getX()+1.0f, holdY-1.0f, r.getWidth()-2.0f, 2.0f);
     g.setColour(theme.mutedText); g.drawText(label, r.withY(r.getBottom()+4).withHeight(14).toNearestInt(), juce::Justification::centred);
@@ -319,8 +361,8 @@ void MixPulseAudioProcessorEditor::drawVerticalBar(juce::Graphics& g, juce::Rect
 
 void MixPulseAudioProcessorEditor::drawMeterColumn(juce::Graphics& g, juce::Rectangle<int> area)
 {
-    drawPanel(g, area, "Meter Rail");
-    auto panel = area.toFloat().reduced(12.0f, 42.0f);
+    drawPanel(g, area, "Signal");
+    auto panel = area.toFloat().reduced(10.0f, 34.0f);
     auto ticks = panel.withTrimmedBottom(78.0f);
     for (auto db : {0,-3,-6,-9,-12,-24}) { auto y=dbToY((float)db,ticks); g.setColour(theme.grid); g.drawHorizontalLine((int)y,ticks.getX(),ticks.getRight()); g.setColour(theme.mutedText); g.drawText(juce::String(db),(int)ticks.getRight()-30,(int)y-8,28,14,juce::Justification::right); }
 
@@ -348,9 +390,9 @@ void MixPulseAudioProcessorEditor::setStatusMessage(const juce::String& msg)
 void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(theme.background);
-    auto b = getLocalBounds().reduced(14);
-    drawHeader(g, b.removeFromTop(74));
-    b.removeFromTop(12);
+    auto b = getLocalBounds().reduced(8);
+    drawHeader(g, b.removeFromTop(52));
+    b.removeFromTop(6);
 
     if (hudMode)
     {
@@ -358,10 +400,10 @@ void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
     }
     else
     {
-        auto meter = b.removeFromLeft(218);
-        b.removeFromLeft(12);
-        auto controls = b.removeFromRight(326);
-        b.removeFromRight(12);
+        auto meter = b.removeFromLeft(184);
+        b.removeFromLeft(6);
+        auto controls = b.removeFromRight(304);
+        b.removeFromRight(6);
         drawMeterColumn(g, meter);
         drawPreviewCanvas(g, b);
         drawRightControlPanel(g, controls);
@@ -375,16 +417,16 @@ void MixPulseAudioProcessorEditor::paint(juce::Graphics& g)
 
 void MixPulseAudioProcessorEditor::resized()
 {
-    auto b = getLocalBounds().reduced(14);
-    auto header = b.removeFromTop(74).reduced(18, 18);
-    auto actions = header.removeFromRight(356);
-    visualizerButton.setBounds(actions.removeFromLeft(76)); actions.removeFromLeft(8);
-    screenshotButton.setBounds(actions.removeFromLeft(70)); actions.removeFromLeft(8);
-    hudButton.setBounds(actions.removeFromLeft(56)); actions.removeFromLeft(8);
-    infoButton.setBounds(actions.removeFromLeft(54)); actions.removeFromLeft(8);
-    copyInfoButton.setBounds(actions.removeFromLeft(76));
+    auto b = getLocalBounds().reduced(8);
+    auto header = b.removeFromTop(52).reduced(10, 9);
+    auto actions = header.removeFromRight(300);
+    visualizerButton.setBounds(actions.removeFromLeft(64)); actions.removeFromLeft(5);
+    screenshotButton.setBounds(actions.removeFromLeft(58)); actions.removeFromLeft(5);
+    hudButton.setBounds(actions.removeFromLeft(48)); actions.removeFromLeft(5);
+    infoButton.setBounds(actions.removeFromLeft(46)); actions.removeFromLeft(5);
+    copyInfoButton.setBounds(actions.removeFromLeft(64));
 
-    b.removeFromTop(12);
+    b.removeFromTop(6);
     if (hudMode)
     {
         moduleBox.setBounds(0, 0, 0, 0);
@@ -405,16 +447,16 @@ void MixPulseAudioProcessorEditor::resized()
         return;
     }
 
-    b.removeFromLeft(218);
-    b.removeFromLeft(12);
-    auto right = b.removeFromRight(326).reduced(14, 42);
+    b.removeFromLeft(184);
+    b.removeFromLeft(6);
+    auto right = b.removeFromRight(304).reduced(10, 34);
     auto controls = right.removeFromTop(126);
     controls.removeFromTop(22);
     auto sessionRow = controls.removeFromTop(26);
-    sessionPresetBox.setBounds(sessionRow.withTrimmedLeft(68));
+    sessionPresetBox.setBounds(sessionRow.withTrimmedLeft(84));
     controls.removeFromTop(4);
     auto moduleRow = controls.removeFromTop(26);
-    moduleBox.setBounds(moduleRow.withTrimmedLeft(68));
+    moduleBox.setBounds(moduleRow.withTrimmedLeft(84));
     auto beatRow = controls.removeFromTop(28);
     beatSyncButton.setBounds(beatRow.removeFromLeft(104));
     beatRow.removeFromLeft(8);
@@ -429,16 +471,16 @@ void MixPulseAudioProcessorEditor::resized()
     brand.removeFromTop(22);
     auto brandFields = brand.removeFromTop(116);
     auto row = brandFields.removeFromTop(24);
-    artistNameEditor.setBounds(row.removeFromRight(204));
+    artistNameEditor.setBounds(row.removeFromRight(198));
     brandFields.removeFromTop(5);
     row = brandFields.removeFromTop(24);
-    trackTitleEditor.setBounds(row.removeFromRight(204));
+    trackTitleEditor.setBounds(row.removeFromRight(198));
     brandFields.removeFromTop(5);
     row = brandFields.removeFromTop(24);
-    labelNameEditor.setBounds(row.removeFromRight(204));
+    labelNameEditor.setBounds(row.removeFromRight(198));
     brandFields.removeFromTop(5);
     row = brandFields.removeFromTop(24);
-    ctaTextEditor.setBounds(row.removeFromRight(204));
+    ctaTextEditor.setBounds(row.removeFromRight(198));
     auto brandButtons = brand.removeFromBottom(26);
     savePresetButton.setBounds(brandButtons.removeFromLeft(84));
     brandButtons.removeFromLeft(8);
@@ -475,114 +517,116 @@ bool MixPulseAudioProcessorEditor::keyPressed(const juce::KeyPress& k)
 void MixPulseAudioProcessorEditor::drawHeader(juce::Graphics& g, juce::Rectangle<int> area)
 {
     drawPanel(g, area, juce::String());
-    auto header = area.reduced(18, 12);
-    auto title = header.removeFromLeft(250);
+    auto header = area.reduced(12, 7);
+    auto title = header.removeFromLeft(214);
     g.setColour(theme.accent);
-    g.setFont(juce::Font(27.0f, juce::Font::bold));
-    g.drawText(Branding::ProductDisplayName, title.removeFromTop(34), juce::Justification::centredLeft);
+    g.setFont(juce::Font(21.0f, juce::Font::bold));
+    g.drawText(Branding::ProductDisplayName, title.removeFromTop(24), juce::Justification::centredLeft);
     g.setColour(theme.mutedText);
-    g.setFont(12.0f);
-    g.drawText(juce::String(Branding::ProductVersion) + " / " + Branding::BetaStatus + " / MixPulse internal", title, juce::Justification::centredLeft);
+    g.setFont(9.5f);
+    g.drawText(juce::String(Branding::ProductVersion) + "  /  CREATOR METER  /  " + Branding::BetaStatus, title, juce::Justification::centredLeft);
 
-    auto status = header.removeFromLeft(390);
+    auto status = header.removeFromLeft(322);
     auto bpm = processor.tapTempo.getBpm();
-    drawPill(g, status.removeFromLeft(118).reduced(0, 8), "BPM " + (bpm ? juce::String(*bpm, 1) : "--.-"), theme.accent);
-    status.removeFromLeft(8);
-    drawPill(g, status.removeFromLeft(128).reduced(0, 8), "Input: host", theme.secondary);
-    status.removeFromLeft(8);
-    drawPill(g, status.removeFromLeft(132).reduced(0, 8), visualizer && visualizer->isVisible() ? "Output open" : "Output closed", theme.mutedText);
+    drawPill(g, status.removeFromLeft(92).reduced(0, 3), "BPM  " + (bpm ? juce::String(*bpm, 1) : "--.-"), theme.accent);
+    status.removeFromLeft(5);
+    drawPill(g, status.removeFromLeft(100).reduced(0, 3), "HOST INPUT", theme.secondary);
+    status.removeFromLeft(5);
+    drawPill(g, status.removeFromLeft(120).reduced(0, 3), visualizer && visualizer->isVisible() ? "OUTPUT  LIVE" : "OUTPUT  CLOSED", theme.mutedText);
 }
 
 void MixPulseAudioProcessorEditor::drawPreviewCanvas(juce::Graphics& g, juce::Rectangle<int> area)
 {
-    drawPanel(g, area, "Preview Canvas");
-    auto inner = area.reduced(18, 42);
-    auto meta = inner.removeFromTop(76);
+    drawPanel(g, area, "Live Workspace");
+    auto inner = area.reduced(8, 34);
     const auto moduleName = visualModuleName((VisualModuleType)sanitizeVisualModuleIndex(processor.visualRackState.selectedModule.load()));
     const auto* selectedTemplate = getTemplateForSelectedId(templateBox.getSelectedId());
     const juce::String templateName = selectedTemplate != nullptr ? selectedTemplate->name : juce::String("Minimal Meter");
-    drawLabelValue(g, meta.removeFromTop(22), "Module", moduleName);
-    drawLabelValue(g, meta.removeFromTop(22), "Template", templateName);
-    drawLabelValue(g, meta.removeFromTop(22), "Use", selectedTemplate != nullptr ? selectedTemplate->bestFor : "Producer utility");
 
-    inner.removeFromTop(8);
-    auto canvas = inner.toFloat().reduced(2.0f);
-    g.setColour(juce::Colour::fromRGB(8, 13, 24));
-    g.fillRoundedRectangle(canvas, 10.0f);
-    g.setColour(theme.grid.withAlpha(0.45f));
-    for (int x = (int)canvas.getX(); x < (int)canvas.getRight(); x += 28)
-        g.drawVerticalLine(x, canvas.getY(), canvas.getBottom());
-    for (int y = (int)canvas.getY(); y < (int)canvas.getBottom(); y += 28)
-        g.drawHorizontalLine(y, canvas.getX(), canvas.getRight());
-
-    auto guide = canvas.reduced(34.0f);
-    float ratio = 16.0f / 9.0f;
-    const auto preset = (OutputPreset)processor.visualRackState.outputPreset.load();
-    if (preset == OutputPreset::Square1x1) ratio = 1.0f;
-    else if (preset == OutputPreset::Portrait9x16) ratio = 9.0f / 16.0f;
-    else if (preset == OutputPreset::Portrait4x5) ratio = 4.0f / 5.0f;
-
-    auto frame = guide;
-    if (frame.getWidth() / frame.getHeight() > ratio)
-        frame = frame.withWidth(frame.getHeight() * ratio).withCentre(guide.getCentre());
-    else
-        frame = frame.withHeight(frame.getWidth() / ratio).withCentre(guide.getCentre());
-
-    g.setColour(theme.accent.withAlpha(0.14f));
-    g.fillRoundedRectangle(frame, 8.0f);
-    g.setColour(theme.accent.withAlpha(0.72f));
-    g.drawRoundedRectangle(frame, 8.0f, 1.6f);
-    g.setColour(theme.secondary.withAlpha(0.58f));
-    g.drawRoundedRectangle(frame.reduced(frame.getWidth() * 0.08f, frame.getHeight() * 0.08f), 6.0f, 1.0f);
-
+    auto workspaceBar = inner.removeFromTop(26);
+    g.setColour(juce::Colour::fromString("ff080b10"));
+    g.fillRect(workspaceBar);
     g.setColour(theme.text);
-    g.setFont(juce::Font(26.0f, juce::Font::bold));
-    auto overlay = frame.toNearestInt().reduced(18);
-    g.drawFittedText(fallbackText(processor.brandState.trackTitle, "Track Title"), overlay.removeFromTop(58), juce::Justification::centred, 2);
-    g.setFont(15.0f);
-    g.drawText(fallbackText(processor.brandState.artistName, "Artist Name"), overlay.removeFromTop(28), juce::Justification::centred);
+    g.setFont(10.0f);
+    g.drawText(moduleName.toUpperCase() + "  /  " + templateName.toUpperCase(), workspaceBar.reduced(8, 0), juce::Justification::centredLeft);
     g.setColour(theme.mutedText);
-    g.setFont(13.0f);
-    g.drawText(templateName + " / " + moduleName, overlay.removeFromTop(24), juce::Justification::centred);
-    g.drawText(fallbackText(processor.brandState.callToAction, "Out Now") + " / still-frame preview", frame.toNearestInt().reduced(18), juce::Justification::centredBottom);
+    g.drawText(exportPresetStatusText(exportPresetBox.getSelectedId(), processor.selectedExportPreset).toUpperCase(), workspaceBar.reduced(8, 0), juce::Justification::centredRight);
 
-    auto footer = inner.removeFromBottom(42);
-    drawPill(g, footer.removeFromLeft(176).reduced(0, 8), exportPresetStatusText(exportPresetBox.getSelectedId(), processor.selectedExportPreset), theme.accent);
-    footer.removeFromLeft(8);
-    drawPill(g, footer.removeFromLeft(150).reduced(0, 8), "PNG frame only", theme.secondary);
-    footer.removeFromLeft(8);
-    drawPill(g, footer.removeFromLeft(162).reduced(0, 8), "Video export: future", theme.mutedText);
+    inner.removeFromTop(4);
+    auto metrics = inner.removeFromBottom(52);
+    inner.removeFromBottom(4);
+    auto canvas = inner.reduced(1);
+
+    VisualizerRenderer renderer;
+    {
+        juce::Graphics::ScopedSaveState clipState(g);
+        g.reduceClipRegion(canvas);
+        renderer.render(g, canvas, processor.analyzer.getSpectrumSnapshot(), processor.visualizerState.mode.load(), processor.beatPulse.getPulse(), processor.visualRackState, &processor.brandState);
+    }
+    g.setColour(theme.panelBorder);
+    g.drawRect(canvas, 1);
+
+    const auto& meter = processor.analyzer.getMeterData();
+    const float peak = std::max(meter.peakL.load(), meter.peakR.load());
+    const float rms = std::max(meter.rmsL.load(), meter.rmsR.load());
+    const float truePeak = meter.truePeak.load();
+    const int gap = 4;
+    const int tileWidth = (metrics.getWidth() - gap * 3) / 4;
+    auto drawMetric = [&g, this](juce::Rectangle<int> tile, const juce::String& label, const juce::String& value, juce::Colour colour)
+    {
+        g.setColour(juce::Colour::fromString("ff080b10"));
+        g.fillRect(tile);
+        g.setColour(theme.panelBorder);
+        g.drawRect(tile, 1);
+        g.setColour(colour);
+        g.fillRect(tile.removeFromTop(2));
+        auto text = tile.reduced(8, 4);
+        g.setColour(theme.mutedText);
+        g.setFont(9.0f);
+        g.drawText(label, text.removeFromTop(16), juce::Justification::centredLeft);
+        g.setColour(theme.text);
+        g.setFont(juce::Font(15.0f, juce::Font::bold));
+        g.drawText(value, text, juce::Justification::centredLeft);
+    };
+
+    drawMetric(metrics.removeFromLeft(tileWidth), "PEAK", juce::String(gainToDb(peak), 1) + " dB", theme.right);
+    metrics.removeFromLeft(gap);
+    drawMetric(metrics.removeFromLeft(tileWidth), "RMS", juce::String(gainToDb(rms), 1) + " dB", theme.left);
+    metrics.removeFromLeft(gap);
+    drawMetric(metrics.removeFromLeft(tileWidth), "LUFS M", juce::String(meter.lufsM.load(), 1), theme.secondary);
+    metrics.removeFromLeft(gap);
+    drawMetric(metrics, "TRUE PEAK", juce::String(gainToDb(truePeak), 1) + " dB", theme.accent);
 }
 
 void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce::Rectangle<int> area)
 {
-    drawPanel(g, area, "Creator Controls");
-    auto r = area.reduced(14, 42);
+    drawPanel(g, area, "Creator Inspector");
+    auto r = area.reduced(10, 34);
 
     auto controls = r.removeFromTop(126);
-    drawSectionTitle(g, controls.removeFromTop(20), "Session / Controls");
+    drawSectionTitle(g, controls.removeFromTop(20), "Workspace");
     drawLabelValue(g, controls.removeFromTop(28), "Preset", "");
     drawLabelValue(g, controls.removeFromTop(28), "Module", "");
 
     r.removeFromTop(10);
     auto motion = r.removeFromTop(74);
-    drawSectionTitle(g, motion.removeFromTop(20), "Visual Controls");
+    drawSectionTitle(g, motion.removeFromTop(20), "Signal");
     drawLabelValue(g, motion.removeFromTop(20), "Intensity", juce::String(processor.visualRackState.visualIntensity.load(), 2));
     drawLabelValue(g, motion.removeFromTop(20), "Motion", juce::String(processor.visualRackState.motionAmount.load(), 2));
 
     r.removeFromTop(10);
     auto brand = r.removeFromTop(204);
-    drawSectionTitle(g, brand.removeFromTop(20), "Brand Text");
+    drawSectionTitle(g, brand.removeFromTop(20), "Brand");
     drawLabelValue(g, brand.removeFromTop(29), "Artist", "");
     drawLabelValue(g, brand.removeFromTop(29), "Track", "");
     drawLabelValue(g, brand.removeFromTop(29), "Label", "");
     drawLabelValue(g, brand.removeFromTop(29), "CTA", "");
-    drawLabelValue(g, brand.removeFromTop(20), "Colors", "primary/accent/background TODO");
-    drawLabelValue(g, brand.removeFromTop(20), "Logo", processor.brandState.logoPath.isNotEmpty() ? "preset path" : "placeholder layer");
+    drawLabelValue(g, brand.removeFromTop(20), "Palette", "WaveFrame signal");
+    drawLabelValue(g, brand.removeFromTop(20), "Logo", processor.brandState.logoPath.isNotEmpty() ? "Loaded preset" : "Not loaded");
 
     r.removeFromTop(10);
     auto templates = r.removeFromTop(120);
-    drawSectionTitle(g, templates.removeFromTop(20), "Templates");
+    drawSectionTitle(g, templates.removeFromTop(20), "Template");
     templates.removeFromTop(30);
     if (const auto* tp = getTemplateForSelectedId(templateBox.getSelectedId()))
     {
@@ -599,7 +643,7 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
 
     r.removeFromTop(10);
     auto exportCard = r;
-    drawSectionTitle(g, exportCard.removeFromTop(20), "Export");
+    drawSectionTitle(g, exportCard.removeFromTop(20), "Output");
     exportCard.removeFromTop(30);
     int exportIndex = 0;
     const auto* preset = getExportPresetForSelection(exportPresetBox.getSelectedId(), processor.selectedExportPreset, exportIndex);
@@ -611,11 +655,11 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
 
 void MixPulseAudioProcessorEditor::drawHudPanel(juce::Graphics& g, juce::Rectangle<int> area)
 {
-    auto meter = area.removeFromLeft(260);
-    area.removeFromLeft(14);
+    auto meter = area.removeFromLeft(210);
+    area.removeFromLeft(6);
     drawMeterColumn(g, meter);
     drawPanel(g, area, "HUD Meter View");
-    auto r = area.reduced(18, 44);
+    auto r = area.reduced(12, 34);
     auto& m = processor.analyzer.getMeterData();
     drawLabelValue(g, r.removeFromTop(28), "BPM", processor.tapTempo.getBpm() ? juce::String(*processor.tapTempo.getBpm(), 1) : "--.-");
     drawLabelValue(g, r.removeFromTop(28), "LUFS M", juce::String(m.lufsM.load(), 1));

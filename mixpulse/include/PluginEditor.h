@@ -40,6 +40,7 @@ private:
     void setStatusMessage(const juce::String&);
 
     MixPulseAudioProcessor& processor;
+    juce::LookAndFeel_V4 waveLookAndFeel;
     ThemeManager::Theme theme;
     juce::TextButton tapButton { "Tap" }, visualizerButton { "Output" }, screenshotButton { "Frame" }, hudButton { "HUD" }, fullscreenButton { "Full" }, infoButton { "Info" }, copyInfoButton { "Copy Info" }, savePresetButton { "Save Preset" }, loadPresetButton { "Load Preset" }, resetDefaultButton { "Reset" };
     juce::ToggleButton beatSyncButton { "Beat Sync" };

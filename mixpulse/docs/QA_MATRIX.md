@@ -71,3 +71,5 @@ When a test fails:
 | WF-S6-002 | Frame/current-frame failure handling | Needs retest | Click Frame before Output, after Output, repeatedly, and with future-only presets |
 | WF-S8-001 | Current-window PNG rendering | Needs retest | In Ableton, select Current, click Frame, confirm the PNG contains the visual scene, and confirm Explorer reveals the file |
 | WF-S8-002 | Creator control-row layout | Needs retest | Open the normal creator view at minimum and default sizes; verify Preset, Module, Beat Sync, Tap, and Full do not overlap |
+| WF-S9-001 | Live modular workspace | Needs retest | Play audio in Ableton; verify the central workspace animates, metric tiles update, and controls remain usable |
+| WF-S9-002 | Modular UI resizing | Needs retest | Resize from 980x620 through 1280x720 and larger; verify command bar, signal rail, workspace, and inspector remain readable |

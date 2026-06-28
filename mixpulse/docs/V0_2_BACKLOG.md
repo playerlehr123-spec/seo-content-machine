@@ -38,6 +38,8 @@ Status values:
 | WF-S6-003 | Docs | Docs | P2 | Align export, OBS, QA, and beta docs around still-frame vs future video export | v0.2 Sprint 6 | Needs retest | Sprint 6 | Verify docs do not imply MP4/WebM/timeline export exists |
 | WF-S8-001 | Export | Bug | P1 | Current-window Frame capture can save a blank host-component PNG in Ableton | Ableton smoke test | Needs retest | Sprint 8 | Render the visual scene directly for every still preset and reveal the saved PNG in Explorer |
 | WF-S8-002 | UI | Bug | P2 | Beat Sync row labels overlap in the creator controls panel | Ableton smoke test | Needs retest | Sprint 8 | Separate Preset/Module labels from their controls and remove duplicate Beat Sync status text |
+| WF-S9-001 | UI | Feature | P2 | Replace static dashboard preview with a dense live modular workspace | Creator reference review | Needs retest | Sprint 9 | Live renderer, compact command bar, metric tiles, and creator inspector implemented in Pass A |
+| WF-S9-002 | Visuals | Polish | P2 | Establish a distinctive high-energy WaveFrame signal palette | Creator reference review | Needs retest | Sprint 9 | Cyan/magenta/orange spectrum and graphite UI applied without copying third-party assets or branding |
 
 ## Areas
 
