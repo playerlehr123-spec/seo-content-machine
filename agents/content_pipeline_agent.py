@@ -8,6 +8,7 @@ from agents.editor_agent import EditorAgent
 from agents.seo_optimizer_agent import SEOOptimizerAgent
 from agents.blog_card_image_agent import BlogCardImageAgent
 from agents.internal_link_agent import InternalLinkAgent
+from agents.article_style_guard_agent import ArticleStyleGuardAgent
 
 
 class ContentPipelineAgent:
@@ -56,6 +57,12 @@ class ContentPipelineAgent:
         seo_out = SEOOptimizerAgent(self.business, self.case_study, post).execute({"title": post.title})
         img_out = BlogCardImageAgent(self.business, self.case_study, post).execute({})
         link_out = InternalLinkAgent(self.business, self.case_study, post).execute({})
+        edited_body = edit_out.get("edited_body_markdown") or draft_out.get("body_markdown", "")
+        style_guard_out = ArticleStyleGuardAgent(
+            self.business,
+            self.case_study,
+            post,
+        ).execute({"text": edited_body, "business_name": self.business.name})
 
         post.edited_body_markdown = edit_out.get("edited_body_markdown")
         post.seo_title = seo_out.get("seo_title")
@@ -67,5 +74,6 @@ class ContentPipelineAgent:
         post.image_prompt = img_out.get("image_prompt")
         post.image_alt_text = img_out.get("image_alt_text")
         post.internal_links_json = json.dumps(link_out.get("links", []))
+        post.publish_readiness_json = json.dumps({"article_style_guard": style_guard_out})
         db.session.commit()
         return post

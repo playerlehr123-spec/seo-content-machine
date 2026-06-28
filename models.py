@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
@@ -67,9 +68,18 @@ class BlogPost(db.Model):
     image_prompt = db.Column(db.Text)
     image_alt_text = db.Column(db.String(255))
     internal_links_json = db.Column(db.Text)
+    publish_readiness_json = db.Column(db.Text)
     status = db.Column(db.String(50), default='draft')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    @property
+    def article_style_guard(self):
+        try:
+            readiness = json.loads(self.publish_readiness_json or "{}")
+        except (TypeError, ValueError):
+            return {}
+        return readiness.get("article_style_guard", {})
 
 
 class AgentRun(db.Model):

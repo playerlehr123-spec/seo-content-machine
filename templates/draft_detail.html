@@ -13,6 +13,22 @@
   <p><strong>Internal Links:</strong></p>
   <ul>{% for link in links %}<li>{{link.anchor_text}} → {{link.target}} ({{link.reason}})</li>{% else %}<li>No link suggestions.</li>{% endfor %}</ul>
 </div>
+{% set article_style = d.article_style_guard %}
+<div class='card'>
+  <h3>Article Style Guard</h3>
+  {% if article_style %}
+  <p><strong>Word count:</strong> {{article_style.get('word_count')}}</p>
+  <p><strong>Passes length check:</strong> {{article_style.get('passes_length_check')}}</p>
+  <p><strong>Passes structure check:</strong> {{article_style.get('passes_structure_check')}}</p>
+  <p><strong>Banned phrases found:</strong> {{article_style.get('banned_phrases_found')}}</p>
+  <p><strong>Wrong-business terms found:</strong> {{article_style.get('wrong_business_terms_found')}}</p>
+  <p><strong>Pricing/claim risks:</strong> {{article_style.get('pricing_or_claim_risks')}}</p>
+  <p><strong>Missing items:</strong> {{article_style.get('missing_items')}}</p>
+  <p><strong>Approved for WordPress draft:</strong> {{article_style.get('approved_for_wordpress_draft')}}</p>
+  {% else %}
+  <p>No Article Style Guard result is available for this draft.</p>
+  {% endif %}
+</div>
 <div class='card'><h3>Body markdown</h3><pre>{{d.body_markdown}}</pre></div>
 <div class='card'><h3>Edited body markdown</h3><pre>{{d.edited_body_markdown}}</pre></div>
 {% endblock %}
