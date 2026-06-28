@@ -36,6 +36,8 @@ Status values:
 | WF-S6-001 | Export | Polish | P2 | Clarify export preset labels, dimensions, use cases, and still-PNG workflow | v0.2 Sprint 6 | Needs retest | Sprint 6 | Implemented in Sprint 6; verify each preset displays correct aspect/dimensions/use case |
 | WF-S6-002 | Export | Bug | P2 | Harden Frame/current-frame PNG failure messaging | v0.2 Sprint 6 | Needs retest | Sprint 6 | Implemented in Sprint 6; verify Frame before Output, repeated Frame clicks, and future-only presets fail safely |
 | WF-S6-003 | Docs | Docs | P2 | Align export, OBS, QA, and beta docs around still-frame vs future video export | v0.2 Sprint 6 | Needs retest | Sprint 6 | Verify docs do not imply MP4/WebM/timeline export exists |
+| WF-S8-001 | Export | Bug | P1 | Current-window Frame capture can save a blank host-component PNG in Ableton | Ableton smoke test | Needs retest | Sprint 8 | Render the visual scene directly for every still preset and reveal the saved PNG in Explorer |
+| WF-S8-002 | UI | Bug | P2 | Beat Sync row labels overlap in the creator controls panel | Ableton smoke test | Needs retest | Sprint 8 | Separate Preset/Module labels from their controls and remove duplicate Beat Sync status text |
 
 ## Areas
 

@@ -410,11 +410,13 @@ void MixPulseAudioProcessorEditor::resized()
     auto right = b.removeFromRight(326).reduced(14, 42);
     auto controls = right.removeFromTop(126);
     controls.removeFromTop(22);
-    sessionPresetBox.setBounds(controls.removeFromTop(26));
+    auto sessionRow = controls.removeFromTop(26);
+    sessionPresetBox.setBounds(sessionRow.withTrimmedLeft(68));
     controls.removeFromTop(4);
-    moduleBox.setBounds(controls.removeFromTop(26));
+    auto moduleRow = controls.removeFromTop(26);
+    moduleBox.setBounds(moduleRow.withTrimmedLeft(68));
     auto beatRow = controls.removeFromTop(28);
-    beatSyncButton.setBounds(beatRow.removeFromLeft(118));
+    beatSyncButton.setBounds(beatRow.removeFromLeft(104));
     beatRow.removeFromLeft(8);
     tapButton.setBounds(beatRow.removeFromLeft(54));
     beatRow.removeFromLeft(8);
@@ -559,9 +561,8 @@ void MixPulseAudioProcessorEditor::drawRightControlPanel(juce::Graphics& g, juce
 
     auto controls = r.removeFromTop(126);
     drawSectionTitle(g, controls.removeFromTop(20), "Session / Controls");
-    drawLabelValue(g, controls.removeFromTop(28), "Session", "");
-    drawLabelValue(g, controls.removeFromTop(28), "Visual", "");
-    drawLabelValue(g, controls.removeFromTop(22), "Beat sync", processor.visualizerState.beatSync.load() ? "On" : "Off");
+    drawLabelValue(g, controls.removeFromTop(28), "Preset", "");
+    drawLabelValue(g, controls.removeFromTop(28), "Module", "");
 
     r.removeFromTop(10);
     auto motion = r.removeFromTop(74);
@@ -750,15 +751,8 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
 
     juce::Image img(juce::Image::ARGB, w, h, true);
     juce::Graphics gg(img);
-    if (preset.width > 0 && preset.height > 0)
-    {
-        VisualizerRenderer renderer;
-        renderer.render(gg, { 0, 0, w, h }, processor.analyzer.getSpectrumSnapshot(), processor.visualizerState.mode.load(), processor.beatPulse.getPulse(), processor.visualRackState, &processor.brandState);
-    }
-    else
-    {
-        sourceComponent->paintEntireComponent(gg, false);
-    }
+    VisualizerRenderer renderer;
+    renderer.render(gg, { 0, 0, w, h }, processor.analyzer.getSpectrumSnapshot(), processor.visualizerState.mode.load(), processor.beatPulse.getPulse(), processor.visualRackState, &processor.brandState);
 
     auto stamp = juce::Time::getCurrentTime().formatted("%Y-%m-%d_%H-%M-%S");
     auto safeName = exportPresetShortLabel(presetIndex).removeCharacters(" /:");
@@ -767,8 +761,10 @@ void MixPulseAudioProcessorEditor::exportScreenshot()
     juce::PNGImageFormat png;
     if (!os.openedOk()) { setStatusMessage("Frame capture failed: cannot create output file"); return; }
     if (!png.writeImageToStream(img, os)) { setStatusMessage("Frame capture failed: PNG encoder error"); return; }
+    os.flush();
 
-    setStatusMessage("Captured still PNG: " + exportPresetShortLabel(presetIndex) + " " + juce::String(w) + "x" + juce::String(h));
+    setStatusMessage("Saved PNG: " + file.getFullPathName());
+    file.revealToUser();
 }
 
 
